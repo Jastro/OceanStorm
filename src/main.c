@@ -3,11 +3,15 @@
 #include "time.h"
 #include "utils/definitions.h"
 #include "game/airplane.h"
+#include "game/island.h"
+#include "game/render_system.h"
 #include "states/menu.h"
 #include "states/gameover.h"
 
 // Incluir las implementaciones
 #include "game/airplane.c"
+#include "game/island.c"
+#include "game/render_system.c"
 #include "states/menu.c"
 #include "utils/utilities.c"
 #include "states/gameover.c"
@@ -16,8 +20,9 @@
 int game_state;
 
 void main() {
-    // Inicializar el juego
-    initialize_airplane();
+    initialize_carrier();      // Inicializar el carrier primero
+    initialize_islands();      // Luego las islas
+    initialize_airplane();     // Y finalmente el avión
     game_state = StateMenu;
     
     // Bucle principal del juego
