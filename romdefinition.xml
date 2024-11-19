@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+    <rom type="cartridge" title="Ocean Storm" version="1.0" />
+    <binary path="obj/main.vbin" />
+    <textures>
+        <texture path="obj/airplane.vtx" />
+        <texture path="obj/carrier.vtx" />
+    </textures>
+    <sounds>
+    </sounds>
+</rom-definition>

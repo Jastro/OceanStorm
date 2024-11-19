@@ -1,0 +1,2815 @@
+
+File src/main.c:
+
+[1] [START OF FILE]
+
+File C:\Vircon32\Vircon32\WarOnWater\dev\include\video.h:
+
+[57] Keyword: int
+[57] Identifier: make_gray
+[57] Delimiter: '('
+[57] Keyword: int
+[57] Identifier: brightness
+[57] Delimiter: ')'
+[58] Delimiter: '{'
+[59] Keyword: return
+[59] Literal int: -16777216
+[59] Operator: |
+[59] Delimiter: '('
+[59] Identifier: brightness
+[59] Operator: <<
+[59] Literal int: 16
+[59] Delimiter: ')'
+[59] Operator: |
+[59] Delimiter: '('
+[59] Identifier: brightness
+[59] Operator: <<
+[59] Literal int: 8
+[59] Delimiter: ')'
+[59] Operator: |
+[59] Identifier: brightness
+[59] Special symbol: ';'
+[60] Delimiter: '}'
+[66] Keyword: int
+[66] Identifier: make_color_rgb
+[66] Delimiter: '('
+[66] Keyword: int
+[66] Identifier: r
+[66] Special symbol: ','
+[66] Keyword: int
+[66] Identifier: g
+[66] Special symbol: ','
+[66] Keyword: int
+[66] Identifier: b
+[66] Delimiter: ')'
+[67] Delimiter: '{'
+[68] Keyword: return
+[68] Literal int: -16777216
+[68] Operator: |
+[68] Delimiter: '('
+[68] Identifier: b
+[68] Operator: <<
+[68] Literal int: 16
+[68] Delimiter: ')'
+[68] Operator: |
+[68] Delimiter: '('
+[68] Identifier: g
+[68] Operator: <<
+[68] Literal int: 8
+[68] Delimiter: ')'
+[68] Operator: |
+[68] Identifier: r
+[68] Special symbol: ';'
+[69] Delimiter: '}'
+[74] Keyword: int
+[74] Identifier: make_color_rgba
+[74] Delimiter: '('
+[74] Keyword: int
+[74] Identifier: r
+[74] Special symbol: ','
+[74] Keyword: int
+[74] Identifier: g
+[74] Special symbol: ','
+[74] Keyword: int
+[74] Identifier: b
+[74] Special symbol: ','
+[74] Keyword: int
+[74] Identifier: a
+[74] Delimiter: ')'
+[75] Delimiter: '{'
+[76] Keyword: return
+[76] Delimiter: '('
+[76] Identifier: a
+[76] Operator: <<
+[76] Literal int: 24
+[76] Delimiter: ')'
+[76] Operator: |
+[76] Delimiter: '('
+[76] Identifier: b
+[76] Operator: <<
+[76] Literal int: 16
+[76] Delimiter: ')'
+[76] Operator: |
+[76] Delimiter: '('
+[76] Identifier: g
+[76] Operator: <<
+[76] Literal int: 8
+[76] Delimiter: ')'
+[76] Operator: |
+[76] Identifier: r
+[76] Special symbol: ';'
+[77] Delimiter: '}'
+[82] Keyword: int
+[82] Identifier: get_color_red
+[82] Delimiter: '('
+[82] Keyword: int
+[82] Identifier: color
+[82] Delimiter: ')'
+[83] Delimiter: '{'
+[84] Keyword: return
+[84] Identifier: color
+[84] Operator: &
+[84] Literal int: 255
+[84] Special symbol: ';'
+[85] Delimiter: '}'
+[88] Keyword: int
+[88] Identifier: get_color_green
+[88] Delimiter: '('
+[88] Keyword: int
+[88] Identifier: color
+[88] Delimiter: ')'
+[89] Delimiter: '{'
+[90] Keyword: return
+[90] Delimiter: '('
+[90] Identifier: color
+[90] Operator: >>
+[90] Literal int: 8
+[90] Delimiter: ')'
+[90] Operator: &
+[90] Literal int: 255
+[90] Special symbol: ';'
+[91] Delimiter: '}'
+[95] Keyword: int
+[95] Identifier: get_color_blue
+[95] Delimiter: '('
+[95] Keyword: int
+[95] Identifier: color
+[95] Delimiter: ')'
+[96] Delimiter: '{'
+[97] Keyword: return
+[97] Delimiter: '('
+[97] Identifier: color
+[97] Operator: >>
+[97] Literal int: 16
+[97] Delimiter: ')'
+[97] Operator: &
+[97] Literal int: 255
+[97] Special symbol: ';'
+[98] Delimiter: '}'
+[102] Keyword: int
+[102] Identifier: get_color_alpha
+[102] Delimiter: '('
+[102] Keyword: int
+[102] Identifier: color
+[102] Delimiter: ')'
+[103] Delimiter: '{'
+[104] Keyword: return
+[104] Delimiter: '('
+[104] Identifier: color
+[104] Operator: >>
+[104] Literal int: 24
+[104] Delimiter: ')'
+[104] Operator: &
+[104] Literal int: 255
+[104] Special symbol: ';'
+[105] Delimiter: '}'
+[115] Keyword: void
+[115] Identifier: select_texture
+[115] Delimiter: '('
+[115] Keyword: int
+[115] Identifier: texture_id
+[115] Delimiter: ')'
+[116] Delimiter: '{'
+[117] Keyword: asm
+[118] Delimiter: '{'
+[119] Literal string: "mov R0, {texture_id}"
+[120] Literal string: "out GPU_SelectedTexture, R0"
+[121] Delimiter: '}'
+[122] Delimiter: '}'
+[126] Keyword: int
+[126] Identifier: get_selected_texture
+[126] Delimiter: '('
+[126] Delimiter: ')'
+[127] Delimiter: '{'
+[128] Keyword: asm
+[129] Delimiter: '{'
+[130] Literal string: "in R0, GPU_SelectedTexture"
+[131] Delimiter: '}'
+[132] Delimiter: '}'
+[137] Keyword: void
+[137] Identifier: select_region
+[137] Delimiter: '('
+[137] Keyword: int
+[137] Identifier: region_id
+[137] Delimiter: ')'
+[138] Delimiter: '{'
+[139] Keyword: asm
+[140] Delimiter: '{'
+[141] Literal string: "mov R0, {region_id}"
+[142] Literal string: "out GPU_SelectedRegion, R0"
+[143] Delimiter: '}'
+[144] Delimiter: '}'
+[148] Keyword: int
+[148] Identifier: get_selected_region
+[148] Delimiter: '('
+[148] Delimiter: ')'
+[149] Delimiter: '{'
+[150] Keyword: asm
+[151] Delimiter: '{'
+[152] Literal string: "in R0, GPU_SelectedRegion"
+[153] Delimiter: '}'
+[154] Delimiter: '}'
+[163] Keyword: void
+[163] Identifier: define_region
+[163] Delimiter: '('
+[163] Keyword: int
+[163] Identifier: min_x
+[163] Special symbol: ','
+[163] Keyword: int
+[163] Identifier: min_y
+[163] Special symbol: ','
+[163] Keyword: int
+[163] Identifier: max_x
+[163] Special symbol: ','
+[163] Keyword: int
+[163] Identifier: max_y
+[163] Special symbol: ','
+[163] Keyword: int
+[163] Identifier: hotspot_x
+[163] Special symbol: ','
+[163] Keyword: int
+[163] Identifier: hotspot_y
+[163] Delimiter: ')'
+[164] Delimiter: '{'
+[165] Keyword: asm
+[166] Delimiter: '{'
+[167] Literal string: "mov R0, {min_x}"
+[168] Literal string: "out GPU_RegionMinX, R0"
+[169] Literal string: "mov R0, {min_y}"
+[170] Literal string: "out GPU_RegionMinY, R0"
+[171] Literal string: "mov R0, {max_x}"
+[172] Literal string: "out GPU_RegionMaxX, R0"
+[173] Literal string: "mov R0, {max_y}"
+[174] Literal string: "out GPU_RegionMaxY, R0"
+[175] Literal string: "mov R0, {hotspot_x}"
+[176] Literal string: "out GPU_RegionHotSpotX, R0"
+[177] Literal string: "mov R0, {hotspot_y}"
+[178] Literal string: "out GPU_RegionHotSpotY, R0"
+[179] Delimiter: '}'
+[180] Delimiter: '}'
+[186] Keyword: void
+[186] Identifier: define_region_topleft
+[186] Delimiter: '('
+[186] Keyword: int
+[186] Identifier: min_x
+[186] Special symbol: ','
+[186] Keyword: int
+[186] Identifier: min_y
+[186] Special symbol: ','
+[186] Keyword: int
+[186] Identifier: max_x
+[186] Special symbol: ','
+[186] Keyword: int
+[186] Identifier: max_y
+[186] Delimiter: ')'
+[187] Delimiter: '{'
+[188] Keyword: asm
+[189] Delimiter: '{'
+[190] Literal string: "mov R0, {min_x}"
+[191] Literal string: "out GPU_RegionMinX, R0"
+[192] Literal string: "out GPU_RegionHotSpotX, R0"
+[193] Literal string: "mov R0, {min_y}"
+[194] Literal string: "out GPU_RegionMinY, R0"
+[195] Literal string: "out GPU_RegionHotSpotY, R0"
+[196] Literal string: "mov R0, {max_x}"
+[197] Literal string: "out GPU_RegionMaxX, R0"
+[198] Literal string: "mov R0, {max_y}"
+[199] Literal string: "out GPU_RegionMaxY, R0"
+[200] Delimiter: '}'
+[201] Delimiter: '}'
+[207] Keyword: void
+[207] Identifier: define_region_center
+[207] Delimiter: '('
+[207] Keyword: int
+[207] Identifier: min_x
+[207] Special symbol: ','
+[207] Keyword: int
+[207] Identifier: min_y
+[207] Special symbol: ','
+[207] Keyword: int
+[207] Identifier: max_x
+[207] Special symbol: ','
+[207] Keyword: int
+[207] Identifier: max_y
+[207] Delimiter: ')'
+[208] Delimiter: '{'
+[209] Keyword: int
+[209] Identifier: center_x
+[209] Operator: =
+[209] Delimiter: '('
+[209] Identifier: min_x
+[209] Operator: +
+[209] Identifier: max_x
+[209] Delimiter: ')'
+[209] Operator: /
+[209] Literal int: 2
+[209] Special symbol: ';'
+[210] Keyword: int
+[210] Identifier: center_y
+[210] Operator: =
+[210] Delimiter: '('
+[210] Identifier: min_y
+[210] Operator: +
+[210] Identifier: max_y
+[210] Delimiter: ')'
+[210] Operator: /
+[210] Literal int: 2
+[210] Special symbol: ';'
+[212] Keyword: asm
+[213] Delimiter: '{'
+[214] Literal string: "mov R0, {min_x}"
+[215] Literal string: "out GPU_RegionMinX, R0"
+[216] Literal string: "mov R0, {min_y}"
+[217] Literal string: "out GPU_RegionMinY, R0"
+[218] Literal string: "mov R0, {max_x}"
+[219] Literal string: "out GPU_RegionMaxX, R0"
+[220] Literal string: "mov R0, {max_y}"
+[221] Literal string: "out GPU_RegionMaxY, R0"
+[222] Literal string: "mov R0, {center_x}"
+[223] Literal string: "out GPU_RegionHotSpotX, R0"
+[224] Literal string: "mov R0, {center_y}"
+[225] Literal string: "out GPU_RegionHotSpotY, R0"
+[226] Delimiter: '}'
+[227] Delimiter: '}'
+[237] Keyword: void
+[237] Identifier: define_region_matrix
+[238] Delimiter: '('
+[239] Keyword: int
+[239] Identifier: first_id
+[239] Special symbol: ','
+[240] Keyword: int
+[240] Identifier: first_min_x
+[240] Special symbol: ','
+[240] Keyword: int
+[240] Identifier: first_min_y
+[240] Special symbol: ','
+[241] Keyword: int
+[241] Identifier: first_max_x
+[241] Special symbol: ','
+[241] Keyword: int
+[241] Identifier: first_max_y
+[241] Special symbol: ','
+[242] Keyword: int
+[242] Identifier: first_hotspot_x
+[242] Special symbol: ','
+[242] Keyword: int
+[242] Identifier: first_hotspot_y
+[242] Special symbol: ','
+[243] Keyword: int
+[243] Identifier: elements_x
+[243] Special symbol: ','
+[243] Keyword: int
+[243] Identifier: elements_y
+[243] Special symbol: ','
+[244] Keyword: int
+[244] Identifier: gap
+[245] Delimiter: ')'
+[246] Delimiter: '{'
+[248] Keyword: int
+[248] Identifier: current_id
+[248] Operator: =
+[248] Identifier: first_id
+[248] Special symbol: ';'
+[249] Keyword: int
+[249] Identifier: min_x
+[249] Operator: =
+[249] Identifier: first_min_x
+[249] Special symbol: ';'
+[250] Keyword: int
+[250] Identifier: min_y
+[250] Operator: =
+[250] Identifier: first_min_y
+[250] Special symbol: ';'
+[251] Keyword: int
+[251] Identifier: max_x
+[251] Operator: =
+[251] Identifier: first_max_x
+[251] Special symbol: ';'
+[252] Keyword: int
+[252] Identifier: max_y
+[252] Operator: =
+[252] Identifier: first_max_y
+[252] Special symbol: ';'
+[253] Keyword: int
+[253] Identifier: hotspot_x
+[253] Operator: =
+[253] Identifier: first_hotspot_x
+[253] Special symbol: ';'
+[254] Keyword: int
+[254] Identifier: hotspot_y
+[254] Operator: =
+[254] Identifier: first_hotspot_y
+[254] Special symbol: ';'
+[257] Keyword: int
+[257] Identifier: advance_x
+[257] Operator: =
+[257] Delimiter: '('
+[257] Identifier: max_x
+[257] Operator: -
+[257] Identifier: min_x
+[257] Operator: +
+[257] Literal int: 1
+[257] Delimiter: ')'
+[257] Operator: +
+[257] Identifier: gap
+[257] Special symbol: ';'
+[258] Keyword: int
+[258] Identifier: advance_y
+[258] Operator: =
+[258] Delimiter: '('
+[258] Identifier: max_y
+[258] Operator: -
+[258] Identifier: min_y
+[258] Operator: +
+[258] Literal int: 1
+[258] Delimiter: ')'
+[258] Operator: +
+[258] Identifier: gap
+[258] Special symbol: ';'
+[261] Keyword: for
+[261] Delimiter: '('
+[261] Keyword: int
+[261] Identifier: matrix_y
+[261] Operator: =
+[261] Literal int: 0
+[261] Special symbol: ';'
+[261] Identifier: matrix_y
+[261] Operator: <
+[261] Identifier: elements_y
+[261] Special symbol: ';'
+[261] Operator: ++
+[261] Identifier: matrix_y
+[261] Delimiter: ')'
+[262] Delimiter: '{'
+[263] Keyword: for
+[263] Delimiter: '('
+[263] Keyword: int
+[263] Identifier: matrix_x
+[263] Operator: =
+[263] Literal int: 0
+[263] Special symbol: ';'
+[263] Identifier: matrix_x
+[263] Operator: <
+[263] Identifier: elements_x
+[263] Special symbol: ';'
+[263] Operator: ++
+[263] Identifier: matrix_x
+[263] Delimiter: ')'
+[264] Delimiter: '{'
+[266] Identifier: select_region
+[266] Delimiter: '('
+[266] Identifier: current_id
+[266] Delimiter: ')'
+[266] Special symbol: ';'
+[267] Identifier: define_region
+[267] Delimiter: '('
+[267] Identifier: min_x
+[267] Special symbol: ','
+[267] Identifier: min_y
+[267] Special symbol: ','
+[267] Identifier: max_x
+[267] Special symbol: ','
+[267] Identifier: max_y
+[267] Special symbol: ','
+[267] Identifier: hotspot_x
+[267] Special symbol: ','
+[267] Identifier: hotspot_y
+[267] Delimiter: ')'
+[267] Special symbol: ';'
+[268] Identifier: current_id
+[268] Operator: ++
+[268] Special symbol: ';'
+[271] Identifier: min_x
+[271] Operator: +=
+[271] Identifier: advance_x
+[271] Special symbol: ';'
+[272] Identifier: max_x
+[272] Operator: +=
+[272] Identifier: advance_x
+[272] Special symbol: ';'
+[273] Identifier: hotspot_x
+[273] Operator: +=
+[273] Identifier: advance_x
+[273] Special symbol: ';'
+[274] Delimiter: '}'
+[277] Identifier: min_y
+[277] Operator: +=
+[277] Identifier: advance_y
+[277] Special symbol: ';'
+[278] Identifier: max_y
+[278] Operator: +=
+[278] Identifier: advance_y
+[278] Special symbol: ';'
+[279] Identifier: hotspot_y
+[279] Operator: +=
+[279] Identifier: advance_y
+[279] Special symbol: ';'
+[282] Identifier: min_x
+[282] Operator: =
+[282] Identifier: first_min_x
+[282] Special symbol: ';'
+[283] Identifier: max_x
+[283] Operator: =
+[283] Identifier: first_max_x
+[283] Special symbol: ';'
+[284] Identifier: hotspot_x
+[284] Operator: =
+[284] Identifier: first_hotspot_x
+[284] Special symbol: ';'
+[285] Delimiter: '}'
+[286] Delimiter: '}'
+[291] Keyword: void
+[291] Identifier: set_region_hotspot
+[291] Delimiter: '('
+[291] Keyword: int
+[291] Identifier: hotspot_x
+[291] Special symbol: ','
+[291] Keyword: int
+[291] Identifier: hotspot_y
+[291] Delimiter: ')'
+[292] Delimiter: '{'
+[293] Keyword: asm
+[294] Delimiter: '{'
+[295] Literal string: "mov R0, {hotspot_x}"
+[296] Literal string: "out GPU_RegionHotSpotX, R0"
+[297] Literal string: "mov R0, {hotspot_y}"
+[298] Literal string: "out GPU_RegionHotSpotY, R0"
+[299] Delimiter: '}'
+[300] Delimiter: '}'
+[310] Keyword: void
+[310] Identifier: set_multiply_color
+[310] Delimiter: '('
+[310] Keyword: int
+[310] Identifier: color
+[310] Delimiter: ')'
+[311] Delimiter: '{'
+[312] Keyword: asm
+[313] Delimiter: '{'
+[314] Literal string: "mov R0, {color}"
+[315] Literal string: "out GPU_MultiplyColor, R0"
+[316] Delimiter: '}'
+[317] Delimiter: '}'
+[323] Keyword: void
+[323] Identifier: set_drawing_point
+[323] Delimiter: '('
+[323] Keyword: int
+[323] Identifier: drawing_x
+[323] Special symbol: ','
+[323] Keyword: int
+[323] Identifier: drawing_y
+[323] Delimiter: ')'
+[324] Delimiter: '{'
+[325] Keyword: asm
+[326] Delimiter: '{'
+[327] Literal string: "mov R0, {drawing_x}"
+[328] Literal string: "out GPU_DrawingPointX, R0"
+[329] Literal string: "mov R0, {drawing_y}"
+[330] Literal string: "out GPU_DrawingPointY, R0"
+[331] Delimiter: '}'
+[332] Delimiter: '}'
+[338] Keyword: void
+[338] Identifier: set_drawing_scale
+[338] Delimiter: '('
+[338] Keyword: float
+[338] Identifier: scale_x
+[338] Special symbol: ','
+[338] Keyword: float
+[338] Identifier: scale_y
+[338] Delimiter: ')'
+[339] Delimiter: '{'
+[340] Keyword: asm
+[341] Delimiter: '{'
+[342] Literal string: "mov R0, {scale_x}"
+[343] Literal string: "out GPU_DrawingScaleX, R0"
+[344] Literal string: "mov R0, {scale_y}"
+[345] Literal string: "out GPU_DrawingScaleY, R0"
+[346] Delimiter: '}'
+[347] Delimiter: '}'
+[354] Keyword: void
+[354] Identifier: set_drawing_angle
+[354] Delimiter: '('
+[354] Keyword: float
+[354] Identifier: angle
+[354] Delimiter: ')'
+[355] Delimiter: '{'
+[356] Keyword: asm
+[357] Delimiter: '{'
+[358] Literal string: "mov R0, {angle}"
+[359] Literal string: "out GPU_DrawingAngle, R0"
+[360] Delimiter: '}'
+[361] Delimiter: '}'
+[372] Keyword: void
+[372] Identifier: set_blending_mode
+[372] Delimiter: '('
+[372] Keyword: int
+[372] Identifier: mode
+[372] Delimiter: ')'
+[373] Delimiter: '{'
+[374] Keyword: asm
+[375] Delimiter: '{'
+[376] Literal string: "mov R0, {mode}"
+[377] Literal string: "out GPU_ActiveBlending, R0"
+[378] Delimiter: '}'
+[379] Delimiter: '}'
+[387] Keyword: int
+[387] Identifier: get_multiply_color
+[387] Delimiter: '('
+[387] Delimiter: ')'
+[388] Delimiter: '{'
+[389] Keyword: asm
+[390] Delimiter: '{'
+[391] Literal string: "in R0, GPU_MultiplyColor"
+[392] Delimiter: '}'
+[393] Delimiter: '}'
+[397] Keyword: void
+[397] Identifier: get_drawing_point
+[397] Delimiter: '('
+[397] Keyword: int
+[397] Operator: *
+[397] Identifier: drawing_x
+[397] Special symbol: ','
+[397] Keyword: int
+[397] Operator: *
+[397] Identifier: drawing_y
+[397] Delimiter: ')'
+[398] Delimiter: '{'
+[399] Keyword: asm
+[400] Delimiter: '{'
+[401] Literal string: "push R1"
+[402] Literal string: "in R0, GPU_DrawingPointX"
+[403] Literal string: "mov R1, {drawing_x}"
+[404] Literal string: "mov [R1], R0"
+[405] Literal string: "in R0, GPU_DrawingPointY"
+[406] Literal string: "mov R1, {drawing_y}"
+[407] Literal string: "mov [R1], R0"
+[408] Delimiter: '}'
+[409] Delimiter: '}'
+[413] Keyword: void
+[413] Identifier: get_drawing_scale
+[413] Delimiter: '('
+[413] Keyword: float
+[413] Operator: *
+[413] Identifier: scale_x
+[413] Special symbol: ','
+[413] Keyword: float
+[413] Operator: *
+[413] Identifier: scale_y
+[413] Delimiter: ')'
+[414] Delimiter: '{'
+[415] Keyword: asm
+[416] Delimiter: '{'
+[417] Literal string: "push R1"
+[418] Literal string: "in R0, GPU_DrawingScaleX"
+[419] Literal string: "mov R1, {scale_x}"
+[420] Literal string: "mov [R1], R0"
+[421] Literal string: "in R0, GPU_DrawingScaleY"
+[422] Literal string: "mov R1, {scale_y}"
+[423] Literal string: "mov [R1], R0"
+[424] Delimiter: '}'
+[425] Delimiter: '}'
+[429] Keyword: float
+[429] Identifier: get_drawing_angle
+[429] Delimiter: '('
+[429] Delimiter: ')'
+[430] Delimiter: '{'
+[431] Keyword: asm
+[432] Delimiter: '{'
+[433] Literal string: "in R0, GPU_DrawingAngle"
+[434] Delimiter: '}'
+[435] Delimiter: '}'
+[439] Keyword: int
+[439] Identifier: get_blending_mode
+[439] Delimiter: '('
+[439] Delimiter: ')'
+[440] Delimiter: '{'
+[441] Keyword: asm
+[442] Delimiter: '{'
+[443] Literal string: "in R0, GPU_ActiveBlending"
+[444] Delimiter: '}'
+[445] Delimiter: '}'
+[453] Keyword: void
+[453] Identifier: clear_screen
+[453] Delimiter: '('
+[453] Keyword: int
+[453] Identifier: color
+[453] Delimiter: ')'
+[454] Delimiter: '{'
+[455] Keyword: asm
+[456] Delimiter: '{'
+[457] Literal string: "mov R0, {color}"
+[458] Literal string: "out GPU_ClearColor, R0"
+[459] Literal string: "out GPU_Command, GPUCommand_ClearScreen"
+[460] Delimiter: '}'
+[461] Delimiter: '}'
+[467] Keyword: void
+[467] Identifier: draw_region
+[467] Delimiter: '('
+[467] Delimiter: ')'
+[468] Delimiter: '{'
+[469] Keyword: asm
+[470] Delimiter: '{'
+[471] Literal string: "out GPU_Command, GPUCommand_DrawRegion"
+[472] Delimiter: '}'
+[473] Delimiter: '}'
+[479] Keyword: void
+[479] Identifier: draw_region_at
+[479] Delimiter: '('
+[479] Keyword: int
+[479] Identifier: drawing_x
+[479] Special symbol: ','
+[479] Keyword: int
+[479] Identifier: drawing_y
+[479] Delimiter: ')'
+[480] Delimiter: '{'
+[481] Keyword: asm
+[482] Delimiter: '{'
+[483] Literal string: "mov R0, {drawing_x}"
+[484] Literal string: "out GPU_DrawingPointX, R0"
+[485] Literal string: "mov R0, {drawing_y}"
+[486] Literal string: "out GPU_DrawingPointY, R0"
+[487] Literal string: "out GPU_Command, GPUCommand_DrawRegion"
+[488] Delimiter: '}'
+[489] Delimiter: '}'
+[494] Keyword: void
+[494] Identifier: draw_region_zoomed
+[494] Delimiter: '('
+[494] Delimiter: ')'
+[495] Delimiter: '{'
+[496] Keyword: asm
+[497] Delimiter: '{'
+[498] Literal string: "out GPU_Command, GPUCommand_DrawRegionZoomed"
+[499] Delimiter: '}'
+[500] Delimiter: '}'
+[505] Keyword: void
+[505] Identifier: draw_region_zoomed_at
+[505] Delimiter: '('
+[505] Keyword: int
+[505] Identifier: drawing_x
+[505] Special symbol: ','
+[505] Keyword: int
+[505] Identifier: drawing_y
+[505] Delimiter: ')'
+[506] Delimiter: '{'
+[507] Keyword: asm
+[508] Delimiter: '{'
+[509] Literal string: "mov R0, {drawing_x}"
+[510] Literal string: "out GPU_DrawingPointX, R0"
+[511] Literal string: "mov R0, {drawing_y}"
+[512] Literal string: "out GPU_DrawingPointY, R0"
+[513] Literal string: "out GPU_Command, GPUCommand_DrawRegionZoomed"
+[514] Delimiter: '}'
+[515] Delimiter: '}'
+[520] Keyword: void
+[520] Identifier: draw_region_rotated
+[520] Delimiter: '('
+[520] Delimiter: ')'
+[521] Delimiter: '{'
+[522] Keyword: asm
+[523] Delimiter: '{'
+[524] Literal string: "out GPU_Command, GPUCommand_DrawRegionRotated"
+[525] Delimiter: '}'
+[526] Delimiter: '}'
+[531] Keyword: void
+[531] Identifier: draw_region_rotated_at
+[531] Delimiter: '('
+[531] Keyword: int
+[531] Identifier: drawing_x
+[531] Special symbol: ','
+[531] Keyword: int
+[531] Identifier: drawing_y
+[531] Delimiter: ')'
+[532] Delimiter: '{'
+[533] Keyword: asm
+[534] Delimiter: '{'
+[535] Literal string: "mov R0, {drawing_x}"
+[536] Literal string: "out GPU_DrawingPointX, R0"
+[537] Literal string: "mov R0, {drawing_y}"
+[538] Literal string: "out GPU_DrawingPointY, R0"
+[539] Literal string: "out GPU_Command, GPUCommand_DrawRegionRotated"
+[540] Delimiter: '}'
+[541] Delimiter: '}'
+[546] Keyword: void
+[546] Identifier: draw_region_rotozoomed
+[546] Delimiter: '('
+[546] Delimiter: ')'
+[547] Delimiter: '{'
+[548] Keyword: asm
+[549] Delimiter: '{'
+[550] Literal string: "out GPU_Command, GPUCommand_DrawRegionRotozoomed"
+[551] Delimiter: '}'
+[552] Delimiter: '}'
+[557] Keyword: void
+[557] Identifier: draw_region_rotozoomed_at
+[557] Delimiter: '('
+[557] Keyword: int
+[557] Identifier: drawing_x
+[557] Special symbol: ','
+[557] Keyword: int
+[557] Identifier: drawing_y
+[557] Delimiter: ')'
+[558] Delimiter: '{'
+[559] Keyword: asm
+[560] Delimiter: '{'
+[561] Literal string: "mov R0, {drawing_x}"
+[562] Literal string: "out GPU_DrawingPointX, R0"
+[563] Literal string: "mov R0, {drawing_y}"
+[564] Literal string: "out GPU_DrawingPointY, R0"
+[565] Literal string: "out GPU_Command, GPUCommand_DrawRegionRotozoomed"
+[566] Delimiter: '}'
+[567] Delimiter: '}'
+[585] Keyword: void
+[585] Identifier: print_at
+[585] Delimiter: '('
+[585] Keyword: int
+[585] Identifier: drawing_x
+[585] Special symbol: ','
+[585] Keyword: int
+[585] Identifier: drawing_y
+[585] Special symbol: ','
+[585] Keyword: int
+[585] Operator: *
+[585] Identifier: text
+[585] Delimiter: ')'
+[586] Delimiter: '{'
+[589] Keyword: int
+[589] Identifier: previous_texture
+[589] Operator: =
+[589] Identifier: get_selected_texture
+[589] Delimiter: '('
+[589] Delimiter: ')'
+[589] Special symbol: ';'
+[590] Identifier: select_texture
+[590] Delimiter: '('
+[590] Operator: -
+[590] Literal int: 1
+[590] Delimiter: ')'
+[590] Special symbol: ';'
+[593] Keyword: int
+[593] Identifier: initial_drawing_x
+[593] Operator: =
+[593] Identifier: drawing_x
+[593] Special symbol: ';'
+[595] Keyword: while
+[595] Delimiter: '('
+[595] Operator: *
+[595] Identifier: text
+[595] Delimiter: ')'
+[596] Delimiter: '{'
+[599] Identifier: select_region
+[599] Delimiter: '('
+[599] Operator: *
+[599] Identifier: text
+[599] Delimiter: ')'
+[599] Special symbol: ';'
+[600] Identifier: draw_region_at
+[600] Delimiter: '('
+[600] Identifier: drawing_x
+[600] Special symbol: ','
+[600] Identifier: drawing_y
+[600] Delimiter: ')'
+[600] Special symbol: ';'
+[603] Identifier: drawing_x
+[603] Operator: +=
+[603] Literal int: 10
+[603] Special symbol: ';'
+[606] Keyword: if
+[606] Delimiter: '('
+[606] Operator: *
+[606] Identifier: text
+[606] Operator: ==
+[606] Literal int: 10
+[606] Delimiter: ')'
+[607] Delimiter: '{'
+[609] Identifier: drawing_x
+[609] Operator: =
+[609] Identifier: initial_drawing_x
+[609] Special symbol: ';'
+[610] Identifier: drawing_y
+[610] Operator: +=
+[610] Literal int: 20
+[610] Special symbol: ';'
+[611] Delimiter: '}'
+[614] Operator: ++
+[614] Identifier: text
+[614] Special symbol: ';'
+[615] Delimiter: '}'
+[618] Identifier: select_texture
+[618] Delimiter: '('
+[618] Identifier: previous_texture
+[618] Delimiter: ')'
+[618] Special symbol: ';'
+[619] Delimiter: '}'
+[624] Keyword: void
+[624] Identifier: print
+[624] Delimiter: '('
+[624] Keyword: int
+[624] Operator: *
+[624] Identifier: text
+[624] Delimiter: ')'
+[625] Delimiter: '{'
+[626] Keyword: int
+[626] Identifier: drawing_x
+[626] Special symbol: ','
+[626] Identifier: drawing_y
+[626] Special symbol: ';'
+[627] Identifier: get_drawing_point
+[627] Delimiter: '('
+[627] Operator: &
+[627] Identifier: drawing_x
+[627] Special symbol: ','
+[627] Operator: &
+[627] Identifier: drawing_y
+[627] Delimiter: ')'
+[627] Special symbol: ';'
+[629] Identifier: print_at
+[629] Delimiter: '('
+[629] Identifier: drawing_x
+[629] Special symbol: ','
+[629] Identifier: drawing_y
+[629] Special symbol: ','
+[629] Identifier: text
+[629] Delimiter: ')'
+[629] Special symbol: ';'
+[630] Delimiter: '}'
+
+File C:\Vircon32\Vircon32\WarOnWater\dev\include\input.h:
+
+[24] Keyword: void
+[24] Identifier: select_gamepad
+[24] Delimiter: '('
+[24] Keyword: int
+[24] Identifier: gamepad_id
+[24] Delimiter: ')'
+[25] Delimiter: '{'
+[26] Keyword: asm
+[27] Delimiter: '{'
+[28] Literal string: "mov R0, {gamepad_id}"
+[29] Literal string: "out INP_SelectedGamepad, R0"
+[30] Delimiter: '}'
+[31] Delimiter: '}'
+[35] Keyword: int
+[35] Identifier: get_selected_gamepad
+[35] Delimiter: '('
+[35] Delimiter: ')'
+[36] Delimiter: '{'
+[37] Keyword: asm
+[38] Delimiter: '{'
+[39] Literal string: "in R0, INP_SelectedGamepad"
+[40] Delimiter: '}'
+[41] Delimiter: '}'
+[48] Keyword: bool
+[48] Identifier: gamepad_is_connected
+[48] Delimiter: '('
+[48] Delimiter: ')'
+[49] Delimiter: '{'
+[50] Keyword: asm
+[51] Delimiter: '{'
+[52] Literal string: "in R0, INP_GamepadConnected"
+[53] Delimiter: '}'
+[54] Delimiter: '}'
+[62] Keyword: int
+[62] Identifier: gamepad_left
+[62] Delimiter: '('
+[62] Delimiter: ')'
+[63] Delimiter: '{'
+[64] Keyword: asm
+[65] Delimiter: '{'
+[66] Literal string: "in R0, INP_GamepadLeft"
+[67] Delimiter: '}'
+[68] Delimiter: '}'
+[72] Keyword: int
+[72] Identifier: gamepad_right
+[72] Delimiter: '('
+[72] Delimiter: ')'
+[73] Delimiter: '{'
+[74] Keyword: asm
+[75] Delimiter: '{'
+[76] Literal string: "in R0, INP_GamepadRight"
+[77] Delimiter: '}'
+[78] Delimiter: '}'
+[82] Keyword: int
+[82] Identifier: gamepad_up
+[82] Delimiter: '('
+[82] Delimiter: ')'
+[83] Delimiter: '{'
+[84] Keyword: asm
+[85] Delimiter: '{'
+[86] Literal string: "in R0, INP_GamepadUp"
+[87] Delimiter: '}'
+[88] Delimiter: '}'
+[92] Keyword: int
+[92] Identifier: gamepad_down
+[92] Delimiter: '('
+[92] Delimiter: ')'
+[93] Delimiter: '{'
+[94] Keyword: asm
+[95] Delimiter: '{'
+[96] Literal string: "in R0, INP_GamepadDown"
+[97] Delimiter: '}'
+[98] Delimiter: '}'
+[103] Keyword: void
+[103] Identifier: gamepad_direction
+[103] Delimiter: '('
+[103] Keyword: int
+[103] Operator: *
+[103] Identifier: delta_x
+[103] Special symbol: ','
+[103] Keyword: int
+[103] Operator: *
+[103] Identifier: delta_y
+[103] Delimiter: ')'
+[104] Delimiter: '{'
+[106] Keyword: if
+[106] Delimiter: '('
+[106] Identifier: gamepad_left
+[106] Delimiter: '('
+[106] Delimiter: ')'
+[106] Operator: >
+[106] Literal int: 0
+[106] Delimiter: ')'
+[107] Operator: *
+[107] Identifier: delta_x
+[107] Operator: =
+[107] Operator: -
+[107] Literal int: 1
+[107] Special symbol: ';'
+[109] Keyword: else
+[109] Keyword: if
+[109] Delimiter: '('
+[109] Identifier: gamepad_right
+[109] Delimiter: '('
+[109] Delimiter: ')'
+[109] Operator: >
+[109] Literal int: 0
+[109] Delimiter: ')'
+[110] Operator: *
+[110] Identifier: delta_x
+[110] Operator: =
+[110] Literal int: 1
+[110] Special symbol: ';'
+[112] Keyword: else
+[113] Operator: *
+[113] Identifier: delta_x
+[113] Operator: =
+[113] Literal int: 0
+[113] Special symbol: ';'
+[116] Keyword: if
+[116] Delimiter: '('
+[116] Identifier: gamepad_up
+[116] Delimiter: '('
+[116] Delimiter: ')'
+[116] Operator: >
+[116] Literal int: 0
+[116] Delimiter: ')'
+[117] Operator: *
+[117] Identifier: delta_y
+[117] Operator: =
+[117] Operator: -
+[117] Literal int: 1
+[117] Special symbol: ';'
+[119] Keyword: else
+[119] Keyword: if
+[119] Delimiter: '('
+[119] Identifier: gamepad_down
+[119] Delimiter: '('
+[119] Delimiter: ')'
+[119] Operator: >
+[119] Literal int: 0
+[119] Delimiter: ')'
+[120] Operator: *
+[120] Identifier: delta_y
+[120] Operator: =
+[120] Literal int: 1
+[120] Special symbol: ';'
+[122] Keyword: else
+[123] Operator: *
+[123] Identifier: delta_y
+[123] Operator: =
+[123] Literal int: 0
+[123] Special symbol: ';'
+[124] Delimiter: '}'
+[129] Keyword: void
+[129] Identifier: gamepad_direction_normalized
+[129] Delimiter: '('
+[129] Keyword: float
+[129] Operator: *
+[129] Identifier: delta_x
+[129] Special symbol: ','
+[129] Keyword: float
+[129] Operator: *
+[129] Identifier: delta_y
+[129] Delimiter: ')'
+[130] Delimiter: '{'
+[132] Keyword: if
+[132] Delimiter: '('
+[132] Identifier: gamepad_left
+[132] Delimiter: '('
+[132] Delimiter: ')'
+[132] Operator: >
+[132] Literal int: 0
+[132] Delimiter: ')'
+[133] Operator: *
+[133] Identifier: delta_x
+[133] Operator: =
+[133] Operator: -
+[133] Literal int: 1
+[133] Special symbol: ';'
+[135] Keyword: else
+[135] Keyword: if
+[135] Delimiter: '('
+[135] Identifier: gamepad_right
+[135] Delimiter: '('
+[135] Delimiter: ')'
+[135] Operator: >
+[135] Literal int: 0
+[135] Delimiter: ')'
+[136] Operator: *
+[136] Identifier: delta_x
+[136] Operator: =
+[136] Literal int: 1
+[136] Special symbol: ';'
+[138] Keyword: else
+[139] Operator: *
+[139] Identifier: delta_x
+[139] Operator: =
+[139] Literal int: 0
+[139] Special symbol: ';'
+[142] Keyword: if
+[142] Delimiter: '('
+[142] Identifier: gamepad_up
+[142] Delimiter: '('
+[142] Delimiter: ')'
+[142] Operator: >
+[142] Literal int: 0
+[142] Delimiter: ')'
+[143] Operator: *
+[143] Identifier: delta_y
+[143] Operator: =
+[143] Operator: -
+[143] Literal int: 1
+[143] Special symbol: ';'
+[145] Keyword: else
+[145] Keyword: if
+[145] Delimiter: '('
+[145] Identifier: gamepad_down
+[145] Delimiter: '('
+[145] Delimiter: ')'
+[145] Operator: >
+[145] Literal int: 0
+[145] Delimiter: ')'
+[146] Operator: *
+[146] Identifier: delta_y
+[146] Operator: =
+[146] Literal int: 1
+[146] Special symbol: ';'
+[148] Keyword: else
+[149] Operator: *
+[149] Identifier: delta_y
+[149] Operator: =
+[149] Literal int: 0
+[149] Special symbol: ';'
+[152] Keyword: if
+[152] Delimiter: '('
+[152] Operator: *
+[152] Identifier: delta_x
+[152] Operator: &&
+[152] Operator: *
+[152] Identifier: delta_y
+[152] Delimiter: ')'
+[153] Delimiter: '{'
+[154] Operator: *
+[154] Identifier: delta_x
+[154] Operator: *=
+[154] Literal float: 0.707107
+[154] Special symbol: ';'
+[155] Operator: *
+[155] Identifier: delta_y
+[155] Operator: *=
+[155] Literal float: 0.707107
+[155] Special symbol: ';'
+[156] Delimiter: '}'
+[157] Delimiter: '}'
+[165] Keyword: int
+[165] Identifier: gamepad_button_a
+[165] Delimiter: '('
+[165] Delimiter: ')'
+[166] Delimiter: '{'
+[167] Keyword: asm
+[168] Delimiter: '{'
+[169] Literal string: "in R0, INP_GamepadButtonA"
+[170] Delimiter: '}'
+[171] Delimiter: '}'
+[175] Keyword: int
+[175] Identifier: gamepad_button_b
+[175] Delimiter: '('
+[175] Delimiter: ')'
+[176] Delimiter: '{'
+[177] Keyword: asm
+[178] Delimiter: '{'
+[179] Literal string: "in R0, INP_GamepadButtonB"
+[180] Delimiter: '}'
+[181] Delimiter: '}'
+[185] Keyword: int
+[185] Identifier: gamepad_button_x
+[185] Delimiter: '('
+[185] Delimiter: ')'
+[186] Delimiter: '{'
+[187] Keyword: asm
+[188] Delimiter: '{'
+[189] Literal string: "in R0, INP_GamepadButtonX"
+[190] Delimiter: '}'
+[191] Delimiter: '}'
+[195] Keyword: int
+[195] Identifier: gamepad_button_y
+[195] Delimiter: '('
+[195] Delimiter: ')'
+[196] Delimiter: '{'
+[197] Keyword: asm
+[198] Delimiter: '{'
+[199] Literal string: "in R0, INP_GamepadButtonY"
+[200] Delimiter: '}'
+[201] Delimiter: '}'
+[205] Keyword: int
+[205] Identifier: gamepad_button_l
+[205] Delimiter: '('
+[205] Delimiter: ')'
+[206] Delimiter: '{'
+[207] Keyword: asm
+[208] Delimiter: '{'
+[209] Literal string: "in R0, INP_GamepadButtonL"
+[210] Delimiter: '}'
+[211] Delimiter: '}'
+[215] Keyword: int
+[215] Identifier: gamepad_button_r
+[215] Delimiter: '('
+[215] Delimiter: ')'
+[216] Delimiter: '{'
+[217] Keyword: asm
+[218] Delimiter: '{'
+[219] Literal string: "in R0, INP_GamepadButtonR"
+[220] Delimiter: '}'
+[221] Delimiter: '}'
+[225] Keyword: int
+[225] Identifier: gamepad_button_start
+[225] Delimiter: '('
+[225] Delimiter: ')'
+[226] Delimiter: '{'
+[227] Keyword: asm
+[228] Delimiter: '{'
+[229] Literal string: "in R0, INP_GamepadButtonStart"
+[230] Delimiter: '}'
+[231] Delimiter: '}'
+
+File C:\Vircon32\Vircon32\WarOnWater\dev\include\time.h:
+
+[39] Keyword: int
+[39] Identifier: get_cycle_counter
+[39] Delimiter: '('
+[39] Delimiter: ')'
+[40] Delimiter: '{'
+[41] Keyword: asm
+[42] Delimiter: '{'
+[43] Literal string: "in R0, TIM_CycleCounter"
+[44] Delimiter: '}'
+[45] Delimiter: '}'
+[51] Keyword: int
+[51] Identifier: get_frame_counter
+[51] Delimiter: '('
+[51] Delimiter: ')'
+[52] Delimiter: '{'
+[53] Keyword: asm
+[54] Delimiter: '{'
+[55] Literal string: "in R0, TIM_FrameCounter"
+[56] Delimiter: '}'
+[57] Delimiter: '}'
+[65] Keyword: int
+[65] Identifier: get_date
+[65] Delimiter: '('
+[65] Delimiter: ')'
+[66] Delimiter: '{'
+[67] Keyword: asm
+[68] Delimiter: '{'
+[69] Literal string: "in R0, TIM_CurrentDate"
+[70] Delimiter: '}'
+[71] Delimiter: '}'
+[79] Keyword: int
+[79] Identifier: get_time
+[79] Delimiter: '('
+[79] Delimiter: ')'
+[80] Delimiter: '{'
+[81] Keyword: asm
+[82] Delimiter: '{'
+[83] Literal string: "in R0, TIM_CurrentTime"
+[84] Delimiter: '}'
+[85] Delimiter: '}'
+[97] Keyword: struct
+[97] Identifier: date_info
+[98] Delimiter: '{'
+[99] Keyword: int
+[99] Identifier: year
+[99] Special symbol: ';'
+[100] Keyword: int
+[100] Identifier: month
+[100] Special symbol: ';'
+[101] Keyword: int
+[101] Identifier: day
+[101] Special symbol: ';'
+[102] Delimiter: '}'
+[102] Special symbol: ';'
+[108] Keyword: void
+[108] Identifier: translate_date
+[108] Delimiter: '('
+[108] Keyword: int
+[108] Identifier: date
+[108] Special symbol: ','
+[108] Identifier: date_info
+[108] Operator: *
+[108] Identifier: translated
+[108] Delimiter: ')'
+[109] Delimiter: '{'
+[111] Identifier: translated
+[111] Operator: ->
+[111] Identifier: year
+[111] Operator: =
+[111] Identifier: date
+[111] Operator: >>
+[111] Literal int: 16
+[111] Special symbol: ';'
+[112] Keyword: int
+[112] Identifier: days_in_year
+[112] Operator: =
+[112] Identifier: date
+[112] Operator: &
+[112] Literal int: 65535
+[112] Special symbol: ';'
+[115] Keyword: int
+[115] Delimiter: '['
+[115] Literal int: 12
+[115] Delimiter: ']'
+[115] Identifier: month_days
+[115] Operator: =
+[115] Delimiter: '{'
+[115] Literal int: 31
+[115] Special symbol: ','
+[115] Literal int: 28
+[115] Special symbol: ','
+[115] Literal int: 31
+[115] Special symbol: ','
+[115] Literal int: 30
+[115] Special symbol: ','
+[115] Literal int: 31
+[115] Special symbol: ','
+[115] Literal int: 30
+[115] Special symbol: ','
+[115] Literal int: 31
+[115] Special symbol: ','
+[115] Literal int: 31
+[115] Special symbol: ','
+[115] Literal int: 30
+[115] Special symbol: ','
+[115] Literal int: 31
+[115] Special symbol: ','
+[115] Literal int: 30
+[115] Special symbol: ','
+[115] Literal int: 31
+[115] Delimiter: '}'
+[115] Special symbol: ';'
+[118] Keyword: bool
+[118] Identifier: is_leap_year
+[118] Operator: =
+[118] Delimiter: '('
+[118] Delimiter: '('
+[118] Identifier: translated
+[118] Operator: ->
+[118] Identifier: year
+[118] Operator: %
+[118] Literal int: 4
+[118] Delimiter: ')'
+[118] Operator: ==
+[118] Literal int: 0
+[118] Delimiter: ')'
+[118] Operator: &&
+[118] Delimiter: '('
+[118] Delimiter: '('
+[118] Identifier: translated
+[118] Operator: ->
+[118] Identifier: year
+[118] Operator: %
+[118] Literal int: 100
+[118] Delimiter: ')'
+[118] Operator: !=
+[118] Literal int: 0
+[118] Delimiter: ')'
+[118] Special symbol: ';'
+[119] Keyword: if
+[119] Delimiter: '('
+[119] Identifier: is_leap_year
+[119] Delimiter: ')'
+[119] Identifier: month_days
+[119] Delimiter: '['
+[119] Literal int: 1
+[119] Delimiter: ']'
+[119] Operator: =
+[119] Literal int: 29
+[119] Special symbol: ';'
+[122] Identifier: translated
+[122] Operator: ->
+[122] Identifier: month
+[122] Operator: =
+[122] Literal int: 1
+[122] Special symbol: ';'
+[125] Keyword: for
+[125] Delimiter: '('
+[125] Keyword: int
+[125] Identifier: m
+[125] Operator: =
+[125] Literal int: 0
+[125] Special symbol: ';'
+[125] Identifier: m
+[125] Operator: <
+[125] Literal int: 11
+[125] Special symbol: ';'
+[125] Operator: ++
+[125] Identifier: m
+[125] Delimiter: ')'
+[126] Delimiter: '{'
+[127] Keyword: if
+[127] Delimiter: '('
+[127] Identifier: days_in_year
+[127] Operator: <
+[127] Identifier: month_days
+[127] Delimiter: '['
+[127] Identifier: m
+[127] Delimiter: ']'
+[127] Delimiter: ')'
+[128] Delimiter: '{'
+[129] Identifier: translated
+[129] Operator: ->
+[129] Identifier: day
+[129] Operator: =
+[129] Identifier: days_in_year
+[129] Operator: +
+[129] Literal int: 1
+[129] Special symbol: ';'
+[130] Keyword: return
+[130] Special symbol: ';'
+[131] Delimiter: '}'
+[133] Identifier: days_in_year
+[133] Operator: -=
+[133] Identifier: month_days
+[133] Delimiter: '['
+[133] Identifier: m
+[133] Delimiter: ']'
+[133] Special symbol: ';'
+[134] Identifier: translated
+[134] Operator: ->
+[134] Identifier: month
+[134] Operator: ++
+[134] Special symbol: ';'
+[135] Delimiter: '}'
+[138] Identifier: translated
+[138] Operator: ->
+[138] Identifier: month
+[138] Operator: =
+[138] Literal int: 12
+[138] Special symbol: ';'
+[139] Identifier: translated
+[139] Operator: ->
+[139] Identifier: day
+[139] Operator: =
+[139] Identifier: days_in_year
+[139] Operator: +
+[139] Literal int: 1
+[139] Special symbol: ';'
+[140] Delimiter: '}'
+[148] Keyword: struct
+[148] Identifier: time_info
+[149] Delimiter: '{'
+[150] Keyword: int
+[150] Identifier: hours
+[150] Special symbol: ';'
+[151] Keyword: int
+[151] Identifier: minutes
+[151] Special symbol: ';'
+[152] Keyword: int
+[152] Identifier: seconds
+[152] Special symbol: ';'
+[153] Delimiter: '}'
+[153] Special symbol: ';'
+[159] Keyword: void
+[159] Identifier: translate_time
+[159] Delimiter: '('
+[159] Keyword: int
+[159] Identifier: time
+[159] Special symbol: ','
+[159] Identifier: time_info
+[159] Operator: *
+[159] Identifier: translated
+[159] Delimiter: ')'
+[160] Delimiter: '{'
+[161] Identifier: translated
+[161] Operator: ->
+[161] Identifier: hours
+[161] Operator: =
+[161] Identifier: time
+[161] Operator: /
+[161] Literal int: 3600
+[161] Special symbol: ';'
+[162] Identifier: translated
+[162] Operator: ->
+[162] Identifier: minutes
+[162] Operator: =
+[162] Delimiter: '('
+[162] Identifier: time
+[162] Operator: %
+[162] Literal int: 3600
+[162] Delimiter: ')'
+[162] Operator: /
+[162] Literal int: 60
+[162] Special symbol: ';'
+[163] Identifier: translated
+[163] Operator: ->
+[163] Identifier: seconds
+[163] Operator: =
+[163] Identifier: time
+[163] Operator: %
+[163] Literal int: 60
+[163] Special symbol: ';'
+[164] Delimiter: '}'
+[174] Keyword: void
+[174] Identifier: end_frame
+[174] Delimiter: '('
+[174] Delimiter: ')'
+[175] Delimiter: '{'
+[176] Keyword: asm
+[176] Delimiter: '{'
+[176] Literal string: "wait"
+[176] Delimiter: '}'
+[177] Delimiter: '}'
+[183] Keyword: void
+[183] Identifier: sleep
+[183] Delimiter: '('
+[183] Keyword: int
+[183] Identifier: frames
+[183] Delimiter: ')'
+[184] Delimiter: '{'
+[185] Keyword: int
+[185] Identifier: initial_frames
+[185] Operator: =
+[185] Identifier: get_frame_counter
+[185] Delimiter: '('
+[185] Delimiter: ')'
+[185] Special symbol: ';'
+[186] Keyword: int
+[186] Identifier: final_frames
+[186] Operator: =
+[186] Identifier: initial_frames
+[186] Operator: +
+[186] Identifier: frames
+[186] Special symbol: ';'
+[188] Keyword: while
+[188] Delimiter: '('
+[188] Identifier: get_frame_counter
+[188] Delimiter: '('
+[188] Delimiter: ')'
+[188] Operator: <
+[188] Identifier: final_frames
+[188] Delimiter: ')'
+[189] Identifier: end_frame
+[189] Delimiter: '('
+[189] Delimiter: ')'
+[189] Special symbol: ';'
+[190] Delimiter: '}'
+
+File src\\game/airplane.h:
+
+[5] Keyword: extern
+[5] Keyword: float
+[5] Identifier: airplane_x
+[5] Special symbol: ';'
+[6] Keyword: extern
+[6] Keyword: float
+[6] Identifier: airplane_y
+[6] Special symbol: ';'
+[7] Keyword: extern
+[7] Keyword: float
+[7] Identifier: airplane_angle
+[7] Special symbol: ';'
+[8] Keyword: extern
+[8] Keyword: float
+[8] Identifier: airplane_scale
+[8] Special symbol: ';'
+[9] Keyword: extern
+[9] Keyword: float
+[9] Identifier: airplane_velocity
+[9] Special symbol: ';'
+[12] Keyword: void
+[12] Identifier: initialize_airplane
+[12] Delimiter: '('
+[12] Delimiter: ')'
+[12] Special symbol: ';'
+[13] Keyword: void
+[13] Identifier: reset_airplane
+[13] Delimiter: '('
+[13] Delimiter: ')'
+[13] Special symbol: ';'
+[14] Keyword: void
+[14] Identifier: update_airplane
+[14] Delimiter: '('
+[14] Delimiter: ')'
+[14] Special symbol: ';'
+[15] Keyword: void
+[15] Identifier: render_airplane
+[15] Delimiter: '('
+[15] Delimiter: ')'
+[15] Special symbol: ';'
+
+File src\\states/menu.h:
+
+[4] Keyword: void
+[4] Identifier: update_menu
+[4] Delimiter: '('
+[4] Delimiter: ')'
+[4] Special symbol: ';'
+[5] Keyword: void
+[5] Identifier: render_menu
+[5] Delimiter: '('
+[5] Delimiter: ')'
+[5] Special symbol: ';'
+
+File src\\states/gameover.h:
+
+[4] Keyword: void
+[4] Identifier: update_gameover
+[4] Delimiter: '('
+[4] Delimiter: ')'
+[4] Special symbol: ';'
+[5] Keyword: void
+[5] Identifier: render_gameover
+[5] Delimiter: '('
+[5] Delimiter: ')'
+[5] Special symbol: ';'
+
+File src\\game\\../utils/utilities.h:
+
+[4] Keyword: float
+[4] Identifier: clamp
+[4] Delimiter: '('
+[4] Keyword: float
+[4] Identifier: value
+[4] Special symbol: ','
+[4] Keyword: float
+[4] Identifier: min_value
+[4] Special symbol: ','
+[4] Keyword: float
+[4] Identifier: max_value
+[4] Delimiter: ')'
+[4] Special symbol: ';'
+
+File C:\Vircon32\Vircon32\WarOnWater\dev\include\math.h:
+
+[37] Keyword: float
+[37] Identifier: fmod
+[37] Delimiter: '('
+[37] Keyword: float
+[37] Identifier: x
+[37] Special symbol: ','
+[37] Keyword: float
+[37] Identifier: y
+[37] Delimiter: ')'
+[38] Delimiter: '{'
+[39] Keyword: asm
+[40] Delimiter: '{'
+[41] Literal string: "push R1"
+[42] Literal string: "mov R0, {x}"
+[43] Literal string: "mov R1, {y}"
+[44] Literal string: "fmod R0, R1"
+[45] Literal string: "pop R1"
+[46] Delimiter: '}'
+[47] Delimiter: '}'
+[55] Keyword: int
+[55] Identifier: min
+[55] Delimiter: '('
+[55] Keyword: int
+[55] Identifier: a
+[55] Special symbol: ','
+[55] Keyword: int
+[55] Identifier: b
+[55] Delimiter: ')'
+[56] Delimiter: '{'
+[57] Keyword: asm
+[58] Delimiter: '{'
+[59] Literal string: "push R1"
+[60] Literal string: "mov R0, {a}"
+[61] Literal string: "mov R1, {b}"
+[62] Literal string: "imin R0, R1"
+[63] Literal string: "pop R1"
+[64] Delimiter: '}'
+[65] Delimiter: '}'
+[69] Keyword: int
+[69] Identifier: max
+[69] Delimiter: '('
+[69] Keyword: int
+[69] Identifier: a
+[69] Special symbol: ','
+[69] Keyword: int
+[69] Identifier: b
+[69] Delimiter: ')'
+[70] Delimiter: '{'
+[71] Keyword: asm
+[72] Delimiter: '{'
+[73] Literal string: "push R1"
+[74] Literal string: "mov R0, {a}"
+[75] Literal string: "mov R1, {b}"
+[76] Literal string: "imax R0, R1"
+[77] Literal string: "pop R1"
+[78] Delimiter: '}'
+[79] Delimiter: '}'
+[83] Keyword: int
+[83] Identifier: abs
+[83] Delimiter: '('
+[83] Keyword: int
+[83] Identifier: a
+[83] Delimiter: ')'
+[84] Delimiter: '{'
+[85] Keyword: asm
+[86] Delimiter: '{'
+[87] Literal string: "mov R0, {a}"
+[88] Literal string: "iabs R0"
+[89] Delimiter: '}'
+[90] Delimiter: '}'
+[94] Keyword: float
+[94] Identifier: fmin
+[94] Delimiter: '('
+[94] Keyword: float
+[94] Identifier: x
+[94] Special symbol: ','
+[94] Keyword: float
+[94] Identifier: y
+[94] Delimiter: ')'
+[95] Delimiter: '{'
+[96] Keyword: asm
+[97] Delimiter: '{'
+[98] Literal string: "push R1"
+[99] Literal string: "mov R0, {x}"
+[100] Literal string: "mov R1, {y}"
+[101] Literal string: "fmin R0, R1"
+[102] Literal string: "pop R1"
+[103] Delimiter: '}'
+[104] Delimiter: '}'
+[108] Keyword: float
+[108] Identifier: fmax
+[108] Delimiter: '('
+[108] Keyword: float
+[108] Identifier: x
+[108] Special symbol: ','
+[108] Keyword: float
+[108] Identifier: y
+[108] Delimiter: ')'
+[109] Delimiter: '{'
+[110] Keyword: asm
+[111] Delimiter: '{'
+[112] Literal string: "push R1"
+[113] Literal string: "mov R0, {x}"
+[114] Literal string: "mov R1, {y}"
+[115] Literal string: "fmax R0, R1"
+[116] Literal string: "pop R1"
+[117] Delimiter: '}'
+[118] Delimiter: '}'
+[122] Keyword: float
+[122] Identifier: fabs
+[122] Delimiter: '('
+[122] Keyword: float
+[122] Identifier: x
+[122] Delimiter: ')'
+[123] Delimiter: '{'
+[124] Keyword: asm
+[125] Delimiter: '{'
+[126] Literal string: "mov R0, {x}"
+[127] Literal string: "fabs R0"
+[128] Delimiter: '}'
+[129] Delimiter: '}'
+[137] Keyword: float
+[137] Identifier: floor
+[137] Delimiter: '('
+[137] Keyword: float
+[137] Identifier: x
+[137] Delimiter: ')'
+[138] Delimiter: '{'
+[139] Keyword: asm
+[140] Delimiter: '{'
+[141] Literal string: "mov R0, {x}"
+[142] Literal string: "flr R0"
+[143] Delimiter: '}'
+[144] Delimiter: '}'
+[148] Keyword: float
+[148] Identifier: ceil
+[148] Delimiter: '('
+[148] Keyword: float
+[148] Identifier: x
+[148] Delimiter: ')'
+[149] Delimiter: '{'
+[150] Keyword: asm
+[151] Delimiter: '{'
+[152] Literal string: "mov R0, {x}"
+[153] Literal string: "ceil R0"
+[154] Delimiter: '}'
+[155] Delimiter: '}'
+[159] Keyword: float
+[159] Identifier: round
+[159] Delimiter: '('
+[159] Keyword: float
+[159] Identifier: x
+[159] Delimiter: ')'
+[160] Delimiter: '{'
+[161] Keyword: asm
+[162] Delimiter: '{'
+[163] Literal string: "mov R0, {x}"
+[164] Literal string: "round R0"
+[165] Delimiter: '}'
+[166] Delimiter: '}'
+[175] Keyword: float
+[175] Identifier: sin
+[175] Delimiter: '('
+[175] Keyword: float
+[175] Identifier: angle
+[175] Delimiter: ')'
+[176] Delimiter: '{'
+[177] Keyword: asm
+[178] Delimiter: '{'
+[179] Literal string: "mov R0, {angle}"
+[180] Literal string: "sin R0"
+[181] Delimiter: '}'
+[182] Delimiter: '}'
+[187] Keyword: float
+[187] Identifier: cos
+[187] Delimiter: '('
+[187] Keyword: float
+[187] Identifier: angle
+[187] Delimiter: ')'
+[188] Delimiter: '{'
+[190] Keyword: asm
+[191] Delimiter: '{'
+[192] Literal string: "mov R0, {angle}"
+[193] Literal string: "fadd R0, 1.570796"
+[194] Literal string: "sin R0"
+[195] Delimiter: '}'
+[196] Delimiter: '}'
+[203] Keyword: float
+[203] Identifier: tan
+[203] Delimiter: '('
+[203] Keyword: float
+[203] Identifier: angle
+[203] Delimiter: ')'
+[204] Delimiter: '{'
+[207] Keyword: asm
+[208] Delimiter: '{'
+[209] Literal string: "push R1"
+[210] Literal string: "mov R1, {angle}"
+[211] Literal string: "mov R0, R1"
+[212] Literal string: "sin R0"
+[213] Literal string: "fadd R1, 1.570796"
+[214] Literal string: "sin R1"
+[215] Literal string: "fdiv R0, R1"
+[216] Literal string: "pop R1"
+[217] Delimiter: '}'
+[218] Delimiter: '}'
+[225] Keyword: float
+[225] Identifier: asin
+[225] Delimiter: '('
+[225] Keyword: float
+[225] Identifier: x
+[225] Delimiter: ')'
+[226] Delimiter: '{'
+[228] Keyword: asm
+[229] Delimiter: '{'
+[230] Literal string: "mov R0, {x}"
+[231] Literal string: "acos R0"
+[232] Literal string: "fsgn R0"
+[233] Literal string: "fadd R0, 1.570796"
+[234] Delimiter: '}'
+[235] Delimiter: '}'
+[242] Keyword: float
+[242] Identifier: acos
+[242] Delimiter: '('
+[242] Keyword: float
+[242] Identifier: x
+[242] Delimiter: ')'
+[243] Delimiter: '{'
+[244] Keyword: asm
+[245] Delimiter: '{'
+[246] Literal string: "mov R0, {x}"
+[247] Literal string: "acos R0"
+[248] Delimiter: '}'
+[249] Delimiter: '}'
+[256] Keyword: float
+[256] Identifier: atan2
+[256] Delimiter: '('
+[256] Keyword: float
+[256] Identifier: x
+[256] Special symbol: ','
+[256] Keyword: float
+[256] Identifier: y
+[256] Delimiter: ')'
+[257] Delimiter: '{'
+[258] Keyword: asm
+[259] Delimiter: '{'
+[260] Literal string: "push R1"
+[261] Literal string: "mov R0, {x}"
+[262] Literal string: "mov R1, {y}"
+[263] Literal string: "atan2 R0, R1"
+[264] Literal string: "pop R1"
+[265] Delimiter: '}'
+[266] Delimiter: '}'
+[276] Keyword: float
+[276] Identifier: sqrt
+[276] Delimiter: '('
+[276] Keyword: float
+[276] Identifier: x
+[276] Delimiter: ')'
+[277] Delimiter: '{'
+[279] Keyword: asm
+[280] Delimiter: '{'
+[281] Literal string: "push R1"
+[282] Literal string: "mov R0, {x}"
+[283] Literal string: "mov R1, 0.5"
+[284] Literal string: "pow R0, R1"
+[285] Literal string: "pop R1"
+[286] Delimiter: '}'
+[287] Delimiter: '}'
+[293] Keyword: float
+[293] Identifier: pow
+[293] Delimiter: '('
+[293] Keyword: float
+[293] Identifier: x
+[293] Special symbol: ','
+[293] Keyword: float
+[293] Identifier: y
+[293] Delimiter: ')'
+[294] Delimiter: '{'
+[295] Keyword: asm
+[296] Delimiter: '{'
+[297] Literal string: "push R1"
+[298] Literal string: "mov R0, {x}"
+[299] Literal string: "mov R1, {y}"
+[300] Literal string: "pow R0, R1"
+[301] Literal string: "pop R1"
+[302] Delimiter: '}'
+[303] Delimiter: '}'
+[307] Keyword: float
+[307] Identifier: exp
+[307] Delimiter: '('
+[307] Keyword: float
+[307] Identifier: x
+[307] Delimiter: ')'
+[308] Delimiter: '{'
+[309] Keyword: asm
+[310] Delimiter: '{'
+[311] Literal string: "push R1"
+[312] Literal string: "mov R0, 2.718282"
+[313] Literal string: "mov R1, {x}"
+[314] Literal string: "pow R0, R1"
+[315] Literal string: "pop R1"
+[316] Delimiter: '}'
+[317] Delimiter: '}'
+[323] Keyword: float
+[323] Identifier: log
+[323] Delimiter: '('
+[323] Keyword: float
+[323] Identifier: x
+[323] Delimiter: ')'
+[324] Delimiter: '{'
+[325] Keyword: asm
+[326] Delimiter: '{'
+[327] Literal string: "mov R0, {x}"
+[328] Literal string: "log R0"
+[329] Delimiter: '}'
+[330] Delimiter: '}'
+
+File src\\game/airplane.c:
+
+[9] Keyword: float
+[9] Identifier: airplane_x
+[9] Special symbol: ';'
+[10] Keyword: float
+[10] Identifier: airplane_y
+[10] Special symbol: ';'
+[11] Keyword: float
+[11] Identifier: camera_x
+[11] Special symbol: ';'
+[12] Keyword: float
+[12] Identifier: camera_y
+[12] Special symbol: ';'
+[13] Keyword: float
+[13] Identifier: airplane_angle
+[13] Special symbol: ';'
+[14] Keyword: float
+[14] Identifier: airplane_scale
+[14] Special symbol: ';'
+[15] Keyword: float
+[15] Identifier: airplane_velocity
+[15] Special symbol: ';'
+[18] Keyword: extern
+[18] Keyword: int
+[18] Identifier: game_state
+[18] Special symbol: ';'
+[21] Keyword: int
+[21] Identifier: is_over_carrier
+[21] Delimiter: '('
+[21] Delimiter: ')'
+[21] Delimiter: '{'
+[22] Keyword: if
+[22] Delimiter: '('
+[22] Identifier: airplane_x
+[22] Operator: >=
+[22] Literal int: 400
+[22] Operator: -
+[22] Literal int: 50
+[22] Operator: &&
+[23] Identifier: airplane_x
+[23] Operator: <=
+[23] Literal int: 400
+[23] Operator: +
+[23] Literal int: 50
+[23] Operator: &&
+[24] Identifier: airplane_y
+[24] Operator: >=
+[24] Literal int: 300
+[24] Operator: -
+[24] Literal int: 50
+[24] Operator: &&
+[25] Identifier: airplane_y
+[25] Operator: <=
+[25] Literal int: 300
+[25] Operator: +
+[25] Literal int: 50
+[25] Delimiter: ')'
+[25] Delimiter: '{'
+[26] Keyword: return
+[26] Literal int: 1
+[26] Special symbol: ';'
+[27] Delimiter: '}'
+[28] Keyword: return
+[28] Literal int: 0
+[28] Special symbol: ';'
+[29] Delimiter: '}'
+[31] Keyword: void
+[31] Identifier: reset_airplane
+[31] Delimiter: '('
+[31] Delimiter: ')'
+[31] Delimiter: '{'
+[33] Identifier: airplane_x
+[33] Operator: =
+[33] Literal int: 2000
+[33] Operator: /
+[33] Literal int: 2
+[33] Special symbol: ';'
+[34] Identifier: airplane_y
+[34] Operator: =
+[34] Literal int: 2000
+[34] Operator: /
+[34] Literal int: 2
+[34] Special symbol: ';'
+[35] Identifier: camera_x
+[35] Operator: =
+[35] Identifier: airplane_x
+[35] Operator: -
+[35] Delimiter: '('
+[35] Literal int: 640
+[35] Operator: /
+[35] Literal int: 2
+[35] Delimiter: ')'
+[35] Special symbol: ';'
+[36] Identifier: camera_y
+[36] Operator: =
+[36] Identifier: airplane_y
+[36] Operator: -
+[36] Delimiter: '('
+[36] Literal int: 360
+[36] Operator: /
+[36] Literal int: 2
+[36] Delimiter: ')'
+[36] Special symbol: ';'
+[37] Identifier: airplane_angle
+[37] Operator: =
+[37] Literal float: 0.000000
+[37] Special symbol: ';'
+[38] Identifier: airplane_scale
+[38] Operator: =
+[38] Literal float: 1.000000
+[38] Special symbol: ';'
+[39] Identifier: airplane_velocity
+[39] Operator: =
+[39] Literal float: 0.000000
+[39] Special symbol: ';'
+[40] Delimiter: '}'
+[42] Keyword: void
+[42] Identifier: initialize_airplane
+[42] Delimiter: '('
+[42] Delimiter: ')'
+[42] Delimiter: '{'
+[44] Identifier: select_texture
+[44] Delimiter: '('
+[44] Literal int: 0
+[44] Delimiter: ')'
+[44] Special symbol: ';'
+[47] Identifier: select_region
+[47] Delimiter: '('
+[47] Literal int: 0
+[47] Delimiter: ')'
+[47] Special symbol: ';'
+[48] Identifier: define_region
+[48] Delimiter: '('
+[48] Literal int: 0
+[48] Special symbol: ','
+[48] Literal int: 0
+[48] Special symbol: ','
+[48] Literal int: 64
+[48] Special symbol: ','
+[48] Literal int: 64
+[48] Special symbol: ','
+[48] Literal int: 32
+[48] Special symbol: ','
+[48] Literal int: 32
+[48] Delimiter: ')'
+[48] Special symbol: ';'
+[51] Identifier: select_region
+[51] Delimiter: '('
+[51] Literal int: 1
+[51] Delimiter: ')'
+[51] Special symbol: ';'
+[52] Identifier: define_region
+[52] Delimiter: '('
+[52] Literal int: 0
+[52] Special symbol: ','
+[52] Literal int: 0
+[52] Special symbol: ','
+[52] Literal int: 64
+[52] Special symbol: ','
+[52] Literal int: 64
+[52] Special symbol: ','
+[52] Literal int: 32
+[52] Special symbol: ','
+[52] Literal int: 32
+[52] Delimiter: ')'
+[52] Special symbol: ';'
+[55] Identifier: select_region
+[55] Delimiter: '('
+[55] Literal int: 2
+[55] Delimiter: ')'
+[55] Special symbol: ';'
+[56] Identifier: define_region
+[56] Delimiter: '('
+[56] Literal int: 64
+[56] Special symbol: ','
+[56] Literal int: 0
+[56] Special symbol: ','
+[56] Literal int: 164
+[56] Special symbol: ','
+[56] Literal int: 32
+[56] Special symbol: ','
+[56] Literal int: 82
+[56] Special symbol: ','
+[56] Literal int: 16
+[56] Delimiter: ')'
+[56] Special symbol: ';'
+[59] Identifier: reset_airplane
+[59] Delimiter: '('
+[59] Delimiter: ')'
+[59] Special symbol: ';'
+[60] Delimiter: '}'
+[62] Keyword: void
+[62] Identifier: update_camera
+[62] Delimiter: '('
+[62] Delimiter: ')'
+[62] Delimiter: '{'
+[64] Identifier: camera_x
+[64] Operator: =
+[64] Identifier: airplane_x
+[64] Operator: -
+[64] Delimiter: '('
+[64] Literal int: 640
+[64] Operator: /
+[64] Literal int: 2
+[64] Delimiter: ')'
+[64] Special symbol: ';'
+[65] Identifier: camera_y
+[65] Operator: =
+[65] Identifier: airplane_y
+[65] Operator: -
+[65] Delimiter: '('
+[65] Literal int: 360
+[65] Operator: /
+[65] Literal int: 2
+[65] Delimiter: ')'
+[65] Special symbol: ';'
+[66] Delimiter: '}'
+[68] Keyword: void
+[68] Identifier: update_airplane
+[68] Delimiter: '('
+[68] Delimiter: ')'
+[68] Delimiter: '{'
+[70] Keyword: int
+[70] Identifier: direction_x
+[70] Special symbol: ','
+[70] Identifier: direction_y
+[70] Special symbol: ';'
+[71] Identifier: gamepad_direction
+[71] Delimiter: '('
+[71] Operator: &
+[71] Identifier: direction_x
+[71] Special symbol: ','
+[71] Operator: &
+[71] Identifier: direction_y
+[71] Delimiter: ')'
+[71] Special symbol: ';'
+[74] Keyword: if
+[74] Delimiter: '('
+[74] Identifier: gamepad_left
+[74] Delimiter: '('
+[74] Delimiter: ')'
+[74] Operator: >
+[74] Literal int: 0
+[74] Delimiter: ')'
+[75] Identifier: airplane_angle
+[75] Operator: -=
+[75] Literal float: 0.050000
+[75] Special symbol: ';'
+[76] Keyword: if
+[76] Delimiter: '('
+[76] Identifier: gamepad_right
+[76] Delimiter: '('
+[76] Delimiter: ')'
+[76] Operator: >
+[76] Literal int: 0
+[76] Delimiter: ')'
+[77] Identifier: airplane_angle
+[77] Operator: +=
+[77] Literal float: 0.050000
+[77] Special symbol: ';'
+[80] Keyword: if
+[80] Delimiter: '('
+[80] Identifier: gamepad_up
+[80] Delimiter: '('
+[80] Delimiter: ')'
+[80] Operator: >
+[80] Literal int: 0
+[80] Delimiter: ')'
+[80] Delimiter: '{'
+[82] Identifier: airplane_x
+[82] Operator: +=
+[82] Literal float: 3.000000
+[82] Operator: *
+[82] Identifier: sin
+[82] Delimiter: '('
+[82] Identifier: airplane_angle
+[82] Delimiter: ')'
+[82] Special symbol: ';'
+[83] Identifier: airplane_y
+[83] Operator: -=
+[83] Literal float: 3.000000
+[83] Operator: *
+[83] Identifier: cos
+[83] Delimiter: '('
+[83] Identifier: airplane_angle
+[83] Delimiter: ')'
+[83] Special symbol: ';'
+[86] Identifier: airplane_scale
+[86] Operator: =
+[86] Identifier: clamp
+[86] Delimiter: '('
+[86] Identifier: airplane_scale
+[86] Operator: +
+[86] Literal float: 0.010000
+[86] Special symbol: ','
+[86] Literal float: 0.200000
+[86] Special symbol: ','
+[86] Literal float: 1.000000
+[86] Delimiter: ')'
+[86] Special symbol: ';'
+[87] Delimiter: '}'
+[87] Keyword: else
+[87] Delimiter: '{'
+[89] Identifier: airplane_scale
+[89] Operator: =
+[89] Identifier: clamp
+[89] Delimiter: '('
+[89] Identifier: airplane_scale
+[89] Operator: -
+[89] Literal float: 0.010000
+[89] Special symbol: ','
+[89] Literal float: 0.200000
+[89] Special symbol: ','
+[89] Literal float: 1.000000
+[89] Delimiter: ')'
+[89] Special symbol: ';'
+[92] Keyword: if
+[92] Delimiter: '('
+[92] Identifier: airplane_scale
+[92] Operator: <=
+[92] Literal float: 0.200000
+[92] Delimiter: ')'
+[92] Delimiter: '{'
+[94] Keyword: if
+[94] Delimiter: '('
+[94] Identifier: is_over_carrier
+[94] Delimiter: '('
+[94] Delimiter: ')'
+[94] Delimiter: ')'
+[94] Delimiter: '{'
+[96] Identifier: airplane_scale
+[96] Operator: =
+[96] Literal float: 0.200000
+[96] Special symbol: ';'
+[97] Delimiter: '}'
+[97] Keyword: else
+[97] Delimiter: '{'
+[99] Identifier: game_state
+[99] Operator: =
+[99] Literal int: 2
+[99] Special symbol: ';'
+[100] Delimiter: '}'
+[101] Delimiter: '}'
+[102] Delimiter: '}'
+[105] Identifier: airplane_x
+[105] Operator: =
+[105] Identifier: clamp
+[105] Delimiter: '('
+[105] Identifier: airplane_x
+[105] Special symbol: ','
+[105] Literal int: 0
+[105] Special symbol: ','
+[105] Literal int: 2000
+[105] Delimiter: ')'
+[105] Special symbol: ';'
+[106] Identifier: airplane_y
+[106] Operator: =
+[106] Identifier: clamp
+[106] Delimiter: '('
+[106] Identifier: airplane_y
+[106] Special symbol: ','
+[106] Literal int: 0
+[106] Special symbol: ','
+[106] Literal int: 2000
+[106] Delimiter: ')'
+[106] Special symbol: ';'
+[109] Identifier: update_camera
+[109] Delimiter: '('
+[109] Delimiter: ')'
+[109] Special symbol: ';'
+[110] Delimiter: '}'
+[112] Keyword: void
+[112] Identifier: render_sea
+[112] Delimiter: '('
+[112] Delimiter: ')'
+[112] Delimiter: '{'
+[114] Identifier: clear_screen
+[114] Delimiter: '('
+[114] Literal int: -8368096
+[114] Delimiter: ')'
+[114] Special symbol: ';'
+[115] Delimiter: '}'
+[117] Keyword: void
+[117] Identifier: render_airplane
+[117] Delimiter: '('
+[117] Delimiter: ')'
+[117] Delimiter: '{'
+[119] Identifier: render_sea
+[119] Delimiter: '('
+[119] Delimiter: ')'
+[119] Special symbol: ';'
+[122] Identifier: select_texture
+[122] Delimiter: '('
+[122] Literal int: 0
+[122] Delimiter: ')'
+[122] Special symbol: ';'
+[123] Identifier: select_region
+[123] Delimiter: '('
+[123] Literal int: 2
+[123] Delimiter: ')'
+[123] Special symbol: ';'
+[124] Identifier: draw_region_at
+[124] Delimiter: '('
+[124] Literal int: 400
+[124] Operator: -
+[124] Identifier: camera_x
+[124] Special symbol: ','
+[124] Literal int: 300
+[124] Operator: -
+[124] Identifier: camera_y
+[124] Delimiter: ')'
+[124] Special symbol: ';'
+[127] Keyword: float
+[127] Identifier: screen_x
+[127] Operator: =
+[127] Identifier: airplane_x
+[127] Operator: -
+[127] Identifier: camera_x
+[127] Special symbol: ';'
+[128] Keyword: float
+[128] Identifier: screen_y
+[128] Operator: =
+[128] Identifier: airplane_y
+[128] Operator: -
+[128] Identifier: camera_y
+[128] Special symbol: ';'
+[131] Identifier: select_region
+[131] Delimiter: '('
+[131] Literal int: 1
+[131] Delimiter: ')'
+[131] Special symbol: ';'
+[132] Identifier: set_multiply_color
+[132] Delimiter: '('
+[132] Literal int: -2147483648
+[132] Delimiter: ')'
+[132] Special symbol: ';'
+[133] Identifier: set_drawing_scale
+[133] Delimiter: '('
+[133] Identifier: airplane_scale
+[133] Special symbol: ','
+[133] Identifier: airplane_scale
+[133] Delimiter: ')'
+[133] Special symbol: ';'
+[134] Identifier: set_drawing_angle
+[134] Delimiter: '('
+[134] Identifier: airplane_angle
+[134] Delimiter: ')'
+[134] Special symbol: ';'
+[135] Identifier: draw_region_rotozoomed_at
+[135] Delimiter: '('
+[135] Identifier: screen_x
+[135] Operator: +
+[135] Literal int: 10
+[135] Special symbol: ','
+[136] Identifier: screen_y
+[136] Operator: +
+[136] Literal int: 10
+[136] Delimiter: ')'
+[136] Special symbol: ';'
+[139] Identifier: set_multiply_color
+[139] Delimiter: '('
+[139] Literal int: -1
+[139] Delimiter: ')'
+[139] Special symbol: ';'
+[140] Identifier: select_region
+[140] Delimiter: '('
+[140] Literal int: 0
+[140] Delimiter: ')'
+[140] Special symbol: ';'
+[141] Identifier: set_drawing_scale
+[141] Delimiter: '('
+[141] Identifier: airplane_scale
+[141] Special symbol: ','
+[141] Identifier: airplane_scale
+[141] Delimiter: ')'
+[141] Special symbol: ';'
+[142] Identifier: set_drawing_angle
+[142] Delimiter: '('
+[142] Identifier: airplane_angle
+[142] Delimiter: ')'
+[142] Special symbol: ';'
+[143] Identifier: draw_region_rotozoomed_at
+[143] Delimiter: '('
+[143] Identifier: screen_x
+[143] Special symbol: ','
+[143] Identifier: screen_y
+[143] Delimiter: ')'
+[143] Special symbol: ';'
+[144] Delimiter: '}'
+
+File src\\states/menu.c:
+
+[8] Keyword: extern
+[8] Keyword: int
+[8] Identifier: game_state
+[8] Special symbol: ';'
+[10] Keyword: void
+[10] Identifier: update_menu
+[10] Delimiter: '('
+[10] Delimiter: ')'
+[10] Delimiter: '{'
+[12] Keyword: if
+[12] Delimiter: '('
+[12] Identifier: gamepad_button_start
+[12] Delimiter: '('
+[12] Delimiter: ')'
+[12] Operator: ==
+[12] Literal int: 1
+[12] Delimiter: ')'
+[12] Delimiter: '{'
+[13] Identifier: game_state
+[13] Operator: =
+[13] Literal int: 1
+[13] Special symbol: ';'
+[14] Delimiter: '}'
+[15] Delimiter: '}'
+[17] Keyword: void
+[17] Identifier: render_menu
+[17] Delimiter: '('
+[17] Delimiter: ')'
+[17] Delimiter: '{'
+[19] Identifier: clear_screen
+[19] Delimiter: '('
+[19] Literal int: -16777216
+[19] Delimiter: ')'
+[19] Special symbol: ';'
+[22] Identifier: select_texture
+[22] Delimiter: '('
+[22] Operator: -
+[22] Literal int: 1
+[22] Delimiter: ')'
+[22] Special symbol: ';'
+[23] Identifier: set_multiply_color
+[23] Delimiter: '('
+[23] Literal int: -1
+[23] Delimiter: ')'
+[23] Special symbol: ';'
+[26] Identifier: print_at
+[26] Delimiter: '('
+[26] Delimiter: '('
+[26] Literal int: 640
+[26] Operator: /
+[26] Literal int: 2
+[26] Delimiter: ')'
+[26] Operator: -
+[26] Literal int: 60
+[26] Special symbol: ','
+[26] Delimiter: '('
+[26] Literal int: 360
+[26] Operator: /
+[26] Literal int: 2
+[26] Delimiter: ')'
+[26] Operator: -
+[26] Literal int: 40
+[26] Special symbol: ','
+[26] Literal string: "OCEAN STORM"
+[26] Delimiter: ')'
+[26] Special symbol: ';'
+[29] Keyword: if
+[29] Delimiter: '('
+[29] Delimiter: '('
+[29] Identifier: get_frame_counter
+[29] Delimiter: '('
+[29] Delimiter: ')'
+[29] Operator: /
+[29] Literal int: 30
+[29] Delimiter: ')'
+[29] Operator: %
+[29] Literal int: 2
+[29] Operator: ==
+[29] Literal int: 0
+[29] Delimiter: ')'
+[29] Delimiter: '{'
+[30] Identifier: print_at
+[30] Delimiter: '('
+[30] Delimiter: '('
+[30] Literal int: 640
+[30] Operator: /
+[30] Literal int: 2
+[30] Delimiter: ')'
+[30] Operator: -
+[30] Literal int: 90
+[30] Special symbol: ','
+[30] Delimiter: '('
+[30] Literal int: 360
+[30] Operator: /
+[30] Literal int: 2
+[30] Delimiter: ')'
+[30] Operator: +
+[30] Literal int: 20
+[30] Special symbol: ','
+[30] Literal string: "PRESS START TO BEGIN"
+[30] Delimiter: ')'
+[30] Special symbol: ';'
+[31] Delimiter: '}'
+[32] Delimiter: '}'
+
+File src\\utils/utilities.c:
+
+[3] Keyword: float
+[3] Identifier: clamp
+[3] Delimiter: '('
+[3] Keyword: float
+[3] Identifier: value
+[3] Special symbol: ','
+[3] Keyword: float
+[3] Identifier: min_value
+[3] Special symbol: ','
+[3] Keyword: float
+[3] Identifier: max_value
+[3] Delimiter: ')'
+[3] Delimiter: '{'
+[4] Keyword: if
+[4] Delimiter: '('
+[4] Identifier: value
+[4] Operator: <
+[4] Identifier: min_value
+[4] Delimiter: ')'
+[4] Keyword: return
+[4] Identifier: min_value
+[4] Special symbol: ';'
+[5] Keyword: if
+[5] Delimiter: '('
+[5] Identifier: value
+[5] Operator: >
+[5] Identifier: max_value
+[5] Delimiter: ')'
+[5] Keyword: return
+[5] Identifier: max_value
+[5] Special symbol: ';'
+[6] Keyword: return
+[6] Identifier: value
+[6] Special symbol: ';'
+[7] Delimiter: '}'
+
+File src\\states/gameover.c:
+
+[8] Keyword: extern
+[8] Keyword: int
+[8] Identifier: game_state
+[8] Special symbol: ';'
+[10] Keyword: void
+[10] Identifier: update_gameover
+[10] Delimiter: '('
+[10] Delimiter: ')'
+[10] Delimiter: '{'
+[12] Keyword: if
+[12] Delimiter: '('
+[12] Identifier: gamepad_button_start
+[12] Delimiter: '('
+[12] Delimiter: ')'
+[12] Operator: ==
+[12] Literal int: 1
+[12] Delimiter: ')'
+[12] Delimiter: '{'
+[13] Identifier: reset_airplane
+[13] Delimiter: '('
+[13] Delimiter: ')'
+[13] Special symbol: ';'
+[14] Identifier: game_state
+[14] Operator: =
+[14] Literal int: 0
+[14] Special symbol: ';'
+[15] Delimiter: '}'
+[16] Delimiter: '}'
+[18] Keyword: void
+[18] Identifier: render_gameover
+[18] Delimiter: '('
+[18] Delimiter: ')'
+[18] Delimiter: '{'
+[20] Identifier: clear_screen
+[20] Delimiter: '('
+[20] Literal int: -16777216
+[20] Delimiter: ')'
+[20] Special symbol: ';'
+[23] Identifier: select_texture
+[23] Delimiter: '('
+[23] Operator: -
+[23] Literal int: 1
+[23] Delimiter: ')'
+[23] Special symbol: ';'
+[24] Identifier: set_multiply_color
+[24] Delimiter: '('
+[24] Literal int: -16776961
+[24] Delimiter: ')'
+[24] Special symbol: ';'
+[27] Identifier: print_at
+[27] Delimiter: '('
+[27] Delimiter: '('
+[27] Literal int: 640
+[27] Operator: /
+[27] Literal int: 2
+[27] Delimiter: ')'
+[27] Operator: -
+[27] Literal int: 45
+[27] Special symbol: ','
+[27] Delimiter: '('
+[27] Literal int: 360
+[27] Operator: /
+[27] Literal int: 2
+[27] Delimiter: ')'
+[27] Operator: -
+[27] Literal int: 20
+[27] Special symbol: ','
+[27] Literal string: "GAME OVER"
+[27] Delimiter: ')'
+[27] Special symbol: ';'
+[30] Keyword: if
+[30] Delimiter: '('
+[30] Delimiter: '('
+[30] Identifier: get_frame_counter
+[30] Delimiter: '('
+[30] Delimiter: ')'
+[30] Operator: /
+[30] Literal int: 30
+[30] Delimiter: ')'
+[30] Operator: %
+[30] Literal int: 2
+[30] Operator: ==
+[30] Literal int: 0
+[30] Delimiter: ')'
+[30] Delimiter: '{'
+[31] Identifier: set_multiply_color
+[31] Delimiter: '('
+[31] Literal int: -1
+[31] Delimiter: ')'
+[31] Special symbol: ';'
+[32] Identifier: print_at
+[32] Delimiter: '('
+[32] Delimiter: '('
+[32] Literal int: 640
+[32] Operator: /
+[32] Literal int: 2
+[32] Delimiter: ')'
+[32] Operator: -
+[32] Literal int: 90
+[32] Special symbol: ','
+[32] Delimiter: '('
+[32] Literal int: 360
+[32] Operator: /
+[32] Literal int: 2
+[32] Delimiter: ')'
+[32] Operator: +
+[32] Literal int: 20
+[32] Special symbol: ','
+[32] Literal string: "PRESS START TO CONTINUE"
+[32] Delimiter: ')'
+[32] Special symbol: ';'
+[33] Delimiter: '}'
+[34] Delimiter: '}'
+
+File src/main.c:
+
+[16] Keyword: int
+[16] Identifier: game_state
+[16] Special symbol: ';'
+[18] Keyword: void
+[18] Identifier: main
+[18] Delimiter: '('
+[18] Delimiter: ')'
+[18] Delimiter: '{'
+[20] Identifier: initialize_airplane
+[20] Delimiter: '('
+[20] Delimiter: ')'
+[20] Special symbol: ';'
+[21] Identifier: game_state
+[21] Operator: =
+[21] Literal int: 0
+[21] Special symbol: ';'
+[24] Keyword: while
+[24] Delimiter: '('
+[24] Literal bool: true
+[24] Delimiter: ')'
+[24] Delimiter: '{'
+[26] Keyword: switch
+[26] Delimiter: '('
+[26] Identifier: game_state
+[26] Delimiter: ')'
+[26] Delimiter: '{'
+[27] Keyword: case
+[27] Literal int: 0
+[27] Special symbol: ':'
+[28] Identifier: update_menu
+[28] Delimiter: '('
+[28] Delimiter: ')'
+[28] Special symbol: ';'
+[29] Identifier: render_menu
+[29] Delimiter: '('
+[29] Delimiter: ')'
+[29] Special symbol: ';'
+[30] Keyword: break
+[30] Special symbol: ';'
+[32] Keyword: case
+[32] Literal int: 1
+[32] Special symbol: ':'
+[33] Identifier: update_airplane
+[33] Delimiter: '('
+[33] Delimiter: ')'
+[33] Special symbol: ';'
+[34] Identifier: render_airplane
+[34] Delimiter: '('
+[34] Delimiter: ')'
+[34] Special symbol: ';'
+[35] Keyword: break
+[35] Special symbol: ';'
+[37] Keyword: case
+[37] Literal int: 2
+[37] Special symbol: ':'
+[38] Identifier: update_gameover
+[38] Delimiter: '('
+[38] Delimiter: ')'
+[38] Special symbol: ';'
+[39] Identifier: render_gameover
+[39] Delimiter: '('
+[39] Delimiter: ')'
+[39] Special symbol: ';'
+[40] Keyword: break
+[40] Special symbol: ';'
+[41] Delimiter: '}'
+[44] Identifier: end_frame
+[44] Delimiter: '('
+[44] Delimiter: ')'
+[44] Special symbol: ';'
+[45] Delimiter: '}'
+[46] Delimiter: '}'
+[46] [END OF FILE]

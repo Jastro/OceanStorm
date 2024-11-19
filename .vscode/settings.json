@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "input.h": "c",
+        "terrain.h": "c",
+        "particles.h": "c"
+    }
+}
