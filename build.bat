@@ -13,6 +13,7 @@ echo Convert PNG textures
 echo --------------------------
 %PNG2VIRCON% assets/airplane.png -o obj/airplane.vtx || goto :failed
 %PNG2VIRCON% assets/carrier.png -o obj/carrier.vtx || goto :failed
+%PNG2VIRCON% assets/tileset.png -o obj/tileset.vtx || goto :failed
 
 echo Compile the C code
 echo --------------------------

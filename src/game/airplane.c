@@ -1,9 +1,12 @@
 #include "airplane.h"
+#include "island.h"
+#include "render_system.h"
 #include "../utils/definitions.h"
 #include "../utils/utilities.h"
 #include "video.h"
 #include "input.h"
 #include "math.h"
+#include "string.h"
 
 // Variables globales para el estado del avión
 float airplane_x;
@@ -13,132 +16,230 @@ float camera_y;
 float airplane_angle;
 float airplane_scale;
 float airplane_velocity;
+float fuel;
+int airplane_frame;
+int anim_timer;
 
 // Variable externa para el estado del juego
 extern int game_state;
 
-// Función para comprobar si estamos sobre el portaaviones
-int is_over_carrier() {
-    if(airplane_x >= CarrierX - LandingDistance && 
-       airplane_x <= CarrierX + LandingDistance &&
-       airplane_y >= CarrierY - LandingDistance &&
-       airplane_y <= CarrierY + LandingDistance) {
-        return 1;
+int is_over_carrier()
+{
+    float carrier_center_x = StartingX + (CarrierWidth / 2);
+    float carrier_bottom = StartingY + CarrierHeight; // Parte inferior del carrier
+
+    // Comprobar si estamos sobre el carrier completo
+    float dx = airplane_x - carrier_center_x;
+    float dy = airplane_y - StartingY; // Distancia desde la parte superior
+
+    // El área de aterrizaje cubre todo el carrier
+    return (dx >= -CarrierWidth / 2 && dx <= CarrierWidth / 2 && // Dentro del ancho del carrier
+            dy >= 0 && dy <= CarrierHeight);                     // Dentro del alto del carrier
+}
+
+void render_fuel_gauge()
+{
+    // Fondo de la barra de combustible (barra vacía)
+    select_texture(-1); // Usar textura de la BIOS
+    set_multiply_color(RedColor);
+
+    // Dibujar texto
+    print_at(10, 10, "FUEL:");
+
+    // Calcular ancho de la barra basado en el combustible
+    int max_bar_width = 100;
+    int bar_height = 10;
+    int current_width = (int)((fuel / MaxFuel) * max_bar_width);
+
+    // Dibujar barra de fondo (roja)
+    for (int x = 0; x < max_bar_width; x++)
+    {
+        for (int y = 0; y < bar_height; y++)
+        {
+            draw_region_at(60 + x, 10 + y);
+        }
     }
-    return 0;
+
+    // Dibujar barra de combustible actual (blanca)
+    set_multiply_color(TextColor);
+    for (int x = 0; x < current_width; x++)
+    {
+        for (int y = 0; y < bar_height; y++)
+        {
+            draw_region_at(60 + x, 10 + y);
+        }
+    }
 }
 
-void reset_airplane() {
-    // Reiniciar posición y estado del avión
-    airplane_x = WorldWidth / 2;
-    airplane_y = WorldHeight / 2;
-    camera_x = airplane_x - ScreenCenterX;
-    camera_y = airplane_y - ScreenCenterY;
-    airplane_angle = 0.0;
-    airplane_scale = MaxScale;
-    airplane_velocity = 0.0;
-}
+void initialize_airplane()
+{
+    select_texture(TextureAirplane);
 
-void initialize_airplane() {
-    // Configurar región para el sprite del avión
-    select_texture(0);
-    
-    // Región del avión (64x64 con centro en 32,32)
-    select_region(RegionAirplane);
-    define_region(0, 0, 64, 64, 32, 32);
-    
-    // Región de la sombra (mismas dimensiones)
+    // Los frames están uno al lado del otro, no uno encima del otro
+    // Frame 1
+    select_region(0);
+    define_region(
+        0,                      // x inicial del primer frame
+        0,                      // y inicial (mismo para ambos)
+        AirplaneFrameWidth,     // anchura del frame
+        AirplaneFrameHeight,    // altura completa
+        AirplaneFrameWidth / 2, // punto central x (mitad del frame individual)
+        AirplaneFrameHeight / 2 // punto central y
+    );
+
+    // Frame 2
+    select_region(1);
+    define_region(
+        AirplaneFrameWidth,         // x inicial del segundo frame (mitad del sprite)
+        0,                          // y inicial
+        AirplaneFrameWidth * 2,     // ancho total para el segundo frame
+        AirplaneFrameHeight,        // altura completa
+        AirplaneFrameWidth * 1.5,   // punto central x (mitad del frame individual)
+        AirplaneFrameHeight / 2     // punto central y
+    );
+
+    // Definir regiones de sombra
+    // Sombra Frame 1
     select_region(RegionAirplaneShadow);
-    define_region(0, 0, 64, 64, 32, 32);
-    
-    // Configurar región para el portaaviones
-    select_region(RegionCarrier);
-    define_region(64, 0, 164, 32, 82, 16);
-    
-    // Inicializar el estado del avión
+    define_region(
+        0,                      // x inicial del primer frame
+        0,                      // y inicial (mismo para ambos)
+        AirplaneFrameWidth,     // anchura del frame
+        AirplaneFrameHeight,    // altura completa
+        AirplaneFrameWidth / 2, // punto central x (mitad del frame individual)
+        AirplaneFrameHeight / 2 // punto central y
+    );
+
+    // Sombra Frame 2
+    select_region(RegionAirplaneShadow + 1);
+    define_region(
+        AirplaneFrameWidth,         // x inicial del segundo frame (mitad del sprite)
+        0,                          // y inicial
+        AirplaneFrameWidth * 2,     // ancho total para el segundo frame
+        AirplaneFrameHeight,        // altura completa
+        AirplaneFrameWidth * 1.5,   // punto central x (mitad del frame individual)
+        AirplaneFrameHeight / 2     // punto central y
+    );
+
+    airplane_frame = 0;
+    anim_timer = 0;
     reset_airplane();
 }
 
-void update_camera() {
-    // La cámara sigue al avión
+void reset_airplane()
+{
+    // El avión empieza en el centro del carrier, pero 40 pixels a la izquierda
+    airplane_x = StartingX + (CarrierWidth / 2) - 40;
+    airplane_y = StartingY + 20;
+    airplane_angle = 0.0;
+    airplane_scale = InitialScale;
+    airplane_velocity = 0.0;
+    fuel = MaxFuel;
+
+    // Centrar la cámara en el avión
     camera_x = airplane_x - ScreenCenterX;
     camera_y = airplane_y - ScreenCenterY;
 }
 
-void update_airplane() {
+void update_airplane()
+{
     // Obtener entrada del control
     int direction_x, direction_y;
     gamepad_direction(&direction_x, &direction_y);
-    
+
     // Rotar el avión
-    if(gamepad_left() > 0)
+    if (gamepad_left() > 0)
         airplane_angle -= RotationSpeed;
-    if(gamepad_right() > 0)
+    if (gamepad_right() > 0)
         airplane_angle += RotationSpeed;
-    
+
     // Movimiento hacia adelante
-    if(gamepad_up() > 0) {
-        // Calcular el vector de dirección basado en el ángulo
+    if (gamepad_up() > 0 && fuel > 0)
+    {
         airplane_x += MovementSpeed * sin(airplane_angle);
         airplane_y -= MovementSpeed * cos(airplane_angle);
-        
-        // Aumentar altitud cuando se mueve
         airplane_scale = clamp(airplane_scale + DescentSpeed, MinScale, MaxScale);
-    } else {
-        // Descender cuando no se mueve
-        airplane_scale = clamp(airplane_scale - DescentSpeed, MinScale, MaxScale);
-        
-        // Comprobar si estamos descendiendo
-        if(airplane_scale <= MinScale) {
-            // Si estamos sobre el portaaviones, aterrizaje exitoso
-            if(is_over_carrier()) {
-                // Aquí podrías añadir lógica adicional para el aterrizaje exitoso
-                airplane_scale = MinScale;
-            } else {
-                // Game over si caemos al mar
-                game_state = StateGameOver;
-            }
+        fuel -= FuelConsumption;
+
+        // Actualizar animación
+        anim_timer++;
+        if (anim_timer >= AirplaneAnimSpeed)
+        {
+            anim_timer = 0;
+            airplane_frame = 1 - airplane_frame; // Alternar entre 0 y 1
         }
     }
-    
+    else
+    {
+        airplane_scale = clamp(airplane_scale - DescentSpeed, MinScale, MaxScale);
+        airplane_frame = 0; // Frame base cuando no se mueve
+        anim_timer = 0;
+    }
+
+    // Comprobar aterrizaje
+    if (airplane_scale <= LandingScale)
+    {
+        // Si estamos sobre el carrier o una isla, permitir aterrizaje
+        if (is_over_carrier() || is_over_island(airplane_x, airplane_y))
+        {
+            // Aterrizaje exitoso
+            airplane_scale = LandingScale; // Mantenemos esta escala para que se vea bien
+
+            // Solo repostar si estamos en el carrier
+            if (is_over_carrier())
+            {
+                fuel = clamp(fuel + RefuelRate, 0, MaxFuel);
+            }
+        }
+        else if (airplane_scale <= MinScale)
+        {
+            // Si no estamos sobre ninguna superficie y bajamos demasiado -> Game Over
+            game_state = StateGameOver;
+        }
+    }
+    else
+    {
+        // Si estamos muy alto, seguimos descendiendo normalmente
+        airplane_scale = clamp(airplane_scale - DescentSpeed, MinScale, MaxScale);
+    }
+
+    // Game over si nos quedamos sin combustible y sin altura
+    if (fuel <= 0 && airplane_scale <= MinScale && !is_over_carrier() && !is_over_island(airplane_x, airplane_y))
+    {
+        game_state = StateGameOver;
+    }
+
     // Mantener el avión dentro del mundo
     airplane_x = clamp(airplane_x, 0, WorldWidth);
     airplane_y = clamp(airplane_y, 0, WorldHeight);
-    
-    // Actualizar la posición de la cámara
-    update_camera();
+
+    // Actualizar la cámara
+    camera_x = airplane_x - ScreenCenterX;
+    camera_y = airplane_y - ScreenCenterY;
 }
 
-void render_sea() {
-    // Color azul oscuro para el mar visto desde arriba (ABGR format)
-    clear_screen(SeaColor);
-}
+void render_airplane()
+{
+    // 1. Dibujar el mundo base
+    render_world(camera_x, camera_y);
 
-void render_airplane() {
-    // Dibujar el mar
-    render_sea();
-    
-    // Dibujar el portaaviones (ajustado a la posición de la cámara)
-    select_texture(0);
-    select_region(RegionCarrier);
-    draw_region_at(CarrierX - camera_x, CarrierY - camera_y);
-    
-    // Calcular posición en pantalla del avión
-    float screen_x = airplane_x - camera_x;
-    float screen_y = airplane_y - camera_y;
-    
-    // Dibujar la sombra del avión
-    select_region(RegionAirplaneShadow);
-    set_multiply_color(ShadowColor);
+    // 2. Dibujar la sombra primero
+    select_texture(TextureAirplane);
+    select_region(RegionAirplaneShadow + airplane_frame);
+    set_multiply_color(0x80000000); // Negro semi-transparente
     set_drawing_scale(airplane_scale, airplane_scale);
     set_drawing_angle(airplane_angle);
-    draw_region_rotozoomed_at(screen_x + AirplaneShadowOffset, 
-                             screen_y + AirplaneShadowOffset);
-    
-    // Dibujar el avión
-    set_multiply_color(TextColor); // Resetear el color a blanco opaco
-    select_region(RegionAirplane);
+    draw_region_rotozoomed_at(
+        airplane_x - camera_x + 20, // Offset más grande para la sombra
+        airplane_y - camera_y + 20);
+
+    // 3. Dibujar el avión
+    set_multiply_color(0xFFFFFFFF); // Blanco opaco para el avión
+    select_region(airplane_frame);
     set_drawing_scale(airplane_scale, airplane_scale);
     set_drawing_angle(airplane_angle);
-    draw_region_rotozoomed_at(screen_x, screen_y);
+    draw_region_rotozoomed_at(airplane_x - camera_x, airplane_y - camera_y);
+
+    // 4. Dibujar la interfaz
+    render_fuel_gauge();
 }
