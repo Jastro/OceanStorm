@@ -16,7 +16,15 @@ void create_bullet(float x, float y, float angle, float spread) {
         if(!bullet_active[i]) {
             bullet_x[i] = x;
             bullet_y[i] = y;
-            bullet_angle[i] = angle + (rand() % (int)(spread * 2) - spread);
+            
+            if(spread == 0) {
+                bullet_angle[i] = angle;
+            } else {
+                int spread_int = (int)(spread * 1000);
+                float random_spread = (rand() % spread_int - spread_int/2) / 1000.0;
+                bullet_angle[i] = angle + random_spread;
+            }
+            
             bullet_speed[i] = 5.0;
             bullet_damage[i] = weapon_damage[current_weapon];
             bullet_distance[i] = 0;
