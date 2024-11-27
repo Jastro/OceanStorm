@@ -12,6 +12,7 @@ extern float airplane_velocity;
 extern float fuel;
 extern int airplane_frame;
 extern int anim_timer;
+extern int is_player_in_vehicle;
 
 // Funciones del avión
 void initialize_airplane();
@@ -20,5 +21,6 @@ void update_airplane();
 void render_airplane();
 void render_fuel_gauge();
 int is_over_carrier();  // Añadida la declaración
+void exit_vehicle();
 
 #endif

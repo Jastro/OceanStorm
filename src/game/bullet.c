@@ -50,3 +50,23 @@ void update_bullets() {
         }
     }
 }
+
+void render_bullets() {
+    select_texture(-1);  // Usar textura de la BIOS
+    select_region(0);    // Región cuadrada
+    set_multiply_color(color_yellow);  // Color amarillo para las balas
+    
+    for(int i = 0; i < MaxBullets; i++) {
+        if(bullet_active[i]) {
+            // Dibujar cada bala como un punto pequeño
+            float screen_x = bullet_x[i] - camera_x;
+            float screen_y = bullet_y[i] - camera_y;
+            
+            // Solo dibujar si está en pantalla
+            if(screen_x >= 0 && screen_x < screen_width &&
+               screen_y >= 0 && screen_y < screen_height) {
+                draw_region_at(screen_x, screen_y);
+            }
+        }
+    }
+}

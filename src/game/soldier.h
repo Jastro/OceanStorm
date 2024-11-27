@@ -42,7 +42,6 @@ void collect_supplies();
 void switch_weapon_next();
 void switch_weapon_previous();
 void give_weapon(int weapon_type);
-void create_bullet(float x, float y, float angle, float spread);
-void update_bullets();
+void enter_vehicle();
 
 #endif

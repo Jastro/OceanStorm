@@ -58,13 +58,12 @@ void main() {
                 
                 // Renderizado
                 render_world(camera_x, camera_y);
+                render_airplane();
                 
-                if(is_player_in_vehicle) {
-                    render_airplane();
-                } else {
-                    render_airplane();
+                if(!is_player_in_vehicle) {
                     render_soldier();
-                    render_soldier_ui();  // Solo UI cuando es soldado
+                    render_soldier_ui(); 
+                    render_bullets(); // Solo UI cuando es soldado
                     render_pickups();
                 }
                 break;

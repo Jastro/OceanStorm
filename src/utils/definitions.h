@@ -39,7 +39,9 @@
 #define TextureAirplane 0
 #define TextureCarrier 1
 #define TextureIsland 2
-#define TextureBullet 3 
+#define TextureBullet 3
+#define TextureSoldier 4  // Ya que es la quinta textura (0-4)
+
 
 // Define regiones para sprites
 #define RegionAirplane 0
@@ -86,6 +88,11 @@
 #define MinIslandSize 64
 #define MaxIslandSize 192
 #define NumIslandVariants 4
+
+//Soldier
+#define SoldierWidth 32
+#define SoldierHeight 32
+#define RegionSoldier 0
 
 // Colores (formato ABGR)
 #define BackgroundColor 0xFF000000

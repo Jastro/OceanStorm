@@ -19,6 +19,7 @@ void initialize_carrier() {
 void render_world(float camera_x, float camera_y) {
     // 1. Limpiar pantalla con el mar
     clear_screen(SeaColor);
+    set_multiply_color(color_white);
     
     // 2. Dibujar el portaaviones
     select_texture(TextureCarrier);

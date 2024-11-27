@@ -21,8 +21,7 @@ float airplane_velocity;
 float fuel;
 int airplane_frame;
 int anim_timer;
-int can_exit_vehicle;
-int is_player_in_vehicle;
+int is_player_in_vehicle = 1;
 
 // Variable externa para el estado del juego
 extern int game_state;
@@ -78,7 +77,6 @@ void render_fuel_gauge()
 void initialize_airplane()
 {
     is_player_in_vehicle = 1;
-    can_exit_vehicle = 0;
     select_texture(TextureAirplane);
 
     // Los frames están uno al lado del otro, no uno encima del otro
@@ -133,20 +131,22 @@ void initialize_airplane()
 }
 
 void exit_vehicle() {
-    is_player_in_vehicle = 0;
-    target_zoom = CameraZoomGround;
-
-    float offset = 20.0;
-    soldier_x = airplane_x + sin(airplane_angle) * offset;
-    soldier_y = airplane_y - cos(airplane_angle) * offset;
-    soldier_state = SoldierStateActive;
+ if((is_over_carrier() || is_over_island(airplane_x, airplane_y))) {
+        is_player_in_vehicle = 0;
+        soldier_x = airplane_x + cos(airplane_angle) * 50;  // Usar el ángulo del avión
+        soldier_y = airplane_y + sin(airplane_angle) * 50;
+        soldier_state = SoldierStateActive;  // Asegurarse de que está activo
+        target_zoom = CameraZoomGround;
+    }
 }
 
 void enter_vehicle()
 {
-    is_player_in_vehicle = 1;
-    soldier_state = SoldierStateNone;
-    target_zoom = CameraZoomAir;
+    if(!is_player_in_vehicle) {  // Solo si estamos fuera del avión
+        is_player_in_vehicle = 1;
+        soldier_state = SoldierStateNone;
+        target_zoom = CameraZoomAir;
+    }
 }
 
 void reset_airplane()
@@ -238,24 +238,21 @@ void update_airplane()
     airplane_x = clamp(airplane_x, 0, WorldWidth);
     airplane_y = clamp(airplane_y, 0, WorldHeight);
 
-    // Actualizar la cámara
-    camera_x = airplane_x - ScreenCenterX;
-    camera_y = airplane_y - ScreenCenterY;
-
-    can_exit_vehicle = (airplane_scale <= LandingScale) &&
-                       (is_over_carrier() || is_over_island(airplane_x, airplane_y));
-
-    // Comprobar si el jugador quiere salir (usando botón B por ejemplo)
-    if (can_exit_vehicle && gamepad_button_b() == 1)
-    {
-        exit_vehicle();
+    if(is_player_in_vehicle) {
+        camera_x = airplane_x - ScreenCenterX;
+        camera_y = airplane_y - ScreenCenterY;
     }
+
+    if((is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1) {
+            exit_vehicle();
+            return;
+        }
 }
 
 void render_airplane()
 {
     // 1. Dibujar el mundo base
-    render_world(camera_x, camera_y);
+    // render_world(camera_x, camera_y);
 
     // 2. Dibujar la sombra primero
     select_texture(TextureAirplane);
@@ -276,4 +273,12 @@ void render_airplane()
 
     // 4. Dibujar la interfaz
     render_fuel_gauge();
+}
+
+void update_camera_zoom() {
+    // Interpolar suavemente entre el zoom actual y el objetivo
+    if(camera_zoom != target_zoom) {
+        float diff = target_zoom - camera_zoom;
+        camera_zoom += diff * CameraZoomSpeed;
+    }
 }
