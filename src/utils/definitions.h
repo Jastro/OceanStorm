@@ -18,7 +18,12 @@
 #define MaxTilesX 4
 #define MaxTilesY 3
 
-// Tamaños de sprites
+// Camara
+#define CameraZoomAir 1.0
+#define CameraZoomGround 0.5
+#define CameraZoomSpeed 0.05
+
+// sprites
 #define AirplaneSpriteWidth 128    // Ancho total del sprite
 #define AirplaneSpriteHeight 91    // Alto total del sprite
 #define AirplaneFrameWidth 128     // Cada frame es del ancho total

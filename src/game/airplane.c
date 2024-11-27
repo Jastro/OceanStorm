@@ -7,6 +7,8 @@
 #include "input.h"
 #include "math.h"
 #include "string.h"
+#include "soldier.h"
+
 
 // Variables globales para el estado del avión
 float airplane_x;
@@ -19,6 +21,8 @@ float airplane_velocity;
 float fuel;
 int airplane_frame;
 int anim_timer;
+int can_exit_vehicle;
+int is_player_in_vehicle;
 
 // Variable externa para el estado del juego
 extern int game_state;
@@ -73,6 +77,8 @@ void render_fuel_gauge()
 
 void initialize_airplane()
 {
+    is_player_in_vehicle = 1;
+    can_exit_vehicle = 0;
     select_texture(TextureAirplane);
 
     // Los frames están uno al lado del otro, no uno encima del otro
@@ -90,12 +96,12 @@ void initialize_airplane()
     // Frame 2
     select_region(1);
     define_region(
-        AirplaneFrameWidth,         // x inicial del segundo frame (mitad del sprite)
-        0,                          // y inicial
-        AirplaneFrameWidth * 2,     // ancho total para el segundo frame
-        AirplaneFrameHeight,        // altura completa
-        AirplaneFrameWidth * 1.5,   // punto central x (mitad del frame individual)
-        AirplaneFrameHeight / 2     // punto central y
+        AirplaneFrameWidth,       // x inicial del segundo frame (mitad del sprite)
+        0,                        // y inicial
+        AirplaneFrameWidth * 2,   // ancho total para el segundo frame
+        AirplaneFrameHeight,      // altura completa
+        AirplaneFrameWidth * 1.5, // punto central x (mitad del frame individual)
+        AirplaneFrameHeight / 2   // punto central y
     );
 
     // Definir regiones de sombra
@@ -113,17 +119,34 @@ void initialize_airplane()
     // Sombra Frame 2
     select_region(RegionAirplaneShadow + 1);
     define_region(
-        AirplaneFrameWidth,         // x inicial del segundo frame (mitad del sprite)
-        0,                          // y inicial
-        AirplaneFrameWidth * 2,     // ancho total para el segundo frame
-        AirplaneFrameHeight,        // altura completa
-        AirplaneFrameWidth * 1.5,   // punto central x (mitad del frame individual)
-        AirplaneFrameHeight / 2     // punto central y
+        AirplaneFrameWidth,       // x inicial del segundo frame (mitad del sprite)
+        0,                        // y inicial
+        AirplaneFrameWidth * 2,   // ancho total para el segundo frame
+        AirplaneFrameHeight,      // altura completa
+        AirplaneFrameWidth * 1.5, // punto central x (mitad del frame individual)
+        AirplaneFrameHeight / 2   // punto central y
     );
 
     airplane_frame = 0;
     anim_timer = 0;
     reset_airplane();
+}
+
+void exit_vehicle() {
+    is_player_in_vehicle = 0;
+
+    float offset = 20.0;
+    soldier_x = airplane_x + sin(airplane_angle) * offset;
+    soldier_y = airplane_y - cos(airplane_angle) * offset;
+    soldier_state = SoldierStateActive;
+    target_zoom = CameraZoomGround;
+}
+
+void enter_vehicle()
+{
+    is_player_in_vehicle = 1;
+    soldier_state = SoldierStateNone;
+    target_zoom = CameraZoomAir;
 }
 
 void reset_airplane()
@@ -143,6 +166,8 @@ void reset_airplane()
 
 void update_airplane()
 {
+    if (!is_player_in_vehicle)
+        return;
     // Obtener entrada del control
     int direction_x, direction_y;
     gamepad_direction(&direction_x, &direction_y);
@@ -216,6 +241,15 @@ void update_airplane()
     // Actualizar la cámara
     camera_x = airplane_x - ScreenCenterX;
     camera_y = airplane_y - ScreenCenterY;
+
+    can_exit_vehicle = (airplane_scale <= LandingScale) &&
+                       (is_over_carrier() || is_over_island(airplane_x, airplane_y));
+
+    // Comprobar si el jugador quiere salir (usando botón B por ejemplo)
+    if (can_exit_vehicle && gamepad_button_b() == 1)
+    {
+        exit_vehicle();
+    }
 }
 
 void render_airplane()
