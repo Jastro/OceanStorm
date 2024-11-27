@@ -6,6 +6,7 @@
         <texture path="obj/airplane.vtx" />
         <texture path="obj/carrier.vtx" />
         <texture path="obj/tileset.vtx" />
+        <texture path="obj/bullet.vtx" />
     </textures>
     <sounds>
     </sounds>

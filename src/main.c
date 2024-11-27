@@ -19,6 +19,7 @@
 #include "states/menu.c"
 #include "utils/utilities.c"
 #include "states/gameover.c"
+#include "game/bullet.c"
 
 // Variable global para el estado del juego
 int game_state;
@@ -61,6 +62,7 @@ void main() {
                 if(is_player_in_vehicle) {
                     render_airplane();
                 } else {
+                    render_airplane();
                     render_soldier();
                     render_soldier_ui();  // Solo UI cuando es soldado
                     render_pickups();

@@ -5,6 +5,7 @@
 #include "input.h"
 #include "math.h"
 #include "string.h"
+#include "misc.h"
 
 // Definir las variables globales que declaramos como extern en soldier.h
 float soldier_x;
@@ -21,6 +22,10 @@ int[3] soldier_has_weapon;
 extern float camera_x;
 extern float camera_y;
 extern int game_state;
+extern float[MaxBullets] bullet_x;
+extern float[MaxBullets] bullet_y; 
+extern float[MaxBullets] bullet_angle;
+extern int[MaxBullets] bullet_active;
 
 void initialize_soldier() {
     soldier_armor = MaxArmor;
@@ -36,91 +41,84 @@ void initialize_soldier() {
 }
 
 void update_soldier() {
-    if(soldier_state == SoldierStateNone) return;
-    
- // Actualizar inmunidad
-    if(soldier_state == SoldierStateImmune) {
-        soldier_immunity_timer -= 1.0/60.0;
-        if(soldier_immunity_timer <= 0)
-            soldier_state = SoldierStateActive;
-    }
+   if(soldier_state == SoldierStateNone) return;
+   
+   // Actualizar inmunidad
+   if(soldier_state == SoldierStateImmune) {
+       soldier_immunity_timer -= 1.0/60.0;
+       if(soldier_immunity_timer <= 0)
+           soldier_state = SoldierStateActive;
+   }
 
-    // Actualizar parpadeo
-    if(soldier_state == SoldierStateBlinking) {
-        soldier_blink_timer -= 1.0/60.0;
-        if(soldier_blink_timer <= 0)
-            soldier_state = SoldierStateImmune;
+   // Actualizar parpadeo
+   if(soldier_state == SoldierStateBlinking) {
+       soldier_blink_timer -= 1.0/60.0;
+       if(soldier_blink_timer <= 0)
+           soldier_state = SoldierStateImmune;
+   }
+   
+   // Movimiento del soldado 
+   int direction_x, direction_y;
+   gamepad_direction(&direction_x, &direction_y);
+   soldier_x += direction_x * SoldierSpeed;
+   soldier_y += direction_y * SoldierSpeed;
+   
+   // Apuntar con cruceta
+   int aim_x = 0, aim_y = 0;
+   if(gamepad_up() > 0) aim_y = -1;
+   if(gamepad_down() > 0) aim_y = 1;
+   if(gamepad_left() > 0) aim_x = -1;
+   if(gamepad_right() > 0) aim_x = 1;
+
+   if(aim_x != 0 || aim_y != 0) {
+       soldier_angle = atan2(aim_y, aim_x);
+   }
+   
+   // Cambiar arma con L/R
+   if(gamepad_button_l() == 1)
+       switch_weapon_previous();
+   if(gamepad_button_r() == 1)
+       switch_weapon_next();
+   
+   // A para disparar
+    if(gamepad_button_a() > 0 && !weapon_is_reloading[current_weapon]) {
+       fire_weapon(soldier_x, soldier_y, soldier_angle);
     }
-    
-    // Movimiento del soldado con el pad direccional
-    int direction_x, direction_y;
-    gamepad_direction(&direction_x, &direction_y);
-    
-    // Mover al soldado
-    soldier_x += direction_x * SoldierSpeed;
-    soldier_y += direction_y * SoldierSpeed;
-    
-    // Dirección para apuntar usando los botones ABXY
-    int aim_x = 0, aim_y = 0;
-    if(gamepad_button_y() > 0) aim_y = -1;  // Y = arriba
-    if(gamepad_button_b() > 0) aim_y = 1;   // B = abajo
-    if(gamepad_button_x() > 0) aim_x = -1;  // X = izquierda
-    if(gamepad_button_a() > 0) aim_x = 1;   // A = derecha
-    
-    // Actualizar ángulo solo si hay input de dirección
-    if(aim_x != 0 || aim_y != 0) {
-        soldier_angle = atan2(aim_y, aim_x);
-    }
-    
-    // Cambiar arma con L/R
-    if(gamepad_button_l() == 1)
-        switch_weapon_previous();
-    if(gamepad_button_r() == 1)
-        switch_weapon_next();
-    
-    // Disparar cuando se pulsa START (ya que ABXY se usan para apuntar)
-    if(gamepad_button_start() > 0 && !weapon_is_reloading[current_weapon])
-        fire_weapon(soldier_x, soldier_y, soldier_angle);
-    
-    // Ahora usamos SELECT para las bombas
-    if(gamepad_button_start() == 1 && soldier_bombs > 0)
-        place_bomb();
+   
+   // B para bombas 
+   if(gamepad_button_b() == 1 && soldier_bombs > 0) {
+       place_bomb();
+   }
+
+   // Actualizar balas existentes
+   update_bullets();
 }
 
 void render_soldier() {
-    if(soldier_state == SoldierStateNone) return;
-    
-    // Color base del soldado
-    int color = TextColor;
-    
-    // Si está parpadeando, alternar entre rojo y normal
-    if(soldier_state == SoldierStateBlinking) {
-        if((int)(soldier_blink_timer * 10) % 2 == 0)
-            color = RedColor;
-    }
-    
-    // Dibujar el soldado (círculo por ahora)
-    set_multiply_color(color);
-    select_texture(-1);
-    draw_region_at(soldier_x - camera_x, soldier_y - camera_y);
-    
-    // Dibujar flecha de dirección
-    float arrow_length = 20.0;
-    float arrow_end_x = soldier_x + cos(soldier_angle) * arrow_length;
-    float arrow_end_y = soldier_y + sin(soldier_angle) * arrow_length;
-    
-    set_multiply_color(RedColor);
-    select_texture(-1);
-    // Dibujar línea desde el soldado hasta el punto final
-    select_region(0);  // region cuadrada de la BIOS
-    
-    // Dibujamos varios puntos para simular una línea
-    float step = 2.0;
-    for(float t = 0; t < arrow_length; t += step) {
-        float point_x = soldier_x + cos(soldier_angle) * t;
-        float point_y = soldier_y + sin(soldier_angle) * t;
-        draw_region_at(point_x - camera_x, point_y - camera_y);
-    }
+   if(soldier_state == SoldierStateNone) return;
+
+   // Dibujar soldado
+   set_multiply_color(TextColor);
+   select_texture(-1);
+   draw_region_at(soldier_x - camera_x, soldier_y - camera_y);
+   
+   // Flecha de dirección
+   float arrow_length = 20.0;
+   set_multiply_color(RedColor);
+   for(float t = 0; t < arrow_length; t += 2.0) {
+       float point_x = soldier_x + cos(soldier_angle) * t;
+       float point_y = soldier_y + sin(soldier_angle) * t;
+       draw_region_at(point_x - camera_x, point_y - camera_y);
+   }
+
+   // Dibujar balas
+   select_texture(TextureBullet);
+   set_multiply_color(TextColor);
+   for(int i = 0; i < MaxBullets; i++) {
+       if(bullet_active[i]) {
+           draw_region_at(bullet_x[i] - camera_x, bullet_y[i] - camera_y);
+       }
+   }
 }
 
 void render_soldier_ui() {
@@ -133,22 +131,22 @@ void render_soldier_ui() {
     int[12] number_buffer;  // Suficientemente grande para cualquier número
 
     // Mostrar munición
-    print_at(10, 10, "AMMO: ");
+    print_at(10, 40, "AMMO: ");
     itoa(weapon_current_ammo[current_weapon], number_buffer, 10);
-    print_at(70, 10, number_buffer);
-    print_at(100, 10, "/");
+    print_at(70, 40, number_buffer);
+    print_at(100, 40, "/");
     itoa(weapon_max_ammo[current_weapon], number_buffer, 10);
-    print_at(120, 10, number_buffer);
+    print_at(120, 40, number_buffer);
 
     // Mostrar bombas
-    print_at(10, 30, "BOMBS: ");
+    print_at(10, 60, "BOMBS: ");
     itoa(soldier_bombs, number_buffer, 10);
-    print_at(70, 30, number_buffer);
+    print_at(70, 60, number_buffer);
 
     // Mostrar armadura
-    print_at(10, 50, "ARMOR: ");
+    print_at(10, 80, "ARMOR: ");
     itoa(soldier_armor, number_buffer, 10);
-    print_at(70, 50, number_buffer);
+    print_at(70, 80, number_buffer);
 }
 
 void soldier_take_damage() {

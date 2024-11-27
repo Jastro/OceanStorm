@@ -23,6 +23,11 @@
 #define CameraZoomGround 0.5
 #define CameraZoomSpeed 0.05
 
+//Bullets
+#define BulletSpeed 5.0
+#define MaxBullets 50
+#define BulletSize 16
+
 // sprites
 #define AirplaneSpriteWidth 128    // Ancho total del sprite
 #define AirplaneSpriteHeight 91    // Alto total del sprite
@@ -34,6 +39,7 @@
 #define TextureAirplane 0
 #define TextureCarrier 1
 #define TextureIsland 2
+#define TextureBullet 3 
 
 // Define regiones para sprites
 #define RegionAirplane 0

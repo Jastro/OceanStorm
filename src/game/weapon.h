@@ -25,7 +25,6 @@ extern int[3] weapon_bullet_count;  // Número de balas por disparo
 extern float[3] weapon_last_shot;   // Último disparo
 extern float[3] weapon_reload_start;// Cuando empezó la recarga
 extern int[3] weapon_is_reloading;  // Estado de recarga
-
 extern int current_weapon;     // Arma actual
 
 void initialize_weapons();

@@ -24,6 +24,13 @@ extern float soldier_blink_timer;
 extern int[3] soldier_has_weapon;
 extern float camera_zoom;
 extern float target_zoom;
+extern float[MaxBullets] bullet_x;
+extern float[MaxBullets] bullet_y; 
+extern float[MaxBullets] bullet_angle;
+extern float[MaxBullets] bullet_speed;
+extern float[MaxBullets] bullet_damage;
+extern float[MaxBullets] bullet_distance;
+extern int[MaxBullets] bullet_active;
 
 // Funciones del soldado
 void initialize_soldier();
@@ -35,5 +42,7 @@ void collect_supplies();
 void switch_weapon_next();
 void switch_weapon_previous();
 void give_weapon(int weapon_type);
+void create_bullet(float x, float y, float angle, float spread);
+void update_bullets();
 
 #endif

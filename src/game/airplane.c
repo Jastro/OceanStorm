@@ -134,12 +134,12 @@ void initialize_airplane()
 
 void exit_vehicle() {
     is_player_in_vehicle = 0;
+    target_zoom = CameraZoomGround;
 
     float offset = 20.0;
     soldier_x = airplane_x + sin(airplane_angle) * offset;
     soldier_y = airplane_y - cos(airplane_angle) * offset;
     soldier_state = SoldierStateActive;
-    target_zoom = CameraZoomGround;
 }
 
 void enter_vehicle()
