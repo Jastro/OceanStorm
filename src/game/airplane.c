@@ -251,9 +251,6 @@ void update_airplane()
 
 void render_airplane()
 {
-    // 1. Dibujar el mundo base
-    // render_world(camera_x, camera_y);
-
     // 2. Dibujar la sombra primero
     select_texture(TextureAirplane);
     select_region(RegionAirplaneShadow + airplane_frame);
