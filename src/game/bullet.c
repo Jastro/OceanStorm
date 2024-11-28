@@ -52,9 +52,9 @@ void update_bullets() {
 }
 
 void render_bullets() {
-    select_texture(-1);  // Usar textura de la BIOS
-    select_region(0);    // Región cuadrada
-    set_multiply_color(color_yellow);  // Color amarillo para las balas
+    select_texture(TextureBullet);
+    select_region(0);
+    define_region(0, 0, BulletSize, BulletSize, BulletSize/2, BulletSize/2);
     
     for(int i = 0; i < MaxBullets; i++) {
         if(bullet_active[i]) {

@@ -26,7 +26,7 @@
 //Bullets
 #define BulletSpeed 5.0
 #define MaxBullets 50
-#define BulletSize 16
+#define BulletSize 8
 
 // sprites
 #define AirplaneSpriteWidth 128    // Ancho total del sprite
@@ -40,7 +40,7 @@
 #define TextureCarrier 1
 #define TextureIsland 2
 #define TextureBullet 3
-#define TextureSoldier 4  // Ya que es la quinta textura (0-4)
+#define TextureSoldier 4
 
 
 // Define regiones para sprites
