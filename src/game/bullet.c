@@ -10,6 +10,7 @@ float[MaxBullets] bullet_speed;
 float[MaxBullets] bullet_damage;
 float[MaxBullets] bullet_distance;
 int[MaxBullets] bullet_active;
+int[MaxBullets] bullet_type;
 
 void create_bullet(float x, float y, float angle, float spread) {
     for(int i = 0; i < MaxBullets; i++) {
@@ -52,21 +53,19 @@ void update_bullets() {
 }
 
 void render_bullets() {
-    select_texture(TextureBullet);
+    select_texture(-1);
     select_region(0);
-    define_region(0, 0, BulletSize, BulletSize, BulletSize/2, BulletSize/2);
     
     for(int i = 0; i < MaxBullets; i++) {
         if(bullet_active[i]) {
-            // Dibujar cada bala como un punto pequeño
-            float screen_x = bullet_x[i] - camera_x;
-            float screen_y = bullet_y[i] - camera_y;
-            
-            // Solo dibujar si está en pantalla
-            if(screen_x >= 0 && screen_x < screen_width &&
-               screen_y >= 0 && screen_y < screen_height) {
-                draw_region_at(screen_x, screen_y);
+            // Color según tipo de bala
+            if(bullet_type[i] == BulletTypePlayer) {
+                set_multiply_color(0xFFFFFF00);  // Amarillo para jugador
+            } else {
+                set_multiply_color(0xFF0000FF);  // Rojo para torretas
             }
+            
+            draw_region_at(bullet_x[i] - camera_x, bullet_y[i] - camera_y);
         }
     }
 }

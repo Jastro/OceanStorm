@@ -8,6 +8,7 @@
 #include "math.h"
 #include "string.h"
 #include "soldier.h"
+#include "events.h"
 
 
 // Variables globales para el estado del avión
@@ -137,6 +138,11 @@ void exit_vehicle() {
         soldier_y = airplane_y + sin(airplane_angle) * 50;
         soldier_state = SoldierStateActive;  // Asegurarse de que está activo
         target_zoom = CameraZoomGround;
+
+        if(!has_event_happened(EventFirstExit)) {
+            show_dialog("¡Presiona B para volver al avión cuando estés cerca!", -1);
+            //mark_event_as_happened(EventFirstExit);
+        }
     }
 }
 

@@ -8,6 +8,8 @@
         <texture path="obj/tileset.vtx" />
         <texture path="obj/bullet.vtx" />
         <texture path="obj/soldier.vtx" />
+        <texture path="obj/base.vtx" />
+        <texture path="obj/machinegun.vtx" />
     </textures>
     <sounds>
     </sounds>

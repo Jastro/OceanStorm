@@ -53,7 +53,7 @@ void initialize_islands() {
     
     num_islands = MaxIslands;
     
-    float safe_radius = TileSize * MaxTilesX * 2; // Radio de seguridad para separación
+    float safe_radius = TileSize * MaxTilesX; // Radio de seguridad para separación
     float carrier_safe_zone = 500; // Zona segura alrededor del carrier
     
     for(int i = 0; i < num_islands; i++) {

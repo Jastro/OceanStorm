@@ -6,6 +6,9 @@
 #include "game/island.h"
 #include "game/render_system.h"
 #include "game/soldier.h"
+#include "game/events.h"
+#include "game/turret.h"
+#include "game/dialog.h"
 #include "states/menu.h"
 #include "states/gameover.h"
 
@@ -16,6 +19,9 @@
 #include "game/soldier.c"
 #include "game/weapon.c"
 #include "game/pickup.c"
+#include "game/turret.c"
+#include "game/dialog.c"
+#include "game/events.c"
 #include "states/menu.c"
 #include "utils/utilities.c"
 #include "states/gameover.c"
@@ -34,6 +40,7 @@ void main() {
     initialize_soldier();      // El soldado
     initialize_weapons();      // Las armas
     initialize_pickups();      // Los pickups
+    initialize_events();
     
     // Establecer el estado inicial
     game_state = StateMenu;
@@ -48,32 +55,38 @@ void main() {
                 update_menu();
                 render_menu();
                 break;
-            
+
             case StateGame:
-                // Actualización
-                update_airplane();
-                update_soldier();
-                update_pickups();
-                update_camera_zoom();
-                
-                // Renderizado
+                 if(!dialog_active) {
+                    update_airplane();
+                    update_soldier();
+                    update_pickups();
+                    update_turrets();
+                    update_camera_zoom();
+                 }
+                update_dialog();
                 render_world(camera_x, camera_y);
                 render_airplane();
-                
+                render_turrets();
+
                 if(!is_player_in_vehicle) {
                     render_soldier();
                     render_soldier_ui(); 
                     render_bullets(); // Solo UI cuando es soldado
                     render_pickups();
                 }
+
+                if(dialog_active) {
+                    render_dialog();
+                }
                 break;
-            
+
             case StateGameOver:
                 update_gameover();
                 render_gameover();
                 break;
         }
-        
+
         // Esperar al siguiente frame
         end_frame();
     }
