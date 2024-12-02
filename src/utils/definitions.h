@@ -97,8 +97,8 @@
 #define LandingScale 0.5
 
 // ---- ÁREA DE ATERRIZAJE ----
-#define LandingAreaWidth 60
-#define LandingAreaHeight 60
+#define LandingAreaWidth 77
+#define LandingAreaHeight 255
 
 // ---- PORTAAVIONES ----
 #define StartingX (WorldWidth / 2)
