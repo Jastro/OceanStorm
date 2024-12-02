@@ -63,23 +63,26 @@ void main()
         case StateGame:
             if (!dialog_active)
             {
+                update_turrets();
                 update_airplane();
                 update_soldier();
                 update_pickups();
-                update_turrets();
                 update_camera_zoom();
+                update_bullets();
             }
-            update_dialog();
+
             render_world(camera_x, camera_y);
-            render_airplane();
             render_turrets();
+            render_bullets();
+            render_airplane();
+            render_pickups();
+
+            update_dialog();
 
             if (!is_player_in_vehicle)
             {
                 render_soldier();
                 render_soldier_ui();
-                render_bullets(); // Solo UI cuando es soldado
-                render_pickups();
                 // show_dialog("¡Presiona B para volver al avión cuando estés cerca!", TextureAirplane);
             }
 

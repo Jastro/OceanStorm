@@ -93,41 +93,28 @@ void spawn_turret(float x, float y)
     }
 }
 
-void update_turrets()
-{
+void update_turrets() {
     float current_time = get_frame_counter() / 60.0;
 
-    for (int i = 0; i < MaxTurrets; i++)
-    {
+    for (int i = 0; i < MaxTurrets; i++) {
         if (!turret_active[i])
             continue;
 
-        // Solo procesar si el jugador está en el avión
-        if (is_player_in_vehicle)  // Si está en el avión
-        {
-            // Calcular distancia al avión
+        if (is_player_in_vehicle) {
             float dx = airplane_x - turret_x[i];
             float dy = airplane_y - turret_y[i];
             float distance = sqrt(dx * dx + dy * dy);
 
             // Comprobar si está en rango
-            if (distance <= TurretVisionRange)
-            {
-                // Rotar hacia el avión
+            if (distance <= TurretVisionRange) {
                 turret_angle[i] = atan2(dy, dx);
 
                 // Disparar si ha pasado suficiente tiempo
-                if (current_time - turret_last_shot[i] >= TurretFireRate)
-                {
+                if (current_time - turret_last_shot[i] >= TurretFireRate) {
                     create_turret_bullet(turret_x[i], turret_y[i], turret_angle[i]);
                     turret_last_shot[i] = current_time;
                 }
             }
-        }
-        else  // Si NO está en el avión
-        {
-            // Resetear el tiempo de último disparo para evitar disparos inmediatos al volver al avión
-            turret_last_shot[i] = current_time;
         }
     }
 }

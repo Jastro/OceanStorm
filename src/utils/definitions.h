@@ -87,8 +87,9 @@
 #define AirplaneAnimSpeed 10
 #define RotationSpeed 0.05
 #define MovementSpeed 3.0
-#define DescentSpeed 0.01
-#define MaxScale 1.0
+#define AscendSpeed 0.005
+#define DescentSpeed 0.005
+#define MaxScale 0.8
 #define MinScale 0.2
 #define AirplaneShadowOffset 20
 #define MaxFuel 1000

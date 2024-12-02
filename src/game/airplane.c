@@ -138,7 +138,7 @@ void initialize_airplane()
 void exit_vehicle()
 {
     is_player_in_vehicle = 0;
-    soldier_x = airplane_x + cos(airplane_angle) * 50;
+ soldier_x = airplane_x + cos(airplane_angle) * 50;
     soldier_y = airplane_y + sin(airplane_angle) * 50;
     soldier_state = SoldierStateActive;
     target_zoom = CameraZoomGround;
@@ -193,9 +193,8 @@ void update_airplane()
     {
         airplane_x += MovementSpeed * sin(airplane_angle);
         airplane_y -= MovementSpeed * cos(airplane_angle);
-        airplane_scale = clamp(airplane_scale + DescentSpeed, MinScale, MaxScale);
         fuel -= FuelConsumption;
-
+        airplane_scale = clamp(airplane_scale + AscendSpeed, MinScale, MaxScale);
         // Actualizar animación
         anim_timer++;
         if (anim_timer >= AirplaneAnimSpeed)
