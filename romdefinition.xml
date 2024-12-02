@@ -10,6 +10,7 @@
         <texture path="obj/soldier.vtx" />
         <texture path="obj/base.vtx" />
         <texture path="obj/machinegun.vtx" />
+        <texture path="obj/enemyBullet.vtx" />
     </textures>
     <sounds>
     </sounds>

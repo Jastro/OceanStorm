@@ -1,5 +1,6 @@
 // turret.c
 #include "turret.h"
+#include "island.h"
 #include "../utils/definitions.h"
 #include "video.h"
 #include "math.h"
@@ -9,6 +10,12 @@ float[MaxTurrets] turret_y;
 float[MaxTurrets] turret_angle;
 float[MaxTurrets] turret_last_shot;
 int[MaxTurrets] turret_active;
+extern int num_islands;
+extern float[MaxIslands] island_x;
+extern float[MaxIslands] island_y;
+extern float airplane_x;
+extern float airplane_y;
+extern int is_player_in_vehicle;
 
 void initialize_turrets()
 {
@@ -16,13 +23,14 @@ void initialize_turrets()
     select_texture(TextureTurretBase);
     select_region(RegionTurretBase);
     define_region(0, 0, TurretBaseWidth, TurretBaseHeight,
-                 TurretBaseWidth / 2, TurretBaseHeight / 2);
+                  TurretBaseWidth / 2, TurretBaseHeight / 2);
 
     // Configurar sprite del cañón
     select_texture(TextureTurretGun);
     select_region(RegionTurretGun);
     define_region(0, 0, TurretGunWidth, TurretGunHeight,
-                 TurretGunWidth / 2, TurretGunHeight / 2); 
+                  TurretGunWidth / 2, TurretGunHeight / 2);
+
 
     // Inicializar arrays
     for (int i = 0; i < MaxTurrets; i++)
@@ -42,17 +50,20 @@ void initialize_turrets()
     }
 }
 
-void render_turrets() {
+void render_turrets()
+{
     set_multiply_color(TextColor);
-    
-    for(int i = 0; i < MaxTurrets; i++) {
-        if(!turret_active[i]) continue;
-        
+
+    for (int i = 0; i < MaxTurrets; i++)
+    {
+        if (!turret_active[i])
+            continue;
+
         // Dibujar base
         select_texture(TextureTurretBase);
         select_region(RegionTurretBase);
         draw_region_at(turret_x[i] - camera_x, turret_y[i] - camera_y);
-        
+
         // Dibujar cañón
         select_texture(TextureTurretGun);
         select_region(RegionTurretGun);
@@ -63,21 +74,7 @@ void render_turrets() {
 
 void create_turret_bullet(float x, float y, float angle)
 {
-    for (int i = 0; i < MaxBullets; i++)
-    {
-        if (!bullet_active[i])
-        {
-            bullet_x[i] = x;
-            bullet_y[i] = y;
-            bullet_angle[i] = angle;
-            bullet_speed[i] = TurretBulletSpeed;
-            bullet_damage[i] = TurretDamage;
-            bullet_distance[i] = 0;
-            bullet_active[i] = 1;
-            bullet_type[i] = BulletTypeTurret;
-            break;
-        }
-    }
+    create_bullet(x, y, angle, 0, BulletTypeTurret); // Sin spread para las torretas
 }
 
 void spawn_turret(float x, float y)
@@ -86,10 +83,10 @@ void spawn_turret(float x, float y)
     {
         if (!turret_active[i])
         {
-            turret_x[i] = x;
+            turret_x[i] = x; // Usar los arrays globales
             turret_y[i] = y;
-            turret_angle[i] = 0;     // Corregido: asignar al elemento del array
-            turret_last_shot[i] = 0; // Corregido: asignar al elemento del array
+            turret_angle[i] = 0;
+            turret_last_shot[i] = 0;
             turret_active[i] = 1;
             break;
         }
@@ -105,27 +102,32 @@ void update_turrets()
         if (!turret_active[i])
             continue;
 
-        // Solo disparar si el jugador está en el avión
-        if (!is_player_in_vehicle)
-            continue;
-
-        // Calcular distancia al avión
-        float dx = airplane_x - turret_x[i];
-        float dy = airplane_y - turret_y[i];
-        float distance = sqrt(dx * dx + dy * dy);
-
-        // Comprobar si está en rango
-        if (distance <= TurretVisionRange)
+        // Solo procesar si el jugador está en el avión
+        if (is_player_in_vehicle)  // Si está en el avión
         {
-            // Rotar hacia el avión
-            turret_angle[i] = atan2(dy, dx);
+            // Calcular distancia al avión
+            float dx = airplane_x - turret_x[i];
+            float dy = airplane_y - turret_y[i];
+            float distance = sqrt(dx * dx + dy * dy);
 
-            // Disparar si ha pasado suficiente tiempo
-            if (current_time - turret_last_shot[i] >= TurretFireRate)
+            // Comprobar si está en rango
+            if (distance <= TurretVisionRange)
             {
-                create_turret_bullet(turret_x[i], turret_y[i], turret_angle[i]);
-                turret_last_shot[i] = current_time;
+                // Rotar hacia el avión
+                turret_angle[i] = atan2(dy, dx);
+
+                // Disparar si ha pasado suficiente tiempo
+                if (current_time - turret_last_shot[i] >= TurretFireRate)
+                {
+                    create_turret_bullet(turret_x[i], turret_y[i], turret_angle[i]);
+                    turret_last_shot[i] = current_time;
+                }
             }
+        }
+        else  // Si NO está en el avión
+        {
+            // Resetear el tiempo de último disparo para evitar disparos inmediatos al volver al avión
+            turret_last_shot[i] = current_time;
         }
     }
 }

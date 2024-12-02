@@ -2,9 +2,8 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#define DialogWidth 300    // Más pequeño
-#define DialogHeight 150   // Más pequeño
-#define DialogMargin 10    // Margen interior
+#define DialogWidth 400
+#define DialogHeight 200
 
 extern int dialog_active;
 extern int[256] dialog_text;  // Buffer para el texto

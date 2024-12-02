@@ -20,7 +20,8 @@ void reset_airplane();
 void update_airplane();
 void render_airplane();
 void render_fuel_gauge();
-int is_over_carrier();  // Añadida la declaración
+int soldier_is_over_carrier(float x, float y);
+int is_over_carrier();
 void exit_vehicle();
 
 #endif

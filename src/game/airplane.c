@@ -10,7 +10,6 @@
 #include "soldier.h"
 #include "events.h"
 
-
 // Variables globales para el estado del avión
 float airplane_x;
 float airplane_y;
@@ -27,18 +26,23 @@ int is_player_in_vehicle = 1;
 // Variable externa para el estado del juego
 extern int game_state;
 
-int is_over_carrier()
+int soldier_is_over_carrier(float x, float y)
 {
-    float carrier_center_x = StartingX + (CarrierWidth / 2);
-    float carrier_bottom = StartingY + CarrierHeight; // Parte inferior del carrier
-
-    // Comprobar si estamos sobre el carrier completo
-    float dx = airplane_x - carrier_center_x;
-    float dy = airplane_y - StartingY; // Distancia desde la parte superior
+    float dx = x - (StartingX - CarrierWidth / 2);
+    float dy = y - (StartingY - CarrierHeight / 2);
 
     // El área de aterrizaje cubre todo el carrier
-    return (dx >= -CarrierWidth / 2 && dx <= CarrierWidth / 2 && // Dentro del ancho del carrier
-            dy >= 0 && dy <= CarrierHeight);                     // Dentro del alto del carrier
+    return (dx >= 0 && dx <= CarrierWidth) && (dy >= 0 && dy <= CarrierHeight);
+}
+
+int is_over_carrier()
+{
+    // Comprobar si estamos sobre el carrier completo
+    float dx = airplane_x - (StartingX - CarrierWidth / 2);
+    float dy = airplane_y - (StartingY - CarrierHeight / 2);
+
+    // El área de aterrizaje cubre todo el carrier
+    return (dx >= 0 && dx <= CarrierWidth) && (dy >= 0 && dy <= CarrierHeight);
 }
 
 void render_fuel_gauge()
@@ -84,23 +88,23 @@ void initialize_airplane()
     // Frame 1
     select_region(0);
     define_region(
-        0,                      // x inicial del primer frame
-        0,                      // y inicial (mismo para ambos)
-        AirplaneFrameWidth,     // anchura del frame
-        AirplaneFrameHeight,    // altura completa
-        AirplaneFrameWidth / 2, // punto central x (mitad del frame individual)
-        AirplaneFrameHeight / 2 // punto central y
+        0,                   // x inicial del primer frame
+        0,                   // y inicial (mismo para ambos)
+        AirplaneFrameWidth,  // anchura del frame
+        AirplaneFrameHeight, // altura completa
+        39,                  // punto central x (mitad del frame individual)
+        39                   // punto central y
     );
 
     // Frame 2
     select_region(1);
     define_region(
-        AirplaneFrameWidth,       // x inicial del segundo frame (mitad del sprite)
-        0,                        // y inicial
-        AirplaneFrameWidth * 2,   // ancho total para el segundo frame
-        AirplaneFrameHeight,      // altura completa
-        AirplaneFrameWidth * 1.5, // punto central x (mitad del frame individual)
-        AirplaneFrameHeight / 2   // punto central y
+        AirplaneFrameWidth,      // x inicial del segundo frame (mitad del sprite)
+        0,                       // y inicial
+        AirplaneFrameWidth * 2,  // ancho total para el segundo frame
+        AirplaneFrameHeight,     // altura completa
+        39 + AirplaneFrameWidth, // punto central x (mitad del frame individual)
+        39                       // punto central y
     );
 
     // Definir regiones de sombra
@@ -131,24 +135,24 @@ void initialize_airplane()
     reset_airplane();
 }
 
-void exit_vehicle() {
- if((is_over_carrier() || is_over_island(airplane_x, airplane_y))) {
-        is_player_in_vehicle = 0;
-        soldier_x = airplane_x + cos(airplane_angle) * 50;  // Usar el ángulo del avión
-        soldier_y = airplane_y + sin(airplane_angle) * 50;
-        soldier_state = SoldierStateActive;  // Asegurarse de que está activo
-        target_zoom = CameraZoomGround;
-
-        if(!has_event_happened(EventFirstExit)) {
-            show_dialog("¡Presiona B para volver al avión cuando estés cerca!", -1);
-            //mark_event_as_happened(EventFirstExit);
-        }
-    }
+void exit_vehicle()
+{
+    is_player_in_vehicle = 0;
+    soldier_x = airplane_x + cos(airplane_angle) * 50;
+    soldier_y = airplane_y + sin(airplane_angle) * 50;
+    soldier_state = SoldierStateActive;
+    target_zoom = CameraZoomGround;
+    /*if (!has_event_happened(EventFirstExit))
+    {
+        show_dialog("¡Presiona B para volver al avión cuando estés cerca!", -1);
+        // mark_event_as_happened(EventFirstExit);
+    }*/
 }
 
 void enter_vehicle()
 {
-    if(!is_player_in_vehicle) {  // Solo si estamos fuera del avión
+    if (!is_player_in_vehicle)
+    { // Solo si estamos fuera del avión
         is_player_in_vehicle = 1;
         soldier_state = SoldierStateNone;
         target_zoom = CameraZoomAir;
@@ -244,15 +248,17 @@ void update_airplane()
     airplane_x = clamp(airplane_x, 0, WorldWidth);
     airplane_y = clamp(airplane_y, 0, WorldHeight);
 
-    if(is_player_in_vehicle) {
+    if (is_player_in_vehicle)
+    {
         camera_x = airplane_x - ScreenCenterX;
         camera_y = airplane_y - ScreenCenterY;
     }
 
-    if((is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1) {
-            exit_vehicle();
-            return;
-        }
+    if ((is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1)
+    {
+        exit_vehicle();
+        return;
+    }
 }
 
 void render_airplane()
@@ -278,9 +284,11 @@ void render_airplane()
     render_fuel_gauge();
 }
 
-void update_camera_zoom() {
+void update_camera_zoom()
+{
     // Interpolar suavemente entre el zoom actual y el objetivo
-    if(camera_zoom != target_zoom) {
+    if (camera_zoom != target_zoom)
+    {
         float diff = target_zoom - camera_zoom;
         camera_zoom += diff * CameraZoomSpeed;
     }

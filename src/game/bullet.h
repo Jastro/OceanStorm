@@ -7,7 +7,7 @@
 
 extern int[MaxBullets] bullet_type;
 
-void create_bullet(float x, float y, float angle, float spread);
+void create_bullet(float x, float y, float angle, float spread, int type);
 void update_bullets();
 void render_bullets();
 void create_turret_bullet(float x, float y, float angle);

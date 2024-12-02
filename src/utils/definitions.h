@@ -9,6 +9,7 @@
 #define TextureSoldier 4
 #define TextureTurretBase 5
 #define TextureTurretGun 6
+#define TextureEnemyBullet 7
 
 // ---- REGIONES ----
 #define RegionAirplane 0
