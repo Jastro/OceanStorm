@@ -194,7 +194,8 @@ void update_airplane()
         airplane_x += MovementSpeed * sin(airplane_angle);
         airplane_y -= MovementSpeed * cos(airplane_angle);
         fuel -= FuelConsumption;
-        airplane_scale = clamp(airplane_scale + AscendSpeed, MinScale, MaxScale);
+        //airplane_scale = clamp(airplane_scale + AscendSpeed, MinScale, MaxScale);
+        airplane_scale + AscendSpeed;
         // Actualizar animación
         anim_timer++;
         if (anim_timer >= AirplaneAnimSpeed)

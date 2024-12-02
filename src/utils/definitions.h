@@ -69,9 +69,9 @@
 // ---- CONFIGURACIÓN DE TORRETAS ----
 #define MaxTurrets 10
 #define TurretVisionRange 300.0
-#define TurretFireRate 1.0
-#define TurretBulletSpeed 3.0
-#define TurretBulletRange 200.0
+#define TurretFireRate 3.0
+#define TurretBulletSpeed 8.0
+#define TurretBulletRange 400.0
 #define TurretDamage 10.0
 
 // ---- DIMENSIONES DEL MUNDO ----
@@ -87,16 +87,16 @@
 #define AirplaneAnimSpeed 10
 #define RotationSpeed 0.05
 #define MovementSpeed 3.0
-#define AscendSpeed 0.005
-#define DescentSpeed 0.005
+#define AscendSpeed 0.001
+#define DescentSpeed 0.001
 #define MaxScale 0.8
 #define MinScale 0.2
 #define AirplaneShadowOffset 20
 #define MaxFuel 1000
 #define FuelConsumption 0.5
 #define RefuelRate 2.0
-#define InitialScale 0.3
-#define LandingScale 0.5
+#define InitialScale 0.8
+#define LandingScale 0.4
 
 // ---- ÁREA DE ATERRIZAJE ----
 #define LandingAreaWidth 77
