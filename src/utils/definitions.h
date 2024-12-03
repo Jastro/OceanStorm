@@ -145,7 +145,10 @@
 #define SeaColor 0xFF805020
 #define ShadowColor 0x80000000
 #define IslandColor 0xFF604020
+#define GreenColor 0xFF00FF00
 
+// ---- UI ----
 #define BlinkRate 30
+#define HealthFlashTime 0.5
 
 #endif

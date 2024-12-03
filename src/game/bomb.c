@@ -44,25 +44,26 @@ void plant_bomb(float x, float y) {
 }
 
 void check_bomb_explosions() {
-    for(int b = 0; b < MaxActiveBombs; b++) {
-        if(!bomb_active[b]) continue;
-        
-        if(bomb_timer[b] <= 0) {
-            for(int t = 0; t < MaxTurrets; t++) {
-                if(!turret_active[t]) continue;
-                
-                float dx = bomb_x[b] - turret_x[t];
-                float dy = bomb_y[b] - turret_y[t];
-                float distance = sqrt(dx*dx + dy*dy);
-                
-                if(distance <= BombExplosionRadius) {
-                    turret_active[t] = 0;
-                }
-            }
-            
-            bomb_active[b] = 0;
-        }
-    }
+   for(int b = 0; b < MaxActiveBombs; b++) {
+       if(!bomb_active[b]) continue;
+       
+       if(bomb_timer[b] <= 0) {
+           for(int t = 0; t < MaxTurrets; t++) {
+               if(!turret_active[t]) continue;
+               
+               float dx = bomb_x[b] - turret_x[t];
+               float dy = bomb_y[b] - turret_y[t];
+               float distance = sqrt(dx*dx + dy*dy);
+               
+               if(distance <= BombExplosionRadius) {
+                   turret_active[t] = 0;
+                   // Spawn shotgun pickup donde murió la torreta
+                   spawn_pickup(turret_x[t], turret_y[t], PickupWeapon, WeaponTypeShotgun);
+               }
+           }
+           bomb_active[b] = 0;
+       }
+   }
 }
 
 void update_bombs() {

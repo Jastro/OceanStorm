@@ -26,6 +26,7 @@ int is_player_in_vehicle = 1;
 int airplane_current_ammo;
 float airplane_last_shot_time;
 int airplane_health;
+float health_flash_timer = 0;
 
 // Variable externa para el estado del juego
 extern int game_state;
@@ -290,7 +291,7 @@ void update_airplane()
         camera_y = airplane_y - ScreenCenterY;
     }
 
-    if ((airplane_scale <= LandingScale) && (is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1)
+    if ((is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1)
     {
         exit_vehicle();
         return;
@@ -308,6 +309,7 @@ void render_ui()
     int bar_height = 10;
     int health_width = (int)((airplane_health / (float)AirplaneMaxHealth) * max_bar_width);
 
+    // Barra de vida
     set_multiply_color(RedColor);
     print_at(10, 50, "HP:");
     for (int x = 0; x < max_bar_width; x++)
@@ -318,7 +320,16 @@ void render_ui()
         }
     }
 
-    set_multiply_color(TextColor);
+    // Verde normal, rojo cuando recibe daño
+    if (health_flash_timer > 0)
+    {
+        set_multiply_color(RedColor);
+    }
+    else
+    {
+        set_multiply_color(GreenColor);
+    }
+
     for (int x = 0; x < health_width; x++)
     {
         for (int y = 0; y < bar_height; y++)
@@ -351,6 +362,11 @@ void render_airplane()
     if (is_player_in_vehicle)
     {
         render_ui();
+    }
+
+    if (health_flash_timer > 0)
+    {
+        health_flash_timer -= 1.0 / 60.0;
     }
 }
 

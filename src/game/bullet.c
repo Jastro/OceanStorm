@@ -43,6 +43,7 @@ void check_bullet_collisions()
                 {
                     bullet_active[i] = 0;
                     airplane_health -= TurretDamagePerBullet;
+                    health_flash_timer = HealthFlashTime;
                     if (airplane_health <= 0)
                     {
                         game_state = StateGameOver;

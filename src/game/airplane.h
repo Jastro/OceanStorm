@@ -16,6 +16,7 @@ extern int is_player_in_vehicle;
 extern int airplane_current_ammo;
 extern float airplane_last_shot_time;
 extern int airplane_health;
+extern float health_flash_timer;
 
 // Funciones del avión
 void initialize_airplane();
