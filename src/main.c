@@ -5,6 +5,10 @@
 #include "game/airplane.h"
 #include "game/island.h"
 #include "game/render_system.h"
+#include "game/soldier.h"
+#include "game/events.h"
+#include "game/turret.h"
+#include "game/dialog.h"
 #include "states/menu.h"
 #include "states/gameover.h"
 
@@ -12,39 +16,88 @@
 #include "game/airplane.c"
 #include "game/island.c"
 #include "game/render_system.c"
+#include "game/soldier.c"
+#include "game/weapon.c"
+#include "game/pickup.c"
+#include "game/turret.c"
+#include "game/dialog.c"
+#include "game/events.c"
 #include "states/menu.c"
 #include "utils/utilities.c"
 #include "states/gameover.c"
+#include "game/bullet.c"
 
 // Variable global para el estado del juego
 int game_state;
+float camera_zoom = 1.0;
+float target_zoom = 1.0;
 
-void main() {
-    initialize_carrier();      // Inicializar el carrier primero
-    initialize_islands();      // Luego las islas
-    initialize_airplane();     // Y finalmente el avión
+void main()
+{
+    // Inicializar sistemas en orden
+    initialize_carrier();  // Inicializar el carrier primero
+    initialize_islands();  // Luego las islas
+    initialize_airplane(); // El avión
+    initialize_soldier();  // El soldado
+    initialize_weapons();  // Las armas
+    initialize_pickups();  // Los pickups
+    initialize_events();
+    initialize_turrets();
+
+    // Establecer el estado inicial
     game_state = StateMenu;
-    
+
     // Bucle principal del juego
-    while(true) {
+    while (true)
+    {
+        clear_screen(BackgroundColor);
+
         // Actualizar y renderizar según el estado actual
-        switch(game_state) {
-            case StateMenu:
-                update_menu();
-                render_menu();
-                break;
-            
-            case StateGame:
+        switch (game_state)
+        {
+        case StateMenu:
+            update_menu();
+            render_menu();
+            break;
+
+        case StateGame:
+            if (!dialog_active)
+            {
+                update_turrets();
                 update_airplane();
-                render_airplane();
-                break;
-            
-            case StateGameOver:
-                update_gameover();
-                render_gameover();
-                break;
+                update_soldier();
+                update_pickups();
+                update_camera_zoom();
+                update_bullets();
+            }
+
+            render_world(camera_x, camera_y);
+            render_turrets();
+            render_bullets();
+            render_airplane();
+            render_pickups();
+
+            update_dialog();
+
+            if (!is_player_in_vehicle)
+            {
+                render_soldier();
+                render_soldier_ui();
+                // show_dialog("¡Presiona B para volver al avión cuando estés cerca!", TextureAirplane);
+            }
+
+            if (dialog_active)
+            {
+                render_dialog();
+            }
+            break;
+
+        case StateGameOver:
+            update_gameover();
+            render_gameover();
+            break;
         }
-        
+
         // Esperar al siguiente frame
         end_frame();
     }

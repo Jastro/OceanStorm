@@ -21,7 +21,8 @@ int get_tile(int island_index, int x, int y) {
 void generate_island_layout(int island_index) {
     int center_x = MaxTilesX / 2;
     int center_y = MaxTilesY / 2;
-    int radius = 2 + (rand() % 3);
+    //int radius = 1 + (rand() % 2);
+    int radius = 0 + (rand() % 3);
     
     // Limpiar tiles
     for(int y = 0; y < MaxTilesY; y++) {
@@ -49,11 +50,12 @@ void initialize_islands() {
     
     select_texture(TextureIsland);
     select_region(TileGround);
-    define_region(0, 0, TileSize, TileSize, TileSize/2, TileSize/2);
+    define_region(0, 0, TileSize, TileSize, 0, 0);
     
     num_islands = MaxIslands;
-    
-    float safe_radius = TileSize * MaxTilesX * 2; // Radio de seguridad para separación
+    float safe_radius = TileSize * MaxTilesX / 2;  // Reducir el radio de seguridad
+
+    //float safe_radius = TileSize * MaxTilesX; // Radio de seguridad para separación
     float carrier_safe_zone = 500; // Zona segura alrededor del carrier
     
     for(int i = 0; i < num_islands; i++) {
