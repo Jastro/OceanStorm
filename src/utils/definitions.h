@@ -87,15 +87,15 @@
 #define AirplaneAnimSpeed 10
 #define RotationSpeed 0.05
 #define MovementSpeed 3.0
-#define AscendSpeed 0.001
-#define DescentSpeed 0.001
-#define MaxScale 0.8
+#define AscendSpeed 0.005
+#define DescentSpeed 0.005
+#define MaxScale 0.6
 #define MinScale 0.2
 #define AirplaneShadowOffset 20
 #define MaxFuel 1000
 #define FuelConsumption 0.5
 #define RefuelRate 2.0
-#define InitialScale 0.8
+#define InitialScale 0.4
 #define LandingScale 0.4
 
 // ---- ÁREA DE ATERRIZAJE ----
@@ -111,9 +111,9 @@
 
 // ---- ISLAS ----
 #define MaxIslands 10
-#define MinIslandSize 64
+#define MinIslandSize 100
 #define MaxIslandSize 192
-#define NumIslandVariants 4
+#define NumIslandVariants 8
 
 // ---- EVENTOS ----
 #define EventFirstExit 0

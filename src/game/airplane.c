@@ -138,7 +138,7 @@ void initialize_airplane()
 void exit_vehicle()
 {
     is_player_in_vehicle = 0;
- soldier_x = airplane_x + cos(airplane_angle) * 50;
+    soldier_x = airplane_x + cos(airplane_angle) * 50;
     soldier_y = airplane_y + sin(airplane_angle) * 50;
     soldier_state = SoldierStateActive;
     target_zoom = CameraZoomGround;
@@ -194,8 +194,8 @@ void update_airplane()
         airplane_x += MovementSpeed * sin(airplane_angle);
         airplane_y -= MovementSpeed * cos(airplane_angle);
         fuel -= FuelConsumption;
-        //airplane_scale = clamp(airplane_scale + AscendSpeed, MinScale, MaxScale);
-        airplane_scale + AscendSpeed;
+        airplane_scale = clamp(airplane_scale + AscendSpeed, MinScale, MaxScale);
+
         // Actualizar animación
         anim_timer++;
         if (anim_timer >= AirplaneAnimSpeed)
@@ -232,11 +232,6 @@ void update_airplane()
             game_state = StateGameOver;
         }
     }
-    else
-    {
-        // Si estamos muy alto, seguimos descendiendo normalmente
-        airplane_scale = clamp(airplane_scale - DescentSpeed, MinScale, MaxScale);
-    }
 
     // Game over si nos quedamos sin combustible y sin altura
     if (fuel <= 0 && airplane_scale <= MinScale && !is_over_carrier() && !is_over_island(airplane_x, airplane_y))
@@ -254,7 +249,7 @@ void update_airplane()
         camera_y = airplane_y - ScreenCenterY;
     }
 
-    if ((is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1)
+    if ((airplane_scale <= LandingScale) && (is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1)
     {
         exit_vehicle();
         return;

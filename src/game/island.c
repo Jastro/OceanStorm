@@ -21,8 +21,8 @@ int get_tile(int island_index, int x, int y) {
 void generate_island_layout(int island_index) {
     int center_x = MaxTilesX / 2;
     int center_y = MaxTilesY / 2;
-    int radius = 1 + (rand() % 2);
-    //int radius = 0 + (rand() % 3);
+    //int radius = 1 + (rand() % 2);
+    int radius = 0 + (rand() % 3);
     
     // Limpiar tiles
     for(int y = 0; y < MaxTilesY; y++) {
