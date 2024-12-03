@@ -99,12 +99,9 @@ void shoot_from_airplane()
     if (airplane_current_ammo > 0 &&
         current_time - airplane_last_shot_time >= AirplaneFireRate)
     {
-        // Origen desde el frente del avión con signos invertidos
-        float bullet_x = airplane_x - cos(airplane_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
-        float bullet_y = airplane_y - sin(airplane_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
-
-        // Invertimos 180 grados (pi radianes) para que la bala vaya hacia adelante
-        float shoot_angle = airplane_angle + pi;
+        float shoot_angle = airplane_angle - pi/2;
+        float bullet_x = airplane_x + cos(shoot_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
+        float bullet_y = airplane_y + sin(shoot_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
         create_bullet(bullet_x, bullet_y, shoot_angle, 0, BulletTypePlayer);
 
         airplane_current_ammo--;

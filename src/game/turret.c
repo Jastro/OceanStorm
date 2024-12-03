@@ -43,8 +43,8 @@ void initialize_turrets()
         // Colocar una torreta en el centro de cada isla
         int center_x = MaxTilesX / 2;
         int center_y = MaxTilesY / 2;
-        float turret_x = island_x[i] + (center_x * TileSize);
-        float turret_y = island_y[i] + (center_y * TileSize);
+        float turret_x = island_x[i] + (center_x * TileSize) + TileSize / 2;
+        float turret_y = island_y[i] + (center_y * TileSize) + TileSize / 2;
         spawn_turret(turret_x, turret_y);
     }
 }

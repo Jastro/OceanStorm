@@ -66,13 +66,20 @@ void main()
         case StateGame:
             if (!dialog_active)
             {
+                if (!is_player_in_vehicle)
+                {
+                    update_soldier();
+                }
+                else
+                {
+                    update_airplane();
+                }
+
                 update_turrets();
-                update_soldier();
                 update_pickups();
                 update_camera_zoom();
                 update_bullets();
                 update_bombs();
-                update_airplane();
             }
 
             render_world(camera_x, camera_y);
