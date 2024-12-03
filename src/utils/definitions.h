@@ -61,6 +61,12 @@
 #define CameraZoomGround 0.5
 #define CameraZoomSpeed 0.05
 
+
+// ---- SISTEMA DE BOMBAS ----
+#define BombTimerSeconds 5.0
+#define MaxActiveBombs 5
+#define BombExplosionRadius 50.0
+
 // ---- SISTEMA DE PROYECTILES ----
 #define MaxBullets 50
 #define BulletSpeed 5.0
@@ -69,10 +75,12 @@
 // ---- CONFIGURACIÓN DE TORRETAS ----
 #define MaxTurrets 10
 #define TurretVisionRange 300.0
-#define TurretFireRate 3.0
+#define TurretFireRate 10.0
 #define TurretBulletSpeed 8.0
 #define TurretBulletRange 400.0
-#define TurretDamage 10.0
+#define TurretMinSpread 3
+#define TurretMaxSpread 6
+#define TurretDamagePerBullet 10
 
 // ---- DIMENSIONES DEL MUNDO ----
 #define WorldWidth 2000
@@ -85,6 +93,7 @@
 // ---- CONFIGURACIÓN DEL AVIÓN ----
 #define NumAirplaneFrames 2
 #define AirplaneAnimSpeed 10
+#define AirplaneMaxHealth 100
 #define RotationSpeed 0.05
 #define MovementSpeed 3.0
 #define AscendSpeed 0.005
@@ -97,6 +106,9 @@
 #define RefuelRate 2.0
 #define InitialScale 0.4
 #define LandingScale 0.4
+#define AirplaneMaxAmmo 100
+#define AirplaneFireRate 0.1
+#define AirplaneReloadRate 2.0
 
 // ---- ÁREA DE ATERRIZAJE ----
 #define LandingAreaWidth 77
@@ -113,7 +125,7 @@
 #define MaxIslands 10
 #define MinIslandSize 100
 #define MaxIslandSize 192
-#define NumIslandVariants 8
+#define NumIslandVariants 4
 
 // ---- EVENTOS ----
 #define EventFirstExit 0

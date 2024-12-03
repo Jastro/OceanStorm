@@ -9,6 +9,7 @@
 #include "game/events.h"
 #include "game/turret.h"
 #include "game/dialog.h"
+#include "game/bomb.h"
 #include "states/menu.h"
 #include "states/gameover.h"
 
@@ -20,6 +21,7 @@
 #include "game/weapon.c"
 #include "game/pickup.c"
 #include "game/turret.c"
+#include "game/bomb.c"
 #include "game/dialog.c"
 #include "game/events.c"
 #include "states/menu.c"
@@ -43,6 +45,7 @@ void main()
     initialize_pickups();  // Los pickups
     initialize_events();
     initialize_turrets();
+    initialize_bombs();
 
     // Establecer el estado inicial
     game_state = StateMenu;
@@ -64,11 +67,12 @@ void main()
             if (!dialog_active)
             {
                 update_turrets();
-                update_airplane();
                 update_soldier();
                 update_pickups();
                 update_camera_zoom();
                 update_bullets();
+                update_bombs();
+                update_airplane();
             }
 
             render_world(camera_x, camera_y);
@@ -76,6 +80,7 @@ void main()
             render_bullets();
             render_airplane();
             render_pickups();
+            render_bombs();
 
             update_dialog();
 
@@ -83,6 +88,7 @@ void main()
             {
                 render_soldier();
                 render_soldier_ui();
+
                 // show_dialog("¡Presiona B para volver al avión cuando estés cerca!", TextureAirplane);
             }
 

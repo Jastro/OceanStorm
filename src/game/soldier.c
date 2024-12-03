@@ -7,6 +7,7 @@
 #include "string.h"
 #include "misc.h"
 #include "./bullet.h"
+#include "bomb.h"
 
 extern int is_player_in_vehicle;
 
@@ -160,22 +161,22 @@ void render_soldier_ui() {
     int[12] number_buffer;  // Suficientemente grande para cualquier número
 
     // Mostrar munición
-    print_at(10, 40, "AMMO: ");
+    print_at(10, 10, "AMMO: ");
     itoa(weapon_current_ammo[current_weapon], number_buffer, 10);
-    print_at(70, 40, number_buffer);
-    print_at(100, 40, "/");
+    print_at(70, 10, number_buffer);
+    print_at(100, 10, "/");
     itoa(weapon_max_ammo[current_weapon], number_buffer, 10);
-    print_at(120, 40, number_buffer);
+    print_at(120, 10, number_buffer);
 
     // Mostrar bombas
-    print_at(10, 60, "BOMBS: ");
+    print_at(10, 30, "BOMBS: ");
     itoa(soldier_bombs, number_buffer, 10);
-    print_at(70, 60, number_buffer);
+    print_at(70, 30, number_buffer);
 
     // Mostrar armadura
-    print_at(10, 80, "ARMOR: ");
+    print_at(10, 50, "ARMOR: ");
     itoa(soldier_armor, number_buffer, 10);
-    print_at(70, 80, number_buffer);
+    print_at(70, 50, number_buffer);
 }
 
 void soldier_take_damage() {
@@ -197,9 +198,8 @@ void soldier_take_damage() {
 }
 
 void place_bomb() {
-    if(soldier_bombs > 0)
-    {
-        // TODO: Implementar lógica de bombas
+    if(soldier_bombs > 0 && can_plant_bomb(soldier_x, soldier_y)) {
+        plant_bomb(soldier_x, soldier_y);
         soldier_bombs--;
     }
 }

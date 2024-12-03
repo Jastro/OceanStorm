@@ -1,5 +1,6 @@
 #include "airplane.h"
 #include "island.h"
+#include "bullet.h"
 #include "render_system.h"
 #include "../utils/definitions.h"
 #include "../utils/utilities.h"
@@ -22,9 +23,20 @@ float fuel;
 int airplane_frame;
 int anim_timer;
 int is_player_in_vehicle = 1;
+int airplane_current_ammo;
+float airplane_last_shot_time;
+int airplane_health;
 
 // Variable externa para el estado del juego
 extern int game_state;
+
+void reload_airplane()
+{
+    airplane_current_ammo = clamp(
+        airplane_current_ammo + AirplaneReloadRate,
+        0,
+        AirplaneMaxAmmo);
+}
 
 int soldier_is_over_carrier(float x, float y)
 {
@@ -52,7 +64,7 @@ void render_fuel_gauge()
     set_multiply_color(RedColor);
 
     // Dibujar texto
-    print_at(10, 10, "FUEL:");
+    print_at(10, 15, "FUEL:");
 
     // Calcular ancho de la barra basado en el combustible
     int max_bar_width = 100;
@@ -79,8 +91,31 @@ void render_fuel_gauge()
     }
 }
 
+void shoot_from_airplane()
+{
+    float current_time = get_frame_counter() / 60.0;
+
+    if (airplane_current_ammo > 0 &&
+        current_time - airplane_last_shot_time >= AirplaneFireRate)
+    {
+        // Origen desde el frente del avión con signos invertidos
+        float bullet_x = airplane_x - cos(airplane_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
+        float bullet_y = airplane_y - sin(airplane_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
+
+        // Invertimos 180 grados (pi radianes) para que la bala vaya hacia adelante
+        float shoot_angle = airplane_angle + pi;
+        create_bullet(bullet_x, bullet_y, shoot_angle, 0, BulletTypePlayer);
+
+        airplane_current_ammo--;
+        airplane_last_shot_time = current_time;
+    }
+}
+
 void initialize_airplane()
 {
+    airplane_health = AirplaneMaxHealth;
+    airplane_last_shot_time = 0;
+    airplane_current_ammo = AirplaneMaxAmmo;
     is_player_in_vehicle = 1;
     select_texture(TextureAirplane);
 
@@ -188,6 +223,11 @@ void update_airplane()
     if (gamepad_right() > 0)
         airplane_angle += RotationSpeed;
 
+    if (gamepad_button_a() > 0)
+    {
+        shoot_from_airplane();
+    }
+
     // Movimiento hacia adelante
     if (gamepad_up() > 0 && fuel > 0)
     {
@@ -224,6 +264,7 @@ void update_airplane()
             if (is_over_carrier())
             {
                 fuel = clamp(fuel + RefuelRate, 0, MaxFuel);
+                reload_airplane();
             }
         }
         else if (airplane_scale <= MinScale)
@@ -255,6 +296,37 @@ void update_airplane()
         return;
     }
 }
+void render_ui()
+{
+    render_fuel_gauge();
+    set_multiply_color(TextColor);
+    int[8] ammo_text;
+    print_at(10, 40, "AMMO: ");
+    itoa(airplane_current_ammo, ammo_text, 10);
+    print_at(70, 40, ammo_text);
+    int max_bar_width = 100;
+    int bar_height = 10;
+    int health_width = (int)((airplane_health / (float)AirplaneMaxHealth) * max_bar_width);
+
+    set_multiply_color(RedColor);
+    print_at(10, 50, "HP:");
+    for (int x = 0; x < max_bar_width; x++)
+    {
+        for (int y = 0; y < bar_height; y++)
+        {
+            draw_region_at(60 + x, 50 + y);
+        }
+    }
+
+    set_multiply_color(TextColor);
+    for (int x = 0; x < health_width; x++)
+    {
+        for (int y = 0; y < bar_height; y++)
+        {
+            draw_region_at(60 + x, 50 + y);
+        }
+    }
+}
 
 void render_airplane()
 {
@@ -276,7 +348,10 @@ void render_airplane()
     draw_region_rotozoomed_at(airplane_x - camera_x, airplane_y - camera_y);
 
     // 4. Dibujar la interfaz
-    render_fuel_gauge();
+    if (is_player_in_vehicle)
+    {
+        render_ui();
+    }
 }
 
 void update_camera_zoom()

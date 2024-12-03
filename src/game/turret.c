@@ -31,7 +31,6 @@ void initialize_turrets()
     define_region(0, 0, TurretGunWidth, TurretGunHeight,
                   TurretGunWidth / 2, TurretGunHeight / 2);
 
-
     // Inicializar arrays
     for (int i = 0; i < MaxTurrets; i++)
     {
@@ -74,7 +73,14 @@ void render_turrets()
 
 void create_turret_bullet(float x, float y, float angle)
 {
-    create_bullet(x, y, angle, 0, BulletTypeTurret); // Sin spread para las torretas
+    int num_bullets = TurretMinSpread + (rand() % (TurretMaxSpread - TurretMinSpread + 1));
+    float spread = pi / 6; // 30 grados totales de spread
+
+    for (int i = 0; i < num_bullets; i++)
+    {
+        float bullet_angle = angle - spread / 2 + (spread * i) / (num_bullets - 1);
+        create_bullet(x, y, bullet_angle, 0, BulletTypeTurret);
+    }
 }
 
 void spawn_turret(float x, float y)
@@ -93,24 +99,29 @@ void spawn_turret(float x, float y)
     }
 }
 
-void update_turrets() {
+void update_turrets()
+{
     float current_time = get_frame_counter() / 60.0;
 
-    for (int i = 0; i < MaxTurrets; i++) {
+    for (int i = 0; i < MaxTurrets; i++)
+    {
         if (!turret_active[i])
             continue;
 
-        if (is_player_in_vehicle) {
+        if (is_player_in_vehicle)
+        {
             float dx = airplane_x - turret_x[i];
             float dy = airplane_y - turret_y[i];
             float distance = sqrt(dx * dx + dy * dy);
 
             // Comprobar si está en rango
-            if (distance <= TurretVisionRange) {
+            if (distance <= TurretVisionRange)
+            {
                 turret_angle[i] = atan2(dy, dx);
 
                 // Disparar si ha pasado suficiente tiempo
-                if (current_time - turret_last_shot[i] >= TurretFireRate) {
+                if (current_time - turret_last_shot[i] >= TurretFireRate)
+                {
                     create_turret_bullet(turret_x[i], turret_y[i], turret_angle[i]);
                     turret_last_shot[i] = current_time;
                 }
