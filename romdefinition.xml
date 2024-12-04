@@ -12,6 +12,8 @@
         <texture path="obj/machinegun.vtx" />
         <texture path="obj/enemyBullet.vtx" />
         <texture path="obj/hoverEnemy.vtx" />
+        <texture path="obj/kamikaze.vtx" />
+        <texture path="obj/boss.vtx" />
     </textures>
     <sounds>
     </sounds>

@@ -10,6 +10,7 @@ float[MaxEnemies] enemy_y;
 float[MaxEnemies] enemy_angle;
 float[MaxEnemies] enemy_speed;
 float[MaxEnemies] enemy_shoot_timer;
+float[MaxEnemies] enemy_blink_timer;
 int[MaxEnemies] enemy_spread_type;
 int[MaxEnemies] enemy_behavior;
 int[MaxEnemies] enemy_type;
@@ -26,12 +27,32 @@ void initialize_enemies()
     for (int i = 0; i < MaxEnemies; i++)
     {
         enemy_active[i] = 0;
+        enemy_blink_timer[i] = 0;
     }
 }
 
 void spawn_boss()
 {
-    spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeAirplane, AIBehaviorShootAndRun, SpreadTypeCircle);
+    float center_x = WorldWidth / 2;
+    float center_y = WorldHeight / 2;
+
+    for (int i = 0; i < MaxEnemies; i++)
+    {
+        if (!enemy_active[i])
+        {
+            enemy_x[i] = center_x;
+            enemy_y[i] = center_y;
+            enemy_type[i] = EnemyTypeBoss;
+            enemy_behavior[i] = AIBehaviorShootAndRun;
+            enemy_spread_type[i] = SpreadTypeCircle;
+            enemy_speed[i] = 2.0;
+            enemy_health[i] = EnemyHealthBoss;
+            enemy_active[i] = 1;
+            enemy_blink_timer[i] = 0;
+            num_active_enemies++;
+            break;
+        }
+    }
 }
 
 void spawn_enemy(float x, float y, int type, int behavior, int spread_type)
@@ -47,8 +68,27 @@ void spawn_enemy(float x, float y, int type, int behavior, int spread_type)
             enemy_behavior[i] = behavior;
             enemy_spread_type[i] = spread_type;
             enemy_shoot_timer[i] = 0;
-            enemy_speed[i] = 2.0;
-            enemy_health[i] = 100;
+            enemy_blink_timer[i] = 0;
+
+            // Asignar velocidad y vida según tipo
+            switch (type)
+            {
+            case EnemyTypeNormal:
+                enemy_speed[i] = EnemySpeedNormal;
+                enemy_health[i] = EnemyHealthNormal;
+                break;
+
+            case EnemyTypeKamikaze:
+                enemy_speed[i] = EnemySpeedKamikaze;
+                enemy_health[i] = EnemyHealthKamikaze;
+                break;
+
+            case EnemyTypeBoss:
+                enemy_speed[i] = EnemySpeedBoss;
+                enemy_health[i] = EnemyHealthBoss;
+                break;
+            }
+
             enemy_active[i] = 1;
             num_active_enemies++;
             break;
@@ -97,11 +137,38 @@ void update_enemy(int index)
         break;
 
     case AIBehaviorKamikaze:
-        dx = target_x - enemy_x[index];
-        dy = target_y - enemy_y[index];
-        enemy_angle[index] = atan2(dy, dx);
-        enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 1.5;
-        enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 1.5;
+        if (enemy_health[index] > 0)
+        {
+            // Comportamiento normal cuando está vivo
+            dx = target_x - enemy_x[index];
+            dy = target_y - enemy_y[index];
+            enemy_angle[index] = atan2(dy, dx);
+            enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 1.5;
+            enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 1.5;
+
+            // Comprobar colisión si está vivo
+            dist = sqrt(dx * dx + dy * dy);
+            if (dist < 50)
+            {
+                if (is_player_in_vehicle)
+                {
+                    airplane_health -= KamikazeDamage;
+                    health_flash_timer = HealthFlashTime;
+                    if (airplane_health <= 0)
+                    {
+                        game_state = StateGameOver;
+                    }
+                }
+                else
+                {
+                    soldier_take_damage();
+                }
+                // Destruir el kamikaze
+                enemy_health[index] = 0;
+                enemy_shoot_timer[index] = 1.0; // Iniciar animación de caída
+            }
+        }
+        // Cuando está destruido, solo cae
         break;
 
     case AIBehaviorBomber:
@@ -141,6 +208,12 @@ void update_enemies()
         if (enemy_active[i])
         {
             update_enemy(i);
+
+            // Actualizar timer de parpadeo
+            if (enemy_blink_timer[i] > 0)
+            {
+                enemy_blink_timer[i] -= 1.0 / 60.0;
+            }
         }
     }
     check_phase_progress();
@@ -153,43 +226,82 @@ void render_enemies()
         if (!enemy_active[i])
             continue;
 
-        select_texture(TextureEnemy);
+        // Seleccionar textura según tipo
+        if (enemy_type[i] == EnemyTypeKamikaze)
+        {
+            select_texture(TextureEnemyKamikaze);
+        }
+        else if (enemy_type[i] == EnemyTypeBoss)
+        {
+            select_texture(TextureEnemyBoss);
+        }
+        else
+        {
+            select_texture(TextureEnemy);
+        }
 
+        // Determinar el frame a usar
+        int frame;
         if (enemy_health[i] <= 0)
         {
-            // Frame de destrucción
-            select_region(2);
-            // Escalar más pequeño a medida que cae
-            float scale = enemy_shoot_timer[i]; // Usamos el timer para la animación de caída
+            frame = 2; // Frame de destrucción
+            float scale = enemy_shoot_timer[i];
             set_drawing_scale(scale, scale);
             if (scale <= 0.1)
             {
                 enemy_active[i] = 0;
+                num_active_enemies--;
+                continue;
             }
         }
         else
         {
-            // Alternar entre frame 0 y 1 para animación de vuelo
-            select_region((get_frame_counter() / 10) % 2);
+            frame = (get_frame_counter() / 10) % 2; // Alternar entre 0 y 1
         }
 
-        select_region(0);
-        define_region(
-            0,
-            0,
-            EnemyHoverFrameWidth,
-            EnemyHoverFrameHeight,
-            EnemyHoverFrameWidth / 2,
-            EnemyHoverFrameHeight / 2);
+        if (enemy_type[i] == EnemyTypeKamikaze)
+        {
+            select_region(frame);
+            define_region(
+                frame * EnemyKamikazeFrameWidth,
+                0,
+                (frame + 1) * EnemyKamikazeFrameWidth,
+                EnemyKamikazeFrameHeight,
+                (EnemyKamikazeFrameWidth / 2) + (frame * EnemyKamikazeFrameWidth),
+                EnemyKamikazeFrameHeight / 2);
+        }
+        else if (enemy_type[i] == EnemyTypeBoss)
+        {
+            select_region(frame);
+            define_region(
+                frame * EnemyBossFrameWidth,
+                0,
+                (frame + 1) * EnemyBossFrameWidth,
+                EnemyBossFrameHeight,
+                (EnemyBossFrameWidth / 2) + (frame * EnemyBossFrameWidth),
+                EnemyBossFrameHeight / 2);
+        }
+        else
+        {
+            select_region(frame);
+            define_region(
+                frame * EnemyHoverFrameWidth,
+                0,
+                (frame + 1) * EnemyHoverFrameWidth,
+                EnemyHoverFrameHeight,
+                (EnemyHoverFrameWidth / 2) + (frame * EnemyHoverFrameWidth),
+                EnemyHoverFrameHeight / 2);
+        }
 
-        select_region(1);
-        define_region(
-            EnemyHoverFrameWidth,
-            0,
-            EnemyHoverFrameWidth * 2,
-            EnemyHoverFrameHeight,
-            (EnemyHoverFrameWidth / 2) + EnemyHoverFrameWidth,
-            EnemyHoverFrameHeight / 2);
+        // Color normal o rojo si está recibiendo daño
+        if (enemy_blink_timer[i] > 0)
+        {
+            set_multiply_color(RedColor);
+        }
+        else
+        {
+            set_multiply_color(TextColor);
+        }
 
         set_drawing_angle(enemy_angle[i] + 80);
         draw_region_rotozoomed_at(enemy_x[i] - camera_x, enemy_y[i] - camera_y);
@@ -199,18 +311,20 @@ void render_enemies()
 void damage_enemy(int index, int damage)
 {
     enemy_health[index] -= damage;
+    enemy_blink_timer[index] = EnemyBlinkTime; // Iniciar parpadeo
+
     if (enemy_health[index] <= 0)
     {
-        enemy_active[index] = 0;
-        num_active_enemies--;
+        enemy_shoot_timer[index] = 1.0; // Para animación de caída
     }
 }
 
 void spawn_wave_of_enemies()
 {
-    spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeAirplane, AIBehaviorShootAndRun, SpreadTypeCircle);
-    //spawn_enemy(200, 100, EnemyTypeAirplane, AIBehaviorKamikaze, SpreadTypeNormal);
-    //spawn_enemy(300, 100, EnemyTypeAirplane, AIBehaviorBomber, SpreadTypeCross);
+    // spawn_boss();
+    //spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
+    // spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
+    // spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorBomber, SpreadTypeCross);
 }
 
 void check_phase_progress()

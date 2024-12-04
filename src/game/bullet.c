@@ -118,7 +118,25 @@ void check_bullet_collisions()
                 }
             }
         }
-        // Las balas del jugador ya no necesitan comprobar colisiones con torretas
+        else if (bullet_type[i] == BulletTypePlayer)
+        {
+            // Comprobar colisión con enemigos
+            for (int e = 0; e < MaxEnemies; e++)
+            {
+                if (!enemy_active[e] || enemy_health[e] <= 0)
+                    continue;
+
+                if (check_circle_collision(
+                        bullet_x[i], bullet_y[i],
+                        enemy_x[e], enemy_y[e],
+                        EnemyHoverFrameWidth * 0.3)) // Radio más pequeño que el sprite
+                {
+                    bullet_active[i] = 0;
+                    damage_enemy(e, bullet_damage[i]);
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -142,8 +160,21 @@ void create_bullet(float x, float y, float angle, float spread, int type)
                 bullet_angle[i] = angle + random_spread;
             }
 
-            bullet_speed[i] = 5.0;
-            bullet_damage[i] = weapon_damage[current_weapon];
+            // Diferentes configuraciones según quien dispara
+            if (type == BulletTypePlayer && is_player_in_vehicle)
+            {
+                // Balas del avión
+                bullet_speed[i] = AirplaneBulletSpeed;
+                bullet_damage[i] = AirplaneBulletDamage;
+                weapon_range[current_weapon] = AirplaneBulletRange;
+            }
+            else
+            {
+                // Balas del soldado y torretas
+                bullet_speed[i] = 5.0;
+                bullet_damage[i] = weapon_damage[current_weapon];
+            }
+
             bullet_distance[i] = 0;
             bullet_active[i] = 1;
             bullet_type[i] = type;

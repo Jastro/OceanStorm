@@ -10,8 +10,9 @@
 #define TextureTurretBase 5
 #define TextureTurretGun 6
 #define TextureEnemyBullet 7
-#define TextureEnemy 8
-
+#define TextureEnemy 8      // Textura del enemigo normal
+#define TextureEnemyKamikaze 9   // Textura del enemigo kamikaze
+#define TextureEnemyBoss 10       // Textura del jefe
 // ---- REGIONES ----
 #define RegionAirplane 0
 #define RegionAirplaneShadow 2
@@ -81,12 +82,33 @@
 #define TurretBulletRange 400.0
 #define TurretMinSpread 3
 #define TurretMaxSpread 6
-#define TurretDamagePerBullet 10
+#define TurretDamagePerBullet 25
 
 // ---- ENEMIGOS ----
 #define MaxEnemies 20
 #define EnemyTypeSoldier 0
 #define EnemyTypeAirplane 1
+#define EnemyBulletRange 300.0
+#define EnemyBlinkTime 0.1
+// Tipos de enemigos
+#define EnemyTypeNormal 0
+#define EnemyTypeKamikaze 1
+#define EnemyTypeBoss 2
+
+// Puntos de vida
+#define EnemyHealthNormal 100
+#define EnemyHealthKamikaze 50
+#define EnemyHealthBoss 500
+
+// Características de enemigos
+#define EnemyBulletRange 300.0
+#define EnemyBlinkTime 0.1
+#define KamikazeDamage 5
+
+// Velocidades de movimiento
+#define EnemySpeedNormal 3.0
+#define EnemySpeedKamikaze 2.0
+#define EnemySpeedBoss 1.0
 
 #define AIBehaviorChase 0     // Persigue al jugador
 #define AIBehaviorShootAndRun 1  // Dispara y se aleja
@@ -103,6 +125,12 @@
 
 #define EnemyHoverFrameWidth 114
 #define EnemyHoverFrameHeight 80
+
+#define EnemyBossFrameWidth 320
+#define EnemyBossFrameHeight 240
+
+#define EnemyKamikazeFrameWidth 96
+#define EnemyKamikazeFrameHeight 144
 
 // ---- DIMENSIONES DEL MUNDO ----
 #define WorldWidth 2000
@@ -131,6 +159,9 @@
 #define AirplaneMaxAmmo 100
 #define AirplaneFireRate 0.1
 #define AirplaneReloadRate 2.0
+#define AirplaneBulletRange 500.0
+#define AirplaneBulletSpeed 8.0
+#define AirplaneBulletDamage 25.0
 
 // ---- ÁREA DE ATERRIZAJE ----
 #define LandingAreaWidth 77
