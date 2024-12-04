@@ -14,6 +14,7 @@ float[MaxBullets] bullet_damage;
 float[MaxBullets] bullet_distance;
 int[MaxBullets] bullet_active;
 int[MaxBullets] bullet_type;
+float spiral_pattern_angle = 0;
 
 // Comprueba colisión entre un punto y un círculo
 int check_circle_collision(float px, float py, float cx, float cy, float radius)
@@ -21,6 +22,57 @@ int check_circle_collision(float px, float py, float cx, float cy, float radius)
     float dx = px - cx;
     float dy = py - cy;
     return (dx * dx + dy * dy) <= (radius * radius);
+}
+
+void create_spread_pattern(float x, float y, float base_angle, int spread_type)
+{
+    switch (spread_type)
+    {
+    case SpreadTypeCircle:
+        for (int i = 0; i < 8; i++)
+        {
+            float angle = base_angle + (2 * pi * i) / 8;
+            create_bullet(x, y, angle, 0, BulletTypeTurret);
+        }
+        break;
+
+    case SpreadTypeCross:
+        for (int i = 0; i < 4; i++)
+        {
+            float angle = base_angle + (pi * i) / 2;
+            create_bullet(x, y, angle, 0, BulletTypeTurret);
+        }
+        break;
+
+    case SpreadTypeWall:
+        for (int i = 0; i < 7; i++)
+        {
+            if (i % 2 == 0)
+            { // Deja espacios
+                create_bullet(x, y, base_angle, 0, BulletTypeTurret);
+            }
+            x += 30; // Separación entre balas
+        }
+        break;
+
+    case SpreadTypeShotgun:
+        for (int i = 0; i < 5; i++)
+        {
+            float spread = pi / 6; // 30 grados totales
+            float angle = base_angle - spread / 2 + (spread * i) / 4;
+            create_bullet(x, y, angle, 0, BulletTypeTurret);
+        }
+        break;
+
+    case SpreadTypeSpiral:
+        for (int i = 0; i < 3; i++)
+        {
+            float angle = base_angle + spiral_pattern_angle + (2 * pi * i) / 3;
+            create_bullet(x, y, angle, 0, BulletTypeTurret);
+        }
+        spiral_pattern_angle += pi / 8;
+        break;
+    }
 }
 
 void check_bullet_collisions()

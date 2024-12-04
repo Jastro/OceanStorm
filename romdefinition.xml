@@ -11,6 +11,7 @@
         <texture path="obj/base.vtx" />
         <texture path="obj/machinegun.vtx" />
         <texture path="obj/enemyBullet.vtx" />
+        <texture path="obj/hoverEnemy.vtx" />
     </textures>
     <sounds>
     </sounds>

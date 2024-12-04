@@ -10,6 +10,7 @@
 #include "game/turret.h"
 #include "game/dialog.h"
 #include "game/bomb.h"
+#include "game/enemy.h"
 #include "states/menu.h"
 #include "states/gameover.h"
 
@@ -22,6 +23,7 @@
 #include "game/pickup.c"
 #include "game/turret.c"
 #include "game/bomb.c"
+#include "game/enemy.c"
 #include "game/dialog.c"
 #include "game/events.c"
 #include "states/menu.c"
@@ -46,6 +48,7 @@ void main()
     initialize_events();
     initialize_turrets();
     initialize_bombs();
+    initialize_enemies();
 
     // Establecer el estado inicial
     game_state = StateMenu;
@@ -79,6 +82,7 @@ void main()
                 update_pickups();
                 update_camera_zoom();
                 update_bullets();
+                update_enemies();
                 update_bombs();
             }
 
@@ -87,6 +91,7 @@ void main()
             render_bullets();
             render_airplane();
             render_pickups();
+            render_enemies();
             render_bombs();
 
             update_dialog();

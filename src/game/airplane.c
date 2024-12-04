@@ -201,6 +201,8 @@ void reset_airplane()
     airplane_scale = InitialScale;
     airplane_velocity = 0.0;
     fuel = MaxFuel;
+    airplane_health = AirplaneMaxHealth;
+    airplane_current_ammo = AirplaneMaxAmmo;
 
     // Centrar la cámara en el avión
     camera_x = airplane_x - ScreenCenterX;

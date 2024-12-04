@@ -10,6 +10,7 @@
 #define TextureTurretBase 5
 #define TextureTurretGun 6
 #define TextureEnemyBullet 7
+#define TextureEnemy 8
 
 // ---- REGIONES ----
 #define RegionAirplane 0
@@ -81,6 +82,27 @@
 #define TurretMinSpread 3
 #define TurretMaxSpread 6
 #define TurretDamagePerBullet 10
+
+// ---- ENEMIGOS ----
+#define MaxEnemies 20
+#define EnemyTypeSoldier 0
+#define EnemyTypeAirplane 1
+
+#define AIBehaviorChase 0     // Persigue al jugador
+#define AIBehaviorShootAndRun 1  // Dispara y se aleja
+#define AIBehaviorKamikaze 2    // Va directo a chocar
+#define AIBehaviorBomber 3      // Bombardea al suelo
+
+// Patrones de disparo
+#define SpreadTypeNormal 0
+#define SpreadTypeCircle 1   // 8 balas en círculo
+#define SpreadTypeCross 2    // 4 balas en cruz
+#define SpreadTypeWall 3     // Muro de balas con espacios
+#define SpreadTypeShotgun 4  // Grupo de balas con dispersión
+#define SpreadTypeSpiral 5
+
+#define EnemyHoverFrameWidth 114
+#define EnemyHoverFrameHeight 80
 
 // ---- DIMENSIONES DEL MUNDO ----
 #define WorldWidth 2000
