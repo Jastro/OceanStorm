@@ -99,7 +99,7 @@ void shoot_from_airplane()
     if (airplane_current_ammo > 0 &&
         current_time - airplane_last_shot_time >= AirplaneFireRate)
     {
-        float shoot_angle = airplane_angle - pi/2;
+        float shoot_angle = airplane_angle - pi / 2;
         float bullet_x = airplane_x + cos(shoot_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
         float bullet_y = airplane_y + sin(shoot_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
         create_bullet(bullet_x, bullet_y, shoot_angle, 0, BulletTypePlayer);

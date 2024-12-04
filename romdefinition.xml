@@ -14,6 +14,11 @@
         <texture path="obj/hoverEnemy.vtx" />
         <texture path="obj/kamikaze.vtx" />
         <texture path="obj/boss.vtx" />
+        <texture path="obj/player.vtx" />
+        <texture path="obj/commander.vtx" />
+        <texture path="obj/enemySoldier.vtx" />
+        <texture path="obj/enemyBoss.vtx" />
+        <texture path="obj/dialog.vtx" />
     </textures>
     <sounds>
     </sounds>

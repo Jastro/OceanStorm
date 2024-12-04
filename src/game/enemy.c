@@ -44,7 +44,7 @@ void spawn_boss()
             enemy_y[i] = center_y;
             enemy_type[i] = EnemyTypeBoss;
             enemy_behavior[i] = AIBehaviorShootAndRun;
-            enemy_spread_type[i] = SpreadTypeCircle;
+            enemy_spread_type[i] = SpreadTypeWall;
             enemy_speed[i] = 2.0;
             enemy_health[i] = EnemyHealthBoss;
             enemy_active[i] = 1;
@@ -321,7 +321,7 @@ void damage_enemy(int index, int damage)
 
 void spawn_wave_of_enemies()
 {
-    // spawn_boss();
+    //spawn_boss();
     //spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
     // spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
     // spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorBomber, SpreadTypeCross);

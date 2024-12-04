@@ -49,6 +49,8 @@ void main()
     initialize_turrets();
     initialize_bombs();
     initialize_enemies();
+    initialize_portraits();
+    initialize_dialog();
 
     // Establecer el estado inicial
     game_state = StateMenu;
@@ -101,7 +103,14 @@ void main()
                 render_soldier();
                 render_soldier_ui();
 
-                // show_dialog("¡Presiona B para volver al avión cuando estés cerca!", TextureAirplane);
+                if (!has_event_happened(0))
+                {
+                    queue_dialog("Teniente Rykov, inicie operacion 'Nemesis'\nSu mision es clara: \n- Elimine las torretas de defensa\nLa Mano Negra no debe activar su prototipo\nBuena suerte.", TexturePortraitCommander);
+                    queue_dialog("Entendido, comandante. Entrando en zona \nhostil. Es hora de demostrarles quien \ndomina estos cielos.", TexturePortraitPlayer);
+                    start_dialog_sequence();
+
+                    mark_event_as_happened(0);
+                }
             }
 
             if (dialog_active)

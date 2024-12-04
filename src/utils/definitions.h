@@ -10,9 +10,15 @@
 #define TextureTurretBase 5
 #define TextureTurretGun 6
 #define TextureEnemyBullet 7
-#define TextureEnemy 8      // Textura del enemigo normal
-#define TextureEnemyKamikaze 9   // Textura del enemigo kamikaze
-#define TextureEnemyBoss 10       // Textura del jefe
+#define TextureEnemy 8
+#define TextureEnemyKamikaze 9
+#define TextureEnemyBoss 10
+#define TexturePortraitPlayer 11
+#define TexturePortraitCommander 12
+#define TexturePortraitSoldier 13
+#define TexturePortraitBoss 14
+#define TextureDialog 15
+
 // ---- REGIONES ----
 #define RegionAirplane 0
 #define RegionAirplaneShadow 2
@@ -203,5 +209,10 @@
 // ---- UI ----
 #define BlinkRate 30
 #define HealthFlashTime 0.5
+
+#define UIDialogFrameWidth 552
+#define UIDialogFrameHeight 124
+
+#define UIDialogPortraitSize 100
 
 #endif

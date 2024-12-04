@@ -15,6 +15,28 @@ void initialize_carrier() {
     select_region(RegionCarrier);
     define_region(0, 0, CarrierWidth, CarrierHeight, CarrierWidth/2, CarrierHeight/2);
 }
+void initialize_dialog() {
+    select_texture(TextureDialog);
+    select_region(0);
+    define_region(0, 0, UIDialogFrameWidth, UIDialogFrameHeight, UIDialogFrameWidth/2, UIDialogFrameHeight/2);
+}
+void initialize_portraits() {
+    select_texture(TexturePortraitPlayer);
+    select_region(0);
+    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize/2, UIDialogPortraitSize/2);
+
+    select_texture(TexturePortraitCommander);
+    select_region(0);
+    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize/2, UIDialogPortraitSize/2);
+
+    select_texture(TexturePortraitSoldier);
+    select_region(0);
+    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize/2, UIDialogPortraitSize/2);
+
+    select_texture(TexturePortraitBoss);
+    select_region(0);
+    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize/2, UIDialogPortraitSize/2);
+}
 
 void render_world(float camera_x, float camera_y) {
     // 1. Limpiar pantalla con el mar

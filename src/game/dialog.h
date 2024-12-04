@@ -4,13 +4,20 @@
 
 #define DialogWidth 400
 #define DialogHeight 200
+#define MaxDialogs 10
 
 extern int dialog_active;
-extern int[256] dialog_text;  // Buffer para el texto
-extern int dialog_texture;    // ID de la textura a mostrar
+extern int[256] dialog_text;
+extern int dialog_texture;
+extern int current_dialog;
+extern int[MaxDialogs][256] dialog_sequence;
+extern int[MaxDialogs] dialog_portraits;
+extern int num_dialogs;
 
 void show_dialog(int* text, int texture_id);
 void update_dialog();
 void render_dialog();
+void queue_dialog(int* text, int portrait);
+void start_dialog_sequence();
 
 #endif
