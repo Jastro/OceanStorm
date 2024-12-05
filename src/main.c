@@ -103,7 +103,7 @@ void main()
                 render_soldier();
                 render_soldier_ui();
 
-                if (!has_event_happened(0))
+                /*if (!has_event_happened(0))
                 {
                     queue_dialog("Teniente Rykov, inicie operacion 'Nemesis'\nSu mision es clara: \n- Elimine las torretas de defensa\nLa Mano Negra no debe activar su prototipo\nBuena suerte.", TexturePortraitCommander);
                     queue_dialog("Entendido, comandante. Entrando en zona \nhostil. Es hora de demostrarles quien \ndomina estos cielos.", TexturePortraitPlayer);
@@ -149,7 +149,7 @@ void main()
                     start_dialog_sequence();
 
                     mark_event_as_happened(4);
-                }
+                }*/
             }
 
             if (dialog_active)

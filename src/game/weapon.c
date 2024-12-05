@@ -18,6 +18,7 @@ int[3] weapon_bullet_count;
 float[3] weapon_last_shot;
 float[3] weapon_reload_start;
 int[3] weapon_is_reloading;
+float[3] weapon_speed;
 
 int current_weapon;
 
@@ -25,12 +26,13 @@ void initialize_weapons()
 {
     // Pistola
     weapon_type[0] = WeaponTypePistol;
+    weapon_speed[0] = 5.0;
     weapon_fire_mode[0] = FireModeSingle;
     weapon_max_ammo[0] = 12;
     weapon_current_ammo[0] = 12;
     weapon_fire_rate[0] = 0.5;
     weapon_reload_time[0] = 2.0;
-    weapon_damage[0] = 1;
+    weapon_damage[0] = PistolDamage;
     weapon_range[0] = 200;
     weapon_spread[0] = 0;
     weapon_bullet_count[0] = 1;
@@ -39,12 +41,13 @@ void initialize_weapons()
 
     // Escopeta
     weapon_type[1] = WeaponTypeShotgun;
+    weapon_speed[1] = 4.0;
     weapon_fire_mode[1] = FireModeSpread;
     weapon_max_ammo[1] = 6;
     weapon_current_ammo[1] = 6;
     weapon_fire_rate[1] = 1.0;
     weapon_reload_time[1] = 3.0;
-    weapon_damage[1] = 0.5;
+    weapon_damage[1] = ShotgunDamage;
     weapon_range[1] = 100;
     weapon_spread[1] = 30;
     weapon_bullet_count[1] = 8;
@@ -53,12 +56,13 @@ void initialize_weapons()
 
     // Metralleta
     weapon_type[2] = WeaponTypeSubmachine;
+    weapon_speed[2] = 6.0;
     weapon_fire_mode[2] = FireModeAuto;
     weapon_max_ammo[2] = 30;
     weapon_current_ammo[2] = 30;
     weapon_fire_rate[2] = 0.1;
     weapon_reload_time[2] = 2.5;
-    weapon_damage[2] = 0.5;
+    weapon_damage[2] = SubmachineGunDamage;
     weapon_range[2] = 150;
     weapon_spread[2] = 10;
     weapon_bullet_count[2] = 1;

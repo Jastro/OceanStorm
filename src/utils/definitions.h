@@ -39,6 +39,9 @@
 // Soldado
 #define SoldierWidth 32
 #define SoldierHeight 32
+#define PistolDamage 25
+#define ShotgunDamage 15  // Por cada perdigón
+#define SubmachineGunDamage 10
 
 // Torreta
 #define TurretBaseWidth 32
@@ -95,6 +98,26 @@
 #define EnemyTypeAirplane 1
 #define EnemyBulletRange 300.0
 #define EnemyBlinkTime 0.1
+#define ReloadTime 2.0
+#define ReloadTextOffset 30
+
+#define SoldierBulletSpeed 0.5
+#define KamikazeBulletSpeed 4.0
+#define BossBulletSpeed 4.5
+#define NormalEnemyBulletSpeed 4.0
+
+// Soldados enemigos
+#define MinSoldiersPerTurret 2
+#define MaxSoldiersPerTurret 4
+#define SoldierEnemyHealth 5
+#define SoldierEnemyArmor 2
+#define SoldierEnemySpeed 0.4
+#define SoldierEnemyFireRate 1.0
+#define SoldierEnemyDamage 10
+#define SoldierBlinkTime 0.2
+#define SoldierEnemyRange 150.0
+#define SoldierSpawnRadius 100
+#define EnemyCollisionRadius 40
 
 #define BossPhase1Health 400   // Cambia de fase cuando baja a este valor
 #define BossPhase2Health 200   // Y a este
@@ -106,6 +129,7 @@
 #define EnemyTypeNormal 0
 #define EnemyTypeKamikaze 1
 #define EnemyTypeBoss 2
+#define EnemyTypeSoldier 3
 
 // Puntos de vida
 #define EnemyHealthNormal 100
@@ -138,6 +162,7 @@
 #define SpreadTypeWall 3    // Muro de balas con espacios
 #define SpreadTypeShotgun 4 // Grupo de balas con dispersión
 #define SpreadTypeSpiral 5
+#define SpreadTypeSingle 6
 
 #define EnemyHoverFrameWidth 114
 #define EnemyHoverFrameHeight 80

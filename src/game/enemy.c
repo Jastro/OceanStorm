@@ -18,9 +18,47 @@ int[MaxEnemies] enemy_health;
 int[MaxEnemies] enemy_active;
 int[MaxEnemies] enemy_pattern_index; // Para controlar el patrón actual
 int[MaxEnemies] enemy_pattern_count;
+int[MaxEnemies] enemy_is_reloading;
+float[MaxEnemies] enemy_reload_start;
 
 int num_active_enemies;
 int phase;
+
+int check_enemy_collision(float x, float y, int current_enemy)
+{
+    for (int i = 0; i < MaxEnemies; i++)
+    {
+        if (!enemy_active[i] || i == current_enemy)
+            continue;
+
+        float dx = x - enemy_x[i];
+        float dy = y - enemy_y[i];
+        float dist = sqrt(dx * dx + dy * dy);
+
+        if (dist < EnemyCollisionRadius)
+            return 1;
+    }
+
+    // También comprobar colisión con el jugador
+    if (!is_player_in_vehicle)
+    {
+        float dx = x - soldier_x;
+        float dy = y - soldier_y;
+        float dist = sqrt(dx * dx + dy * dy);
+        if (dist < EnemyCollisionRadius)
+            return 1;
+    }
+    else
+    {
+        float dx = x - airplane_x;
+        float dy = y - airplane_y;
+        float dist = sqrt(dx * dx + dy * dy);
+        if (dist < EnemyCollisionRadius)
+            return 1;
+    }
+
+    return 0;
+}
 
 void initialize_enemies()
 {
@@ -31,6 +69,8 @@ void initialize_enemies()
     {
         enemy_active[i] = 0;
         enemy_blink_timer[i] = 0;
+        enemy_is_reloading[i] = 0;
+        enemy_reload_start[i] = 0;
     }
 }
 
@@ -78,6 +118,10 @@ void spawn_enemy(float x, float y, int type, int behavior, int spread_type)
             // Asignar velocidad y vida según tipo
             switch (type)
             {
+            case EnemyTypeSoldier:
+                enemy_speed[i] = SoldierEnemySpeed;
+                enemy_health[i] = SoldierEnemyHealth;
+                break;
             case EnemyTypeNormal:
                 enemy_speed[i] = EnemySpeedNormal;
                 enemy_health[i] = EnemyHealthNormal;
@@ -107,27 +151,106 @@ void update_enemy(int index)
     float target_x;
     float target_y;
 
-    if (is_player_in_vehicle)
+    if (enemy_health[index] <= 0)
     {
-        target_x = airplane_x;
-        target_y = airplane_y;
+        return;
+    }
+
+    if (enemy_is_reloading[index])
+    {
+        // Mostrar texto de recarga
+        select_texture(-1);
+        set_multiply_color(RedColor);
+        print_at(
+            (int)(enemy_x[index] - camera_x - 30),
+            (int)(enemy_y[index] - camera_y - ReloadTextOffset),
+            "RECARGANDO");
+
+        // Si ha pasado el tiempo, completar recarga
+        float current_time = get_frame_counter() / 60.0;
+        if (current_time - enemy_reload_start[index] >= ReloadTime)
+        {
+            enemy_is_reloading[index] = 0;
+            enemy_shoot_timer[index] = 0;
+        }
+        return;
+    }
+
+    if (enemy_type[index] == EnemyTypeSoldier)
+    {
+        // Los soldados enemigos solo atacan cuando el jugador está como soldado
+        if (is_player_in_vehicle)
+            return;
+
+        target_x = soldier_x;
+        target_y = soldier_y;
     }
     else
     {
-        target_x = soldier_x;
-        target_y = soldier_y;
+        // El resto de enemigos solo atacan al avión
+        if (!is_player_in_vehicle)
+            return;
+
+        target_x = airplane_x;
+        target_y = airplane_y;
     }
 
     switch (enemy_behavior[index])
     {
     case AIBehaviorChase:
-        if (is_player_in_vehicle)
-        { // Solo persiguen si el jugador está en el helicóptero
-            dx = target_x - enemy_x[index];
-            dy = target_y - enemy_y[index];
-            enemy_angle[index] = atan2(dy, dx);
-            enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index];
-            enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index];
+        dx = target_x - enemy_x[index];
+        dy = target_y - enemy_y[index];
+        enemy_angle[index] = atan2(dy, dx);
+
+        if (enemy_type[index] == EnemyTypeSoldier && !is_player_in_vehicle)
+        {
+            // Calcular nueva posición potencial
+            float new_x = enemy_x[index] + cos(enemy_angle[index]) * enemy_speed[index];
+            float new_y = enemy_y[index] + sin(enemy_angle[index]) * enemy_speed[index];
+
+            // Solo moverse si no hay colisión
+            if (!check_enemy_collision(new_x, new_y, index))
+            {
+                enemy_x[index] = new_x;
+                enemy_y[index] = new_y;
+            }
+            else
+            {
+                // Si hay colisión, intentar moverse en un ángulo ligeramente diferente
+                float offset_angle = enemy_angle[index] + (pi / 4);
+                new_x = enemy_x[index] + cos(offset_angle) * enemy_speed[index];
+                new_y = enemy_y[index] + sin(offset_angle) * enemy_speed[index];
+
+                if (!check_enemy_collision(new_x, new_y, index))
+                {
+                    enemy_x[index] = new_x;
+                    enemy_y[index] = new_y;
+                }
+            }
+        }
+        else if (!enemy_type[index] == EnemyTypeSoldier && is_player_in_vehicle)
+        {
+            // Similar para enemigos voladores
+            float new_x = enemy_x[index] + cos(enemy_angle[index]) * enemy_speed[index];
+            float new_y = enemy_y[index] + sin(enemy_angle[index]) * enemy_speed[index];
+
+            if (!check_enemy_collision(new_x, new_y, index))
+            {
+                enemy_x[index] = new_x;
+                enemy_y[index] = new_y;
+            }
+            else
+            {
+                float offset_angle = enemy_angle[index] + (pi / 4);
+                new_x = enemy_x[index] + cos(offset_angle) * enemy_speed[index];
+                new_y = enemy_y[index] + sin(offset_angle) * enemy_speed[index];
+
+                if (!check_enemy_collision(new_x, new_y, index))
+                {
+                    enemy_x[index] = new_x;
+                    enemy_y[index] = new_y;
+                }
+            }
         }
         break;
 
@@ -325,6 +448,14 @@ void update_enemy(int index)
         enemy_shoot_timer[index] = 1.0;
     }
 
+    // Comprobar si necesita recargar
+    if (enemy_shoot_timer[index] >= 10.0)
+    { // Usar como indicador de munición gastada
+        enemy_is_reloading[index] = 1;
+        enemy_reload_start[index] = get_frame_counter() / 60.0;
+        return;
+    }
+
     enemy_shoot_timer[index] -= 1.0 / 60.0;
 }
 
@@ -350,11 +481,17 @@ void render_enemies()
 {
     for (int i = 0; i < MaxEnemies; i++)
     {
-        if (!enemy_active[i])
+        if (!enemy_active[i] || enemy_health[i] <= 0)
             continue;
 
         // Seleccionar textura según tipo
-        if (enemy_type[i] == EnemyTypeKamikaze)
+        if (enemy_type[i] == EnemyTypeSoldier)
+        {
+            select_texture(TextureSoldier);
+            select_region(RegionSoldier);
+            define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
+        }
+        else if (enemy_type[i] == EnemyTypeKamikaze)
         {
             select_texture(TextureEnemyKamikaze);
         }
@@ -386,38 +523,42 @@ void render_enemies()
             frame = (get_frame_counter() / 10) % 2; // Alternar entre 0 y 1
         }
 
-        if (enemy_type[i] == EnemyTypeKamikaze)
+        // Definir región según tipo (excepto para soldados que ya está definida)
+        if (enemy_type[i] != EnemyTypeSoldier)
         {
-            select_region(frame);
-            define_region(
-                frame * EnemyKamikazeFrameWidth,
-                0,
-                (frame + 1) * EnemyKamikazeFrameWidth,
-                EnemyKamikazeFrameHeight,
-                (EnemyKamikazeFrameWidth / 2) + (frame * EnemyKamikazeFrameWidth),
-                EnemyKamikazeFrameHeight / 2);
-        }
-        else if (enemy_type[i] == EnemyTypeBoss)
-        {
-            select_region(frame);
-            define_region(
-                frame * EnemyBossFrameWidth,
-                0,
-                (frame + 1) * EnemyBossFrameWidth,
-                EnemyBossFrameHeight,
-                (EnemyBossFrameWidth / 2) + (frame * EnemyBossFrameWidth),
-                EnemyBossFrameHeight / 2);
-        }
-        else
-        {
-            select_region(frame);
-            define_region(
-                frame * EnemyHoverFrameWidth,
-                0,
-                (frame + 1) * EnemyHoverFrameWidth,
-                EnemyHoverFrameHeight,
-                (EnemyHoverFrameWidth / 2) + (frame * EnemyHoverFrameWidth),
-                EnemyHoverFrameHeight / 2);
+            if (enemy_type[i] == EnemyTypeKamikaze)
+            {
+                select_region(frame);
+                define_region(
+                    frame * EnemyKamikazeFrameWidth,
+                    0,
+                    (frame + 1) * EnemyKamikazeFrameWidth,
+                    EnemyKamikazeFrameHeight,
+                    (EnemyKamikazeFrameWidth / 2) + (frame * EnemyKamikazeFrameWidth),
+                    EnemyKamikazeFrameHeight / 2);
+            }
+            else if (enemy_type[i] == EnemyTypeBoss)
+            {
+                select_region(frame);
+                define_region(
+                    frame * EnemyBossFrameWidth,
+                    0,
+                    (frame + 1) * EnemyBossFrameWidth,
+                    EnemyBossFrameHeight,
+                    (EnemyBossFrameWidth / 2) + (frame * EnemyBossFrameWidth),
+                    EnemyBossFrameHeight / 2);
+            }
+            else
+            {
+                select_region(frame);
+                define_region(
+                    frame * EnemyHoverFrameWidth,
+                    0,
+                    (frame + 1) * EnemyHoverFrameWidth,
+                    EnemyHoverFrameHeight,
+                    (EnemyHoverFrameWidth / 2) + (frame * EnemyHoverFrameWidth),
+                    EnemyHoverFrameHeight / 2);
+            }
         }
 
         // Color normal o rojo si está recibiendo daño
@@ -430,25 +571,48 @@ void render_enemies()
             set_multiply_color(TextColor);
         }
 
-        set_drawing_angle(enemy_angle[i] + 80);
-        draw_region_rotozoomed_at(enemy_x[i] - camera_x, enemy_y[i] - camera_y);
+        // Renderizar según tipo
+        if (enemy_type[i] == EnemyTypeSoldier)
+        {
+            set_drawing_angle(enemy_angle[i]);
+            draw_region_rotated_at(enemy_x[i] - camera_x, enemy_y[i] - camera_y);
+        }
+        else
+        {
+            set_drawing_angle(enemy_angle[i] + 80);
+            draw_region_rotozoomed_at(enemy_x[i] - camera_x, enemy_y[i] - camera_y);
+        }
+
+        if (enemy_active[i] && enemy_health[i] > 0 && enemy_is_reloading[i])
+        {
+            select_texture(-1);
+            set_multiply_color(RedColor);
+            print_at(
+                (int)(enemy_x[i] - camera_x - 30),
+                (int)(enemy_y[i] - camera_y - ReloadTextOffset),
+                "RECARGANDO");
+        }
     }
 }
 
 void damage_enemy(int index, int damage)
 {
+    if (enemy_health[index] <= 0)
+        return;
+
     enemy_health[index] -= damage;
-    enemy_blink_timer[index] = EnemyBlinkTime; // Iniciar parpadeo
+    enemy_blink_timer[index] = EnemyBlinkTime;
 
     if (enemy_health[index] <= 0)
     {
-        enemy_shoot_timer[index] = 1.0; // Para animación de caída
+        enemy_active[index] = 0;  // Aquí estaba el error, usaba 'i' en vez de 'index'
+        num_active_enemies--;
     }
 }
 
 void spawn_wave_of_enemies()
 {
-    spawn_boss();
+    // spawn_boss();
     // spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
     //  spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
     //  spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorBomber, SpreadTypeCross);
