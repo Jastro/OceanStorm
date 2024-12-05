@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "input.h": "c",
+        "terrain.h": "c",
+        "particles.h": "c",
+        "weapon.h": "c",
+        "island.h": "c",
+        "gameover.h": "c",
+        "definitions.h": "c",
+        "airplane.h": "c",
+        "soldier.h": "c",
+        "turret.h": "c"
+    }
+}

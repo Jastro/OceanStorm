@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+    <rom type="cartridge" title="Ocean Storm" version="1.0" />
+    <binary path="obj/main.vbin" />
+    <textures>
+        <texture path="obj/airplane.vtx" />
+        <texture path="obj/carrier.vtx" />
+        <texture path="obj/tileset.vtx" />
+        <texture path="obj/bullet.vtx" />
+        <texture path="obj/soldier.vtx" />
+        <texture path="obj/base.vtx" />
+        <texture path="obj/machinegun.vtx" />
+        <texture path="obj/enemyBullet.vtx" />
+        <texture path="obj/hoverEnemy.vtx" />
+        <texture path="obj/kamikaze.vtx" />
+        <texture path="obj/boss.vtx" />
+        <texture path="obj/player.vtx" />
+        <texture path="obj/commander.vtx" />
+        <texture path="obj/enemySoldier.vtx" />
+        <texture path="obj/enemyBoss.vtx" />
+        <texture path="obj/dialog.vtx" />
+    </textures>
+    <sounds>
+    </sounds>
+</rom-definition>
