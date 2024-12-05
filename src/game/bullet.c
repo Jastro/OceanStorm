@@ -28,6 +28,9 @@ void create_spread_pattern(float x, float y, float base_angle, int spread_type)
 {
     switch (spread_type)
     {
+    case SpreadTypeSingle:
+        create_bullet(x, y, base_angle, 0, BulletTypeTurret);
+        break;
     case SpreadTypeCircle:
         for (int i = 0; i < 8; i++)
         {
@@ -160,24 +163,63 @@ void create_bullet(float x, float y, float angle, float spread, int type)
                 bullet_angle[i] = angle + random_spread;
             }
 
-            // Diferentes configuraciones según quien dispara
-            if (type == BulletTypePlayer && is_player_in_vehicle)
+            bullet_type[i] = type;
+
+            if (type == BulletTypePlayer)
             {
-                // Balas del avión
-                bullet_speed[i] = AirplaneBulletSpeed;
-                bullet_damage[i] = AirplaneBulletDamage;
-                weapon_range[current_weapon] = AirplaneBulletRange;
+                if (is_player_in_vehicle)
+                {
+                    bullet_speed[i] = AirplaneBulletSpeed;
+                    bullet_damage[i] = AirplaneBulletDamage;
+                    weapon_range[current_weapon] = AirplaneBulletRange;
+                }
+                else
+                {
+                    bullet_speed[i] = weapon_speed[current_weapon];
+                    bullet_damage[i] = weapon_damage[current_weapon];
+                }
             }
             else
             {
-                // Balas del soldado y torretas
-                bullet_speed[i] = 5.0;
-                bullet_damage[i] = weapon_damage[current_weapon];
+                // Comprobar primero si es una torreta
+                int is_turret_bullet = 1;
+                for (int e = 0; e < MaxEnemies; e++)
+                {
+                    if (enemy_active[e] &&
+                        enemy_x[e] == x &&
+                        enemy_y[e] == y) 
+                    {
+                        is_turret_bullet = 0;
+                        switch (enemy_type[e])
+                        {
+                            case EnemyTypeSoldier:
+                                bullet_speed[i] = SoldierBulletSpeed;
+                                break;
+                            case EnemyTypeKamikaze:
+                                bullet_speed[i] = KamikazeBulletSpeed;
+                                break;
+                            case EnemyTypeBoss:
+                                bullet_speed[i] = BossBulletSpeed;
+                                break;
+                            default:
+                                bullet_speed[i] = NormalEnemyBulletSpeed;
+                                break;
+                        }
+                        break;
+                    }
+                }
+
+                // Si no coincide con ningún enemigo, es una bala de torreta
+                if (is_turret_bullet)
+                {
+                    bullet_speed[i] = TurretBulletSpeed;
+                }
+                
+                bullet_damage[i] = TurretDamagePerBullet;
             }
 
             bullet_distance[i] = 0;
             bullet_active[i] = 1;
-            bullet_type[i] = type;
             break;
         }
     }

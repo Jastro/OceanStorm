@@ -16,5 +16,6 @@ void render_bombs();
 int can_plant_bomb(float x, float y);
 void plant_bomb(float x, float y);
 void check_bomb_explosions();
+void spawn_soldier_enemies(float x, float y, int count);
 
 #endif
