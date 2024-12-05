@@ -9,6 +9,7 @@
 #include "game/events.h"
 #include "game/turret.h"
 #include "game/dialog.h"
+#include "game/dialogtexts.h"
 #include "game/bomb.h"
 #include "game/enemy.h"
 #include "states/menu.h"
@@ -25,6 +26,7 @@
 #include "game/bomb.c"
 #include "game/enemy.c"
 #include "game/dialog.c"
+#include "game/dialogtexts.c"
 #include "game/events.c"
 #include "states/menu.c"
 #include "utils/utilities.c"
@@ -105,8 +107,8 @@ void main()
 
                 /*if (!has_event_happened(0))
                 {
-                    queue_dialog("Teniente Rykov, inicie operacion 'Nemesis'\nSu mision es clara: \n- Elimine las torretas de defensa\nLa Mano Negra no debe activar su prototipo\nBuena suerte.", TexturePortraitCommander);
-                    queue_dialog("Entendido, comandante. Entrando en zona \nhostil. Es hora de demostrarles quien \ndomina estos cielos.", TexturePortraitPlayer);
+                    queue_dialog(DT_StartOperation, TexturePortraitCommander);
+                    queue_dialog(DT_StartOperationReply, TexturePortraitPlayer);
                     start_dialog_sequence();
 
                     mark_event_as_happened(0);
@@ -114,27 +116,27 @@ void main()
 
                 if (!has_event_happened(1))
                 {
-                    queue_dialog("Primera torreta destruida. Esto va a ser \npan comido... ¿o no?", TexturePortraitPlayer);
-                    queue_dialog("Buen trabajo, Rykov. Pero cuidado, hemos \ndetectado actividad enemiga. Prepárese \npara recibir resistencia", TexturePortraitCommander);
-                    queue_dialog("¡El enemigo ha penetrado las defensas! \n¡No dejen que avance!", TexturePortraitSoldier);
+                    queue_dialog(DT_TurretDestroyed, TexturePortraitPlayer);
+                    queue_dialog(DT_EnemyDetected, TexturePortraitCommander);
+                    queue_dialog(DT_EnemyPenetration, TexturePortraitSoldier);
                     start_dialog_sequence();
 
                     mark_event_as_happened(1);
                 }
                 if (!has_event_happened(2))
                 {
-                    queue_dialog("Atención, Rykov. Tenemos cazas enemigos \nsaliendo de la base aérea. \n¡Prepárese para un combate intenso!", TexturePortraitCommander);
-                    queue_dialog("Lo sabía, no podían quedarse quietos por \nmucho tiempo. Vamos, pongan a prueba mi \npuntería.", TexturePortraitPlayer);
-                    queue_dialog("¡Caza Alpha 1 en posición! Objetivo \nvisualizado, todos los cazas: \n¡ataquen al helicóptero!", TexturePortraitSoldier);
+                    queue_dialog(DT_EnemyFighters, TexturePortraitCommander);
+                    queue_dialog(DT_EnemyFightersReply, TexturePortraitPlayer);
+                    queue_dialog(DT_AttackHeli, TexturePortraitSoldier);
                     start_dialog_sequence();
 
                     mark_event_as_happened(2);
                 }
                 if (!has_event_happened(3))
                 {
-                    queue_dialog("Eso es todo, chicos. Vuelvan a casa... o \nlo que quede de ella", TexturePortraitPlayer);
-                    queue_dialog("Buen trabajo, Rykov. Pero no baje la \nguardia. Las torretas restantes todavía \nestán activas y el enemigo no se \nrendirá sin pelear", TexturePortraitCommander);
-                    queue_dialog("Nunca lo hacen. Vamos a \nterminar con esto.", TexturePortraitPlayer);
+                    queue_dialog(DT_GoHome, TexturePortraitPlayer);
+                    queue_dialog(DT_TurretsRemain, TexturePortraitCommander);
+                    queue_dialog(DT_TurretsRemainReply, TexturePortraitPlayer);
                     start_dialog_sequence();
 
                     mark_event_as_happened(3);
@@ -142,10 +144,10 @@ void main()
 
                 if (!has_event_happened(4))
                 {
-                    queue_dialog("¡Alerta máxima, Rykov! El prototipo está \nen el aire. Repito: ¡el prototipo ha \ndespegado!", TexturePortraitCommander);
-                    queue_dialog("Así que aquí estás... el gran monstruo \nque todos temían. Espero que valgas la \npena.", TexturePortraitPlayer);
-                    queue_dialog("Aquí Capitán Kross, piloto del Fénix \nOscuro. Este será tu último vuelo, \nintruso.", TexturePortraitBoss);
-                    queue_dialog("Eso ya lo veremos, Kross. Solo un piloto \nsaldrá vivo de esto, y no serás tú.", TexturePortraitPlayer);
+                    queue_dialog(DT_MaxAlert, TexturePortraitCommander);
+                    queue_dialog(DT_MaxAlertReply, TexturePortraitPlayer);
+                    queue_dialog(DT_DarkPhoenix, TexturePortraitBoss);
+                    queue_dialog(DT_DarkPhoenix_Reply, TexturePortraitPlayer);
                     start_dialog_sequence();
 
                     mark_event_as_happened(4);
