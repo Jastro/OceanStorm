@@ -101,7 +101,6 @@
 #define ReloadTime 2.0
 #define ReloadTextOffset 30
 
-#define SoldierBulletSpeed 0.5
 #define KamikazeBulletSpeed 4.0
 #define BossBulletSpeed 4.5
 #define NormalEnemyBulletSpeed 4.0
@@ -109,14 +108,15 @@
 // Soldados enemigos
 #define MinSoldiersPerTurret 2
 #define MaxSoldiersPerTurret 4
-#define SoldierEnemyHealth 5
+#define SoldierEnemyHealth 10
 #define SoldierEnemyArmor 2
 #define SoldierEnemySpeed 0.4
-#define SoldierEnemyFireRate 1.0
+#define SoldierEnemyFireRate 0.05
 #define SoldierEnemyDamage 10
 #define SoldierBlinkTime 0.2
 #define SoldierEnemyRange 150.0
 #define SoldierSpawnRadius 100
+#define SoldierBulletSpeed 2.0
 #define EnemyCollisionRadius 40
 
 #define BossPhase1Health 400   // Cambia de fase cuando baja a este valor
@@ -191,7 +191,8 @@
 #define DescentSpeed 0.005
 #define MaxScale 0.6
 #define MinScale 0.2
-#define AirplaneShadowOffset 20
+#define AirplaneShadowOffset 60  // Offset máximo de la sombra (cuando está en altura máxima)
+#define AirplaneShadowBaseOffset 10  // Offset mínimo de la sombra
 #define MaxFuel 1000
 #define FuelConsumption 0.5
 #define RefuelRate 2.0
@@ -231,6 +232,12 @@
 #define StateMenu 0
 #define StateGame 1
 #define StateGameOver 2
+
+// ---- EVENTOS DEL JUEGO ----
+#define StartGame 0
+#define TurretDestroyed 1
+#define SpawnFlyingEnemies 2
+#define SpawnBoss 3
 
 // ---- COLORES ----
 #define BackgroundColor 0xFF000000

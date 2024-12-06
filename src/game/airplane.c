@@ -170,16 +170,24 @@ void initialize_airplane()
 
 void exit_vehicle()
 {
+    if (!is_player_in_vehicle)
+        return;
+
+    soldier_x = airplane_x + cos(airplane_angle) * 30;
+    soldier_y = airplane_y + sin(airplane_angle) * 30;
+
+    if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+    {
+        soldier_x = airplane_x - cos(airplane_angle) * 30;
+        soldier_y = airplane_y - sin(airplane_angle) * 30;
+
+        if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+            return;
+    }
+
     is_player_in_vehicle = 0;
-    soldier_x = airplane_x + cos(airplane_angle) * 50;
-    soldier_y = airplane_y + sin(airplane_angle) * 50;
     soldier_state = SoldierStateActive;
     target_zoom = CameraZoomGround;
-    /*if (!has_event_happened(EventFirstExit))
-    {
-        show_dialog("¡Presiona B para volver al avión cuando estés cerca!", -1);
-        // mark_event_as_happened(EventFirstExit);
-    }*/
 }
 
 void enter_vehicle()
@@ -301,21 +309,21 @@ void render_ui()
     render_fuel_gauge();
     set_multiply_color(TextColor);
     int[8] ammo_text;
-    print_at(10, 40, "AMMO: ");
+    print_at(10, 60, "AMMO: ");
     itoa(airplane_current_ammo, ammo_text, 10);
-    print_at(70, 40, ammo_text);
+    print_at(70, 60, ammo_text);
     int max_bar_width = 100;
     int bar_height = 10;
     int health_width = (int)((airplane_health / (float)AirplaneMaxHealth) * max_bar_width);
 
     // Barra de vida
     set_multiply_color(RedColor);
-    print_at(10, 50, "HP:");
+    print_at(10, 35, "HP:");
     for (int x = 0; x < max_bar_width; x++)
     {
         for (int y = 0; y < bar_height; y++)
         {
-            draw_region_at(60 + x, 50 + y);
+            draw_region_at(60 + x, 30 + y);
         }
     }
 
@@ -333,31 +341,35 @@ void render_ui()
     {
         for (int y = 0; y < bar_height; y++)
         {
-            draw_region_at(60 + x, 50 + y);
+            draw_region_at(60 + x, 30 + y);
         }
     }
 }
 
 void render_airplane()
 {
-    // 2. Dibujar la sombra primero
+    float height_factor = (airplane_scale - LandingScale) / (MaxScale - LandingScale);
+    float max_shadow_distance = AirplaneShadowOffset;
+    float shadow_offset = height_factor * max_shadow_distance;
+
+    // 1. Dibujar la sombra primero
     select_texture(TextureAirplane);
     select_region(RegionAirplaneShadow + airplane_frame);
     set_multiply_color(0x80000000); // Negro semi-transparente
     set_drawing_scale(airplane_scale, airplane_scale);
     set_drawing_angle(airplane_angle);
     draw_region_rotozoomed_at(
-        airplane_x - camera_x + 20, // Offset más grande para la sombra
-        airplane_y - camera_y + 20);
+        airplane_x - camera_x + shadow_offset,
+        airplane_y - camera_y + shadow_offset);
 
-    // 3. Dibujar el avión
-    set_multiply_color(0xFFFFFFFF); // Blanco opaco para el avión
+    // 2. Dibujar el avión
+    set_multiply_color(0xFFFFFFFF);
     select_region(airplane_frame);
     set_drawing_scale(airplane_scale, airplane_scale);
     set_drawing_angle(airplane_angle);
     draw_region_rotozoomed_at(airplane_x - camera_x, airplane_y - camera_y);
 
-    // 4. Dibujar la interfaz
+    // 3. Dibujar la interfaz
     if (is_player_in_vehicle)
     {
         render_ui();
