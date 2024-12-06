@@ -2,22 +2,25 @@
 #define DEFINITIONS_H
 
 // ---- TEXTURAS ----
-#define TextureAirplane 0
-#define TextureCarrier 1
-#define TextureIsland 2
-#define TextureBullet 3
-#define TextureSoldier 4
-#define TextureTurretBase 5
-#define TextureTurretGun 6
-#define TextureEnemyBullet 7
-#define TextureEnemy 8
-#define TextureEnemyKamikaze 9
-#define TextureEnemyBoss 10
-#define TexturePortraitPlayer 11
-#define TexturePortraitCommander 12
-#define TexturePortraitSoldier 13
-#define TexturePortraitBoss 14
-#define TextureDialog 15
+enum Textures {
+    TextureAirplane,
+    TextureCarrier,
+    TextureIsland,
+    TextureBullet,
+    TextureSoldier,
+    TextureTurretBase,
+    TextureTurretGun,
+    TextureEnemyBullet,
+    TextureEnemy,
+    TextureEnemyKamikaze,
+    TextureEnemyBoss,
+    TexturePortraitPlayer,
+    TexturePortraitCommander,
+    TexturePortraitSoldier,
+    TexturePortraitBoss,
+    TextureDialog,
+    TextureMinimap
+};
 
 // ---- REGIONES ----
 #define RegionAirplane 0
@@ -27,6 +30,14 @@
 #define RegionSoldier 0
 #define RegionTurretBase 0
 #define RegionTurretGun 1
+
+enum RegionsMinimap {
+    RegionMapFrame,
+    RegionMapSmallIsland,
+    RegionMapLargeIsland,
+    RegionMapCarrier,
+    RegionMapHeli
+};
 
 // ---- DIMENSIONES DE SPRITES ----
 // Avión
@@ -216,7 +227,7 @@
 #define LandingDistance 80
 
 // ---- ISLAS ----
-#define MaxIslands 10
+#define MaxIslands 9
 #define MinIslandSize 100
 #define MaxIslandSize 192
 #define NumIslandVariants 4
@@ -247,7 +258,8 @@
 
 #define UIDialogFrameWidth 552
 #define UIDialogFrameHeight 124
-
 #define UIDialogPortraitSize 100
+
+#define MinimapTileSize 3
 
 #endif

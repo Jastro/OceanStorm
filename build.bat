@@ -27,6 +27,7 @@ echo --------------------------
 %PNG2VIRCON% assets/enemySoldier.png -o obj/enemySoldier.vtx || goto :failed
 %PNG2VIRCON% assets/enemyBoss.png -o obj/enemyBoss.vtx || goto :failed
 %PNG2VIRCON% assets/dialog.png -o obj/dialog.vtx || goto :failed
+%PNG2VIRCON% assets/miniMap.png -o obj/miniMap.vtx || goto :failed
 
 echo Compile the C code
 echo --------------------------

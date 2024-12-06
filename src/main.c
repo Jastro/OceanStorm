@@ -54,6 +54,7 @@ void main()
     initialize_enemies();
     initialize_portraits();
     initialize_dialog();
+    initialize_minimap();
 
     // Establecer el estado inicial
     game_state = StateMenu;
