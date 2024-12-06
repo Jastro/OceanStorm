@@ -7,6 +7,8 @@ void initialize_battleShip();
 void initialize_dialog();
 void starting_dialog();
 void render_objectives();
+void initialize_minimap();
+void render_minimap();
 void render_world(float camera_x, float camera_y);
 
 #endif
