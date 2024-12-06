@@ -10,6 +10,7 @@
 #include "string.h"
 #include "soldier.h"
 #include "events.h"
+#include "dialogTexts.h"
 
 // Variables globales para el estado del avión
 float airplane_x;
@@ -89,6 +90,17 @@ void render_fuel_gauge()
         {
             draw_region_at(60 + x, 10 + y);
         }
+    }
+
+    if (fuel <= (MaxFuel / 2)) {
+        if (!has_event_happened(LowFuel))
+            {
+                queue_dialog(DT_FuelHalf, TexturePortraitCommander);
+                queue_dialog(DT_FuelHalfReply, TexturePortraitPlayer);
+                start_dialog_sequence();
+
+                mark_event_as_happened(LowFuel);
+            }
     }
 }
 
@@ -373,6 +385,10 @@ void render_airplane()
     if (is_player_in_vehicle)
     {
         render_ui();
+    } else {
+        if (airplane_scale > LandingScale) {
+            airplane_scale = clamp(airplane_scale - DescentSpeed, MinScale, MaxScale);
+        }
     }
 
     if (health_flash_timer > 0)

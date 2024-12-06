@@ -18,6 +18,7 @@
 #define TexturePortraitSoldier 13
 #define TexturePortraitBoss 14
 #define TextureDialog 15
+#define TextureBattleship 16
 
 // ---- REGIONES ----
 #define RegionAirplane 0
@@ -36,11 +37,14 @@
 #define AirplaneFrameHeight 91
 #define AirplaneFramesPerRow 1
 
+#define BattleShipSpriteWidth 42
+#define BattleShipSpriteHeight 142
+
 // Soldado
 #define SoldierWidth 32
 #define SoldierHeight 32
 #define PistolDamage 25
-#define ShotgunDamage 15  // Por cada perdigón
+#define ShotgunDamage 15 // Por cada perdigón
 #define SubmachineGunDamage 10
 
 // Torreta
@@ -150,8 +154,8 @@
 #define AIBehaviorShootAndRun 1 // Dispara y se aleja
 #define EnemySpeedBoss 1.0
 
-#define AIBehaviorChase 0     // Persigue al jugador
-#define AIBehaviorShootAndRun 1  // Dispara y se aleja
+#define AIBehaviorChase 0       // Persigue al jugador
+#define AIBehaviorShootAndRun 1 // Dispara y se aleja
 #define AIBehaviorKamikaze 2    // Va directo a chocar
 #define AIBehaviorBomber 3      // Bombardea al suelo
 
@@ -191,8 +195,8 @@
 #define DescentSpeed 0.005
 #define MaxScale 0.6
 #define MinScale 0.2
-#define AirplaneShadowOffset 60  // Offset máximo de la sombra (cuando está en altura máxima)
-#define AirplaneShadowBaseOffset 10  // Offset mínimo de la sombra
+#define AirplaneShadowOffset 60     // Offset máximo de la sombra (cuando está en altura máxima)
+#define AirplaneShadowBaseOffset 10 // Offset mínimo de la sombra
 #define MaxFuel 1000
 #define FuelConsumption 0.5
 #define RefuelRate 2.0
@@ -238,6 +242,7 @@
 #define TurretDestroyed 1
 #define SpawnFlyingEnemies 2
 #define SpawnBoss 3
+#define LowFuel 4
 
 // ---- COLORES ----
 #define BackgroundColor 0xFF000000
@@ -248,6 +253,63 @@
 #define IslandColor 0xFF604020
 #define GreenColor 0xFF00FF00
 
+// En definitions.h
+
+// Barcos
+#define LargeShipWidth 42
+#define LargeShipHeight 142
+#define LargeTurretWidth 20
+#define LargeTurretHeight 18
+
+#define MediumShipWidth 16
+#define MediumShipHeight 58
+#define MediumRocketWidth 12
+#define MediumRocketHeight 10
+#define MediumMachineGunWidth 9
+#define MediumMachineGunHeight 13
+
+#define SmallShipWidth 14
+#define SmallShipHeight 39
+
+// Posiciones de torretas en barco grande
+#define LargeShipFrontTurretX 21 // Centrado en width
+#define LargeShipFrontTurretY 20 // Desde arriba
+#define LargeShipMidTurretX 21
+#define LargeShipMidTurretY 71 // A mitad de height
+#define LargeShipBackTurretX 21
+#define LargeShipBackTurretY 122 // Desde abajo
+
+// Posiciones barco mediano
+#define MediumShipRocketX 8
+#define MediumShipRocketY 15
+#define MediumShipGunX 8
+#define MediumShipGunY 43
+
+// Posiciones barco pequeño
+#define SmallShipGunFrontX 7
+#define SmallShipGunFrontY 10
+#define SmallShipGunBackX 7
+#define SmallShipGunBackY 29
+
+#define MissileLifetime 3.0
+#define MissileSpeed 3.0
+#define MissileTurnSpeed 0.1
+
+// Texturas
+#define TextureLargeShip 20
+#define TextureMediumShip 21
+#define TextureSmallShip 22
+#define TextureMissile 23
+
+// Regiones
+#define RegionShipNormal 0
+#define RegionShipDestroyed 1
+
+// Estados del misil
+#define MissileMaxSpeed 5.0
+#define MissileMinSpeed 2.0
+#define MissileAcceleration 0.1
+
 // ---- UI ----
 #define BlinkRate 30
 #define HealthFlashTime 0.5
@@ -256,5 +318,7 @@
 #define UIDialogFrameHeight 124
 
 #define UIDialogPortraitSize 100
+#define ObjectiveY 80       // Posición Y donde empezarán a mostrarse los objetivos
+#define ObjectiveSpacing 20 // Espacio entre cada línea de objetivo
 
 #endif

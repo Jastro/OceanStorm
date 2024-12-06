@@ -16,6 +16,7 @@ extern int[MaxEnemies] enemy_pattern_index;
 extern int[MaxEnemies] enemy_pattern_count;
 extern int[MaxEnemies] enemy_is_reloading;
 extern float[MaxEnemies] enemy_reload_start;
+extern float phase_time;
 
 extern int num_active_enemies;
 extern int phase;

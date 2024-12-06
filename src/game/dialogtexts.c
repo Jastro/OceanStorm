@@ -76,3 +76,15 @@ DialogText DT_DarkPhoenix_Reply =
     "Eso ya lo veremos, Kross. S" o_ "lo un piloto \n"
     "saldr" a_ " vivo de esto, y no ser" a_ "s t" u_;
 
+DialogText DT_FuelHalf =
+    "Rykov, atenci" o_ "n. Est" a_ "s alcanzando el \n"
+    "50% de tu combustible. Recuerda que el \n"
+    "portaaviones est" a_ " disponible para \n"
+    "reabastecerte de gasolina y munici" o_ "n. \n"
+    exclam "No te arriesgues a quedarte sin recursos!";
+    
+DialogText DT_FuelHalfReply =
+    "Entendido, comandante. Har" e_ " una \n"
+    "parada en cuanto lo necesite. Pero a" u_ "n \n"
+    "tengo suficiente para causar algo de \n"
+    "caos antes de volver.";

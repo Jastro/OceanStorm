@@ -53,7 +53,7 @@ void main()
     initialize_enemies();
     initialize_portraits();
     initialize_dialog();
-
+    initialize_battleShip();
     // Establecer el estado inicial
     game_state = StateMenu;
 
@@ -99,6 +99,7 @@ void main()
             render_bombs();
 
             update_dialog();
+            starting_dialog();
 
             if (!is_player_in_vehicle)
             {
