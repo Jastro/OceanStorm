@@ -51,8 +51,8 @@
 
 // ---- SISTEMA DE TILES ----
 #define TileSize 64
-#define MaxTilesX 4
-#define MaxTilesY 3
+#define MaxTilesX 6
+#define MaxTilesY 6
 
 // Tipos de tiles
 #define TileEmpty 0
@@ -174,8 +174,8 @@
 #define EnemyKamikazeFrameHeight 144
 
 // ---- DIMENSIONES DEL MUNDO ----
-#define WorldWidth 2000
-#define WorldHeight 2000
+#define WorldWidth 2048
+#define WorldHeight 2048
 #define ScreenWidth 640
 #define ScreenHeight 360
 #define ScreenCenterX (ScreenWidth / 2)

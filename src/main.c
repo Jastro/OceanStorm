@@ -18,6 +18,7 @@
 // Incluir las implementaciones
 #include "game/airplane.c"
 #include "game/island.c"
+#include "game/island_maps.c"
 #include "game/render_system.c"
 #include "game/soldier.c"
 #include "game/weapon.c"

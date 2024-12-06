@@ -8,6 +8,7 @@
 // Variables globales
 float[MaxIslands] island_x;
 float[MaxIslands] island_y;
+float[MaxIslands] island_radius;
 int[MaxIslands][MaxTilesX][MaxTilesY] island_tiles;
 int num_islands;
 
@@ -18,11 +19,7 @@ int get_tile(int island_index, int x, int y) {
     return island_tiles[island_index][x][y];
 }
 
-void generate_island_layout(int island_index) {
-    int center_x = MaxTilesX / 2;
-    int center_y = MaxTilesY / 2;
-    //int radius = 1 + (rand() % 2);
-    int radius = 0 + (rand() % 3);
+void generate_island_layout(int island_index, bool is_large) {
     
     // Limpiar tiles
     for(int y = 0; y < MaxTilesY; y++) {
@@ -31,52 +28,75 @@ void generate_island_layout(int island_index) {
         }
     }
     
-    // Generar forma base usando solo TileGround
-    for(int y = center_y - radius; y <= center_y + radius; y++) {
-        for(int x = center_x - radius; x <= center_x + radius; x++) {
-            if(x >= 0 && x < MaxTilesX && y >= 0 && y < MaxTilesY) {
-                int dx = x - center_x;
-                int dy = y - center_y;
-                if(dx*dx + dy*dy <= radius*radius + (rand() % 2)) {
-                    island_tiles[island_index][x][y] = TileGround;
-                }
-            }
-        }
+    int island_model = rand() % 8;
+    
+    if( is_large )
+    {
+        for(int y = 0; y < 6; y++)
+            for(int x = 0; x < 6; x++)
+                if(large_islands[island_model][y][x])
+                    island_tiles[island_index][x][y] = large_islands[island_model][y][x] - 1;  // invertir x e y en arrays
+    }
+    
+    else
+    {
+        for(int y = 0; y < 4; y++)
+            for(int x = 0; x < 4; x++)
+                if(small_islands[island_model][y][x])
+                    island_tiles[island_index][x+1][y+1] = small_islands[island_model][y][x] - 1;  // invertir x e y en arrays
     }
 }
 
 void initialize_islands() {
     srand(get_time());
     
+    // definir el tileset
     select_texture(TextureIsland);
-    select_region(TileGround);
-    define_region(0, 0, TileSize, TileSize, 0, 0);
+    
+    define_region_matrix
+    (
+        TileEmpty,                // ID de la primera region
+        0, 0,                     // X e Y minimas de la primera region
+        TileSize-1, TileSize-1,   // X e Y maximas de la primera region
+        0, 0,                     // X e Y de referencia de la primera region
+        7, 6,                     // dimensiones de la matriz, en tiles
+        0                         // pixels de separacion entre regiones
+    );
     
     num_islands = MaxIslands;
-    //float safe_radius = TileSize * MaxTilesX / 2;  // Reducir el radio de seguridad
-
-    float safe_radius = TileSize * MaxTilesX; // Radio de seguridad para separación
     float carrier_safe_zone = 500; // Zona segura alrededor del carrier
     
     for(int i = 0; i < num_islands; i++) {
         bool valid_position = false;
-        float x, y;
+        float min_x, min_y;
+        
+        // generar 4 islas grandes y 6 pequeñas
+        bool is_large = (i < 4);
+        
+        // esto lo usamos para las separaciones
+        if(is_large) island_radius[i] = TileSize * 4;
+        else         island_radius[i] = TileSize * 3;
         
         while(!valid_position) {
-            x = rand() % (int)(WorldWidth * 0.8);  // Usar solo 80% del mundo
-            y = rand() % (int)(WorldHeight * 0.8);
+            min_x = rand() % (int)(WorldWidth  - MaxTilesX * TileSize);
+            min_y = rand() % (int)(WorldHeight - MaxTilesY * TileSize);
+            float center_x = min_x + (MaxTilesX * TileSize / 2);
+            float center_y = min_y + (MaxTilesY * TileSize / 2);
             
             // Comprobar distancia al carrier
-            float dx = x - StartingX;
-            float dy = y - StartingY;
+            float dx = center_x - StartingX;
+            float dy = center_y - StartingY;
             float carrier_dist = sqrt(dx*dx + dy*dy);
             
             // Comprobar distancia a otras islas
             bool too_close = false;
+            
             for(int j = 0; j < i; j++) {
-                dx = x - island_x[j];
-                dy = y - island_y[j];
+                dx = center_x - (island_x[j] + (MaxTilesX * TileSize / 2));
+                dy = center_y - (island_y[j] + (MaxTilesY * TileSize / 2));
                 float island_dist = sqrt(dx*dx + dy*dy);
+                float safe_radius = island_radius[i] + island_radius[j] + TileSize;
+                
                 if(island_dist < safe_radius) {
                     too_close = true;
                     break;
@@ -86,12 +106,12 @@ void initialize_islands() {
             // Posición válida si está lejos del carrier y otras islas
             if(carrier_dist > carrier_safe_zone && !too_close) {
                 valid_position = true;
-                island_x[i] = x;
-                island_y[i] = y;
+                island_x[i] = min_x;
+                island_y[i] = min_y;
             }
         }
         
-        generate_island_layout(i);
+        generate_island_layout(i, is_large);
     }
 }
 
@@ -119,7 +139,7 @@ void render_islands(float camera_x, float camera_y) {
                         float tile_x = base_x + (x * TileSize) - camera_x;
                         float tile_y = base_y + (y * TileSize) - camera_y;
                         
-                        select_region(TileGround);  // Por ahora solo usamos el tile ground
+                        select_region(island_tiles[i][x][y]);
                         draw_region_at(tile_x, tile_y);
                     }
                 }
