@@ -33,20 +33,32 @@ extern int[MaxBullets] bullet_active;
 
 void initialize_soldier()
 {
-    soldier_armor = MaxArmor;
-    soldier_bombs = BombCount;
-    soldier_state = SoldierStateNone;
-    soldier_immunity_timer = 0;
-    soldier_blink_timer = 0;
-
+    select_texture(TextureSoldier);
+    select_region(RegionSoldier);
+    define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
+    
     // Inicialmente solo tiene la pistola
     soldier_has_weapon[0] = 1;
     soldier_has_weapon[1] = 0;
     soldier_has_weapon[2] = 0;
+    
+    reset_soldier();
+}
 
-    select_texture(TextureSoldier);
-    select_region(RegionSoldier);
-    define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
+void reset_soldier()
+{
+    // Empezamos fuera del heli
+    is_player_in_vehicle = false;
+    soldier_state = SoldierStateActive;
+    soldier_x = StartingX;
+    soldier_y = StartingY - 50;
+    soldier_angle = -pi/2;
+    
+    // Estado inicial
+    soldier_armor = MaxArmor;
+    soldier_bombs = BombCount;
+    soldier_immunity_timer = 0;
+    soldier_blink_timer = 0;
 }
 
 void update_soldier()
