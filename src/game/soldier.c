@@ -71,8 +71,8 @@ void update_soldier()
     }
 
     // Verificar si estamos cerca del avión para poder subir
-    float dx = soldier_x - airplane_x;
-    float dy = soldier_y - airplane_y;
+    float dx = soldier_x - heli_x;
+    float dy = soldier_y - heli_y;
     float distance = sqrt(dx * dx + dy * dy);
 
     if (distance < 50.0 && gamepad_button_b() == 1)
@@ -175,8 +175,8 @@ void render_soldier()
     draw_region_rotated_at(soldier_x - camera_x, soldier_y - camera_y);
 
     // Indicador de poder subir al avión
-    float dx = soldier_x - airplane_x;
-    float dy = soldier_y - airplane_y;
+    float dx = soldier_x - heli_x;
+    float dy = soldier_y - heli_y;
     float distance = sqrt(dx * dx + dy * dy);
 
     if (distance < 50.0)

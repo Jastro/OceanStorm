@@ -1,4 +1,4 @@
-#include "airplane.h"
+#include "heli.h"
 #include "island.h"
 #include "bullet.h"
 #include "render_system.h"
@@ -13,31 +13,31 @@
 #include "dialogTexts.h"
 
 // Variables globales para el estado del avión
-float airplane_x;
-float airplane_y;
+float heli_x;
+float heli_y;
 float camera_x;
 float camera_y;
-float airplane_angle;
-float airplane_scale;
-float airplane_velocity;
+float heli_angle;
+float heli_scale;
+float heli_velocity;
 float fuel;
-int airplane_frame;
+int heli_frame;
 int anim_timer;
 int is_player_in_vehicle = 1;
-int airplane_current_ammo;
-float airplane_last_shot_time;
-int airplane_health;
+int heli_current_ammo;
+float heli_last_shot_time;
+int heli_health;
 float health_flash_timer = 0;
 
 // Variable externa para el estado del juego
 extern int game_state;
 
-void reload_airplane()
+void reload_heli()
 {
-    airplane_current_ammo = clamp(
-        airplane_current_ammo + AirplaneReloadRate,
+    heli_current_ammo = clamp(
+        heli_current_ammo + HeliReloadRate,
         0,
-        AirplaneMaxAmmo);
+        HeliMaxAmmo);
 }
 
 int soldier_is_over_carrier(float x, float y)
@@ -52,8 +52,8 @@ int soldier_is_over_carrier(float x, float y)
 int is_over_carrier()
 {
     // Comprobar si estamos sobre el carrier completo
-    float dx = airplane_x - (StartingX - CarrierWidth / 2);
-    float dy = airplane_y - (StartingY - CarrierHeight / 2);
+    float dx = heli_x - (StartingX - CarrierWidth / 2);
+    float dy = heli_y - (StartingY - CarrierHeight / 2);
 
     // El área de aterrizaje cubre todo el carrier
     return (dx >= 0 && dx <= CarrierWidth) && (dy >= 0 && dy <= CarrierHeight);
@@ -104,30 +104,30 @@ void render_fuel_gauge()
     }
 }
 
-void shoot_from_airplane()
+void shoot_from_heli()
 {
     float current_time = get_frame_counter() / 60.0;
 
-    if (airplane_current_ammo > 0 &&
-        current_time - airplane_last_shot_time >= AirplaneFireRate)
+    if (heli_current_ammo > 0 &&
+        current_time - heli_last_shot_time >= HeliFireRate)
     {
-        float shoot_angle = airplane_angle - pi / 2;
-        float bullet_x = airplane_x + cos(shoot_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
-        float bullet_y = airplane_y + sin(shoot_angle) * AirplaneFrameWidth * airplane_scale * 0.5;
+        float shoot_angle = heli_angle - pi / 2;
+        float bullet_x = heli_x + cos(shoot_angle) * HeliFrameWidth * heli_scale * 0.5;
+        float bullet_y = heli_y + sin(shoot_angle) * HeliFrameWidth * heli_scale * 0.5;
         create_bullet(bullet_x, bullet_y, shoot_angle, 0, BulletTypePlayer);
 
-        airplane_current_ammo--;
-        airplane_last_shot_time = current_time;
+        heli_current_ammo--;
+        heli_last_shot_time = current_time;
     }
 }
 
-void initialize_airplane()
+void initialize_heli()
 {
-    airplane_health = AirplaneMaxHealth;
-    airplane_last_shot_time = 0;
-    airplane_current_ammo = AirplaneMaxAmmo;
+    heli_health = HeliMaxHealth;
+    heli_last_shot_time = 0;
+    heli_current_ammo = HeliMaxAmmo;
     is_player_in_vehicle = 1;
-    select_texture(TextureAirplane);
+    select_texture(TextureHeli);
 
     // Los frames están uno al lado del otro, no uno encima del otro
     // Frame 1
@@ -135,8 +135,8 @@ void initialize_airplane()
     define_region(
         0,                   // x inicial del primer frame
         0,                   // y inicial (mismo para ambos)
-        AirplaneFrameWidth,  // anchura del frame
-        AirplaneFrameHeight, // altura completa
+        HeliFrameWidth,  // anchura del frame
+        HeliFrameHeight, // altura completa
         39,                  // punto central x (mitad del frame individual)
         39                   // punto central y
     );
@@ -144,40 +144,40 @@ void initialize_airplane()
     // Frame 2
     select_region(1);
     define_region(
-        AirplaneFrameWidth,      // x inicial del segundo frame (mitad del sprite)
+        HeliFrameWidth,      // x inicial del segundo frame (mitad del sprite)
         0,                       // y inicial
-        AirplaneFrameWidth * 2,  // ancho total para el segundo frame
-        AirplaneFrameHeight,     // altura completa
-        39 + AirplaneFrameWidth, // punto central x (mitad del frame individual)
+        HeliFrameWidth * 2,  // ancho total para el segundo frame
+        HeliFrameHeight,     // altura completa
+        39 + HeliFrameWidth, // punto central x (mitad del frame individual)
         39                       // punto central y
     );
 
     // Definir regiones de sombra
     // Sombra Frame 1
-    select_region(RegionAirplaneShadow);
+    select_region(RegionHeliShadow);
     define_region(
         0,                      // x inicial del primer frame
         0,                      // y inicial (mismo para ambos)
-        AirplaneFrameWidth,     // anchura del frame
-        AirplaneFrameHeight,    // altura completa
-        AirplaneFrameWidth / 2, // punto central x (mitad del frame individual)
-        AirplaneFrameHeight / 2 // punto central y
+        HeliFrameWidth,     // anchura del frame
+        HeliFrameHeight,    // altura completa
+        HeliFrameWidth / 2, // punto central x (mitad del frame individual)
+        HeliFrameHeight / 2 // punto central y
     );
 
     // Sombra Frame 2
-    select_region(RegionAirplaneShadow + 1);
+    select_region(RegionHeliShadow + 1);
     define_region(
-        AirplaneFrameWidth,       // x inicial del segundo frame (mitad del sprite)
+        HeliFrameWidth,       // x inicial del segundo frame (mitad del sprite)
         0,                        // y inicial
-        AirplaneFrameWidth * 2,   // ancho total para el segundo frame
-        AirplaneFrameHeight,      // altura completa
-        AirplaneFrameWidth * 1.5, // punto central x (mitad del frame individual)
-        AirplaneFrameHeight / 2   // punto central y
+        HeliFrameWidth * 2,   // ancho total para el segundo frame
+        HeliFrameHeight,      // altura completa
+        HeliFrameWidth * 1.5, // punto central x (mitad del frame individual)
+        HeliFrameHeight / 2   // punto central y
     );
 
-    airplane_frame = 0;
+    heli_frame = 0;
     anim_timer = 0;
-    reset_airplane();
+    reset_heli();
 }
 
 void exit_vehicle()
@@ -185,13 +185,13 @@ void exit_vehicle()
     if (!is_player_in_vehicle)
         return;
 
-    soldier_x = airplane_x + cos(airplane_angle) * 30;
-    soldier_y = airplane_y + sin(airplane_angle) * 30;
+    soldier_x = heli_x + cos(heli_angle) * 30;
+    soldier_y = heli_y + sin(heli_angle) * 30;
 
     if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
     {
-        soldier_x = airplane_x - cos(airplane_angle) * 30;
-        soldier_y = airplane_y - sin(airplane_angle) * 30;
+        soldier_x = heli_x - cos(heli_angle) * 30;
+        soldier_y = heli_y - sin(heli_angle) * 30;
 
         if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
             return;
@@ -212,24 +212,24 @@ void enter_vehicle()
     }
 }
 
-void reset_airplane()
+void reset_heli()
 {
     // El avión empieza en el centro del carrier, pero 40 pixels a la izquierda
-    airplane_x = StartingX + (CarrierWidth / 2) - 40;
-    airplane_y = StartingY + 20;
-    airplane_angle = 0.0;
-    airplane_scale = InitialScale;
-    airplane_velocity = 0.0;
+    heli_x = StartingX + (CarrierWidth / 2) - 40;
+    heli_y = StartingY + 20;
+    heli_angle = 0.0;
+    heli_scale = InitialScale;
+    heli_velocity = 0.0;
     fuel = MaxFuel;
-    airplane_health = AirplaneMaxHealth;
-    airplane_current_ammo = AirplaneMaxAmmo;
+    heli_health = HeliMaxHealth;
+    heli_current_ammo = HeliMaxAmmo;
 
     // Centrar la cámara en el avión
-    camera_x = airplane_x - ScreenCenterX;
-    camera_y = airplane_y - ScreenCenterY;
+    camera_x = heli_x - ScreenCenterX;
+    camera_y = heli_y - ScreenCenterY;
 }
 
-void update_airplane()
+void update_heli()
 {
     if (!is_player_in_vehicle)
         return;
@@ -239,55 +239,55 @@ void update_airplane()
 
     // Rotar el avión
     if (gamepad_left() > 0)
-        airplane_angle -= RotationSpeed;
+        heli_angle -= RotationSpeed;
     if (gamepad_right() > 0)
-        airplane_angle += RotationSpeed;
+        heli_angle += RotationSpeed;
 
     if (gamepad_button_a() > 0)
     {
-        shoot_from_airplane();
+        shoot_from_heli();
     }
 
     // Movimiento hacia adelante
     if (gamepad_up() > 0 && fuel > 0)
     {
-        airplane_x += MovementSpeed * sin(airplane_angle);
-        airplane_y -= MovementSpeed * cos(airplane_angle);
+        heli_x += MovementSpeed * sin(heli_angle);
+        heli_y -= MovementSpeed * cos(heli_angle);
         fuel -= FuelConsumption;
-        airplane_scale = clamp(airplane_scale + AscendSpeed, MinScale, MaxScale);
+        heli_scale = clamp(heli_scale + AscendSpeed, MinScale, MaxScale);
 
         // Actualizar animación
         anim_timer++;
-        if (anim_timer >= AirplaneAnimSpeed)
+        if (anim_timer >= HeliAnimSpeed)
         {
             anim_timer = 0;
-            airplane_frame = 1 - airplane_frame; // Alternar entre 0 y 1
+            heli_frame = 1 - heli_frame; // Alternar entre 0 y 1
         }
     }
     else
     {
-        airplane_scale = clamp(airplane_scale - DescentSpeed, MinScale, MaxScale);
-        airplane_frame = 0; // Frame base cuando no se mueve
+        heli_scale = clamp(heli_scale - DescentSpeed, MinScale, MaxScale);
+        heli_frame = 0; // Frame base cuando no se mueve
         anim_timer = 0;
     }
 
     // Comprobar aterrizaje
-    if (airplane_scale <= LandingScale)
+    if (heli_scale <= LandingScale)
     {
         // Si estamos sobre el carrier o una isla, permitir aterrizaje
-        if (is_over_carrier() || is_over_island(airplane_x, airplane_y))
+        if (is_over_carrier() || is_over_island(heli_x, heli_y))
         {
             // Aterrizaje exitoso
-            airplane_scale = LandingScale; // Mantenemos esta escala para que se vea bien
+            heli_scale = LandingScale; // Mantenemos esta escala para que se vea bien
 
             // Solo repostar si estamos en el carrier
             if (is_over_carrier())
             {
                 fuel = clamp(fuel + RefuelRate, 0, MaxFuel);
-                reload_airplane();
+                reload_heli();
             }
         }
-        else if (airplane_scale <= MinScale)
+        else if (heli_scale <= MinScale)
         {
             // Si no estamos sobre ninguna superficie y bajamos demasiado -> Game Over
             game_state = StateGameOver;
@@ -295,22 +295,22 @@ void update_airplane()
     }
 
     // Game over si nos quedamos sin combustible y sin altura
-    if (fuel <= 0 && airplane_scale <= MinScale && !is_over_carrier() && !is_over_island(airplane_x, airplane_y))
+    if (fuel <= 0 && heli_scale <= MinScale && !is_over_carrier() && !is_over_island(heli_x, heli_y))
     {
         game_state = StateGameOver;
     }
 
     // Mantener el avión dentro del mundo
-    airplane_x = clamp(airplane_x, 0, WorldWidth);
-    airplane_y = clamp(airplane_y, 0, WorldHeight);
+    heli_x = clamp(heli_x, 0, WorldWidth);
+    heli_y = clamp(heli_y, 0, WorldHeight);
 
     if (is_player_in_vehicle)
     {
-        camera_x = airplane_x - ScreenCenterX;
-        camera_y = airplane_y - ScreenCenterY;
+        camera_x = heli_x - ScreenCenterX;
+        camera_y = heli_y - ScreenCenterY;
     }
 
-    if ((is_over_carrier() || is_over_island(airplane_x, airplane_y)) && gamepad_button_b() == 1)
+    if ((is_over_carrier() || is_over_island(heli_x, heli_y)) && gamepad_button_b() == 1)
     {
         exit_vehicle();
         return;
@@ -322,11 +322,11 @@ void render_ui()
     set_multiply_color(TextColor);
     int[8] ammo_text;
     print_at(10, 60, "AMMO: ");
-    itoa(airplane_current_ammo, ammo_text, 10);
+    itoa(heli_current_ammo, ammo_text, 10);
     print_at(70, 60, ammo_text);
     int max_bar_width = 100;
     int bar_height = 10;
-    int health_width = (int)((airplane_health / (float)AirplaneMaxHealth) * max_bar_width);
+    int health_width = (int)((heli_health / (float)HeliMaxHealth) * max_bar_width);
 
     // Barra de vida
     set_multiply_color(RedColor);
@@ -358,36 +358,36 @@ void render_ui()
     }
 }
 
-void render_airplane()
+void render_heli()
 {
-    float height_factor = (airplane_scale - LandingScale) / (MaxScale - LandingScale);
-    float max_shadow_distance = AirplaneShadowOffset;
+    float height_factor = (heli_scale - LandingScale) / (MaxScale - LandingScale);
+    float max_shadow_distance = HeliShadowOffset;
     float shadow_offset = height_factor * max_shadow_distance;
 
     // 1. Dibujar la sombra primero
-    select_texture(TextureAirplane);
-    select_region(RegionAirplaneShadow + airplane_frame);
+    select_texture(TextureHeli);
+    select_region(RegionHeliShadow + heli_frame);
     set_multiply_color(0x80000000); // Negro semi-transparente
-    set_drawing_scale(airplane_scale, airplane_scale);
-    set_drawing_angle(airplane_angle);
+    set_drawing_scale(heli_scale, heli_scale);
+    set_drawing_angle(heli_angle);
     draw_region_rotozoomed_at(
-        airplane_x - camera_x + shadow_offset,
-        airplane_y - camera_y + shadow_offset);
+        heli_x - camera_x + shadow_offset,
+        heli_y - camera_y + shadow_offset);
 
     // 2. Dibujar el avión
     set_multiply_color(0xFFFFFFFF);
-    select_region(airplane_frame);
-    set_drawing_scale(airplane_scale, airplane_scale);
-    set_drawing_angle(airplane_angle);
-    draw_region_rotozoomed_at(airplane_x - camera_x, airplane_y - camera_y);
+    select_region(heli_frame);
+    set_drawing_scale(heli_scale, heli_scale);
+    set_drawing_angle(heli_angle);
+    draw_region_rotozoomed_at(heli_x - camera_x, heli_y - camera_y);
 
     // 3. Dibujar la interfaz
     if (is_player_in_vehicle)
     {
         render_ui();
     } else {
-        if (airplane_scale > LandingScale) {
-            airplane_scale = clamp(airplane_scale - DescentSpeed, MinScale, MaxScale);
+        if (heli_scale > LandingScale) {
+            heli_scale = clamp(heli_scale - DescentSpeed, MinScale, MaxScale);
         }
     }
 

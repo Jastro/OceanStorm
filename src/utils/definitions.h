@@ -3,7 +3,7 @@
 
 // ---- TEXTURAS ----
 enum Textures {
-    TextureAirplane,
+    TextureHeli,
     TextureCarrier,
     TextureIsland,
     TextureBullet,
@@ -28,8 +28,8 @@ enum Textures {
 };
 
 // ---- REGIONES ----
-#define RegionAirplane 0
-#define RegionAirplaneShadow 2
+#define RegionHeli 0
+#define RegionHeliShadow 2
 #define RegionCarrier 0
 #define RegionIsland 0
 #define RegionSoldier 0
@@ -46,11 +46,11 @@ enum RegionsMinimap {
 
 // ---- DIMENSIONES DE SPRITES ----
 // Avión
-#define AirplaneSpriteWidth 128
-#define AirplaneSpriteHeight 91
-#define AirplaneFrameWidth 128
-#define AirplaneFrameHeight 91
-#define AirplaneFramesPerRow 1
+#define HeliSpriteWidth 128
+#define HeliSpriteHeight 91
+#define HeliFrameWidth 128
+#define HeliFrameHeight 91
+#define HeliFramesPerRow 1
 
 // Soldado
 #define SoldierWidth 32
@@ -111,7 +111,7 @@ enum RegionsMinimap {
 // ---- ENEMIGOS ----
 #define MaxEnemies 20
 #define EnemyTypeSoldier 0
-#define EnemyTypeAirplane 1
+#define EnemyTypeHeli 1
 #define EnemyBulletRange 300.0
 #define EnemyBlinkTime 0.1
 #define ReloadTime 2.0
@@ -216,28 +216,28 @@ enum RegionsMinimap {
 #define ScreenCenterY (ScreenHeight / 2)
 
 // ---- CONFIGURACIÓN DEL AVIÓN ----
-#define NumAirplaneFrames 2
-#define AirplaneAnimSpeed 10
-#define AirplaneMaxHealth 100
+#define NumHeliFrames 2
+#define HeliAnimSpeed 10
+#define HeliMaxHealth 100
 #define RotationSpeed 0.05
 #define MovementSpeed 3.0
 #define AscendSpeed 0.005
 #define DescentSpeed 0.005
 #define MaxScale 0.6
 #define MinScale 0.2
-#define AirplaneShadowOffset 60     // Offset máximo de la sombra (cuando está en altura máxima)
-#define AirplaneShadowBaseOffset 10 // Offset mínimo de la sombra
+#define HeliShadowOffset 60     // Offset máximo de la sombra (cuando está en altura máxima)
+#define HeliShadowBaseOffset 10 // Offset mínimo de la sombra
 #define MaxFuel 1000
 #define FuelConsumption 0.5
 #define RefuelRate 2.0
 #define InitialScale 0.4
 #define LandingScale 0.4
-#define AirplaneMaxAmmo 100
-#define AirplaneFireRate 0.1
-#define AirplaneReloadRate 2.0
-#define AirplaneBulletRange 500.0
-#define AirplaneBulletSpeed 8.0
-#define AirplaneBulletDamage 25.0
+#define HeliMaxAmmo 100
+#define HeliFireRate 0.1
+#define HeliReloadRate 2.0
+#define HeliBulletRange 500.0
+#define HeliBulletSpeed 8.0
+#define HeliBulletDamage 25.0
 
 // ---- ÁREA DE ATERRIZAJE ----
 #define LandingAreaWidth 77

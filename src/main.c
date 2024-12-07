@@ -2,7 +2,7 @@
 #include "input.h"
 #include "time.h"
 #include "utils/definitions.h"
-#include "game/airplane.h"
+#include "game/heli.h"
 #include "game/island.h"
 #include "game/render_system.h"
 #include "game/soldier.h"
@@ -17,7 +17,7 @@
 #include "states/gameover.h"
 
 // Incluir las implementaciones
-#include "game/airplane.c"
+#include "game/heli.c"
 #include "game/island.c"
 #include "game/island_maps.c"
 #include "game/render_system.c"
@@ -46,7 +46,7 @@ void main()
     // Inicializar sistemas en orden
     initialize_carrier();  // Inicializar el carrier primero
     initialize_islands();  // Luego las islas
-    initialize_airplane(); // El avión
+    initialize_heli(); // El avión
     initialize_soldier();  // El soldado
     initialize_weapons();  // Las armas
     initialize_pickups();  // Los pickups
@@ -84,7 +84,7 @@ void main()
                 }
                 else
                 {
-                    update_airplane();
+                    update_heli();
                 }
 
                 update_turrets();
@@ -103,7 +103,7 @@ void main()
             render_enemies();
             render_bombs();
             render_ships();
-            render_airplane();
+            render_heli();
             update_dialog();
             starting_dialog();
 

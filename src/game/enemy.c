@@ -51,8 +51,8 @@ int check_enemy_collision(float x, float y, int current_enemy)
     }
     else
     {
-        float dx = x - airplane_x;
-        float dy = y - airplane_y;
+        float dx = x - heli_x;
+        float dy = y - heli_y;
         float dist = sqrt(dx * dx + dy * dy);
         if (dist < EnemyCollisionRadius)
             return 1;
@@ -192,8 +192,8 @@ void update_enemy(int index)
         if (!is_player_in_vehicle)
             return;
 
-        target_x = airplane_x;
-        target_y = airplane_y;
+        target_x = heli_x;
+        target_y = heli_y;
     }
 
     switch (enemy_behavior[index])
@@ -400,9 +400,9 @@ void update_enemy(int index)
                 {
                     if (is_player_in_vehicle)
                     {
-                        airplane_health -= KamikazeDamage;
+                        heli_health -= KamikazeDamage;
                         health_flash_timer = HealthFlashTime;
-                        if (airplane_health <= 0)
+                        if (heli_health <= 0)
                         {
                             game_state = StateGameOver;
                         }
