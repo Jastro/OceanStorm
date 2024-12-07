@@ -11,6 +11,7 @@ void update_gameover() {
     // Volver al menú si se presiona START
     if(gamepad_button_start() == 1) {
         reset_heli();  // Reiniciar el estado del avión
+        reset_soldier();
         game_state = StateMenu;
     }
 }

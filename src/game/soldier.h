@@ -34,6 +34,7 @@ extern int[MaxBullets] bullet_active;
 
 // Funciones del soldado
 void initialize_soldier();
+void reset_soldier();
 void update_soldier();
 void render_soldier();
 void soldier_take_damage();

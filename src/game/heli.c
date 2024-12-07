@@ -123,10 +123,6 @@ void shoot_from_heli()
 
 void initialize_heli()
 {
-    heli_health = HeliMaxHealth;
-    heli_last_shot_time = 0;
-    heli_current_ammo = HeliMaxAmmo;
-    is_player_in_vehicle = 1;
     select_texture(TextureHeli);
 
     // Los frames están uno al lado del otro, no uno encima del otro
@@ -180,38 +176,6 @@ void initialize_heli()
     reset_heli();
 }
 
-void exit_vehicle()
-{
-    if (!is_player_in_vehicle)
-        return;
-
-    soldier_x = heli_x + cos(heli_angle) * 30;
-    soldier_y = heli_y + sin(heli_angle) * 30;
-
-    if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
-    {
-        soldier_x = heli_x - cos(heli_angle) * 30;
-        soldier_y = heli_y - sin(heli_angle) * 30;
-
-        if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
-            return;
-    }
-
-    is_player_in_vehicle = 0;
-    soldier_state = SoldierStateActive;
-    target_zoom = CameraZoomGround;
-}
-
-void enter_vehicle()
-{
-    if (!is_player_in_vehicle)
-    { // Solo si estamos fuera del avión
-        is_player_in_vehicle = 1;
-        soldier_state = SoldierStateNone;
-        target_zoom = CameraZoomAir;
-    }
-}
-
 void reset_heli()
 {
     // El avión empieza en el centro del carrier, pero 40 pixels a la izquierda
@@ -223,10 +187,50 @@ void reset_heli()
     fuel = MaxFuel;
     heli_health = HeliMaxHealth;
     heli_current_ammo = HeliMaxAmmo;
+    heli_last_shot_time = 0;
 
     // Centrar la cámara en el avión
     camera_x = heli_x - ScreenCenterX;
     camera_y = heli_y - ScreenCenterY;
+}
+
+void exit_vehicle()
+{
+    // Si ya estamos fuera, no hacer nada
+    if (!is_player_in_vehicle)
+        return;
+    
+    // Intentar salir del heli por un lado
+    soldier_x = heli_x + cos(heli_angle) * 30;
+    soldier_y = heli_y + sin(heli_angle) * 30;
+
+    if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+    {
+        // Intentar salir por el lado contrario
+        soldier_x = heli_x - cos(heli_angle) * 30;
+        soldier_y = heli_y - sin(heli_angle) * 30;
+        
+        // Si no podemos, cancelar la salida
+        // (reproducir sonido indicandolo)
+        if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+            return;
+    }
+    
+    // Actualizar estado solo si hemos salido
+    is_player_in_vehicle = 0;
+    soldier_state = SoldierStateActive;
+    target_zoom = CameraZoomGround;
+}
+
+void enter_vehicle()
+{
+    // Si ya estamos dentro, no hacer nada
+    if (is_player_in_vehicle)
+        return;
+    
+    is_player_in_vehicle = 1;
+    soldier_state = SoldierStateNone;
+    target_zoom = CameraZoomAir;
 }
 
 void update_heli()
