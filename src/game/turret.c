@@ -13,8 +13,8 @@ int[MaxTurrets] turret_active;
 extern int num_islands;
 extern float[MaxIslands] island_x;
 extern float[MaxIslands] island_y;
-extern float airplane_x;
-extern float airplane_y;
+extern float heli_x;
+extern float heli_y;
 extern int is_player_in_vehicle;
 
 void initialize_turrets()
@@ -110,8 +110,8 @@ void update_turrets()
 
         if (is_player_in_vehicle)
         {
-            float dx = airplane_x - turret_x[i];
-            float dy = airplane_y - turret_y[i];
+            float dx = heli_x - turret_x[i];
+            float dy = heli_y - turret_y[i];
             float distance = sqrt(dx * dx + dy * dy);
 
             // Comprobar si está en rango

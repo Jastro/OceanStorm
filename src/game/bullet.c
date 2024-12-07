@@ -1,6 +1,6 @@
 #include "bullet.h"
 #include "weapon.h"
-#include "airplane.h"
+#include "heli.h"
 #include "soldier.h"
 #include "math.h"
 #include "video.h"
@@ -93,13 +93,13 @@ void check_bullet_collisions()
             {
                 if (check_circle_collision(
                         bullet_x[i], bullet_y[i],
-                        airplane_x, airplane_y,
-                        AirplaneFrameWidth * airplane_scale * 0.3)) // Radio más pequeño que el sprite
+                        heli_x, heli_y,
+                        HeliFrameWidth * heli_scale * 0.3)) // Radio más pequeño que el sprite
                 {
                     bullet_active[i] = 0;
-                    airplane_health -= TurretDamagePerBullet;
+                    heli_health -= TurretDamagePerBullet;
                     health_flash_timer = HealthFlashTime;
-                    if (airplane_health <= 0)
+                    if (heli_health <= 0)
                     {
                         game_state = StateGameOver;
                     }
@@ -169,9 +169,9 @@ void create_bullet(float x, float y, float angle, float spread, int type)
             {
                 if (is_player_in_vehicle)
                 {
-                    bullet_speed[i] = AirplaneBulletSpeed;
-                    bullet_damage[i] = AirplaneBulletDamage;
-                    weapon_range[current_weapon] = AirplaneBulletRange;
+                    bullet_speed[i] = HeliBulletSpeed;
+                    bullet_damage[i] = HeliBulletDamage;
+                    weapon_range[current_weapon] = HeliBulletRange;
                 }
                 else
                 {

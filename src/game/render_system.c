@@ -155,8 +155,8 @@ void render_minimap()
 
     // Al dibujar el heli mostramos la direccion done mira
     select_region(RegionMapHeli);
-    set_drawing_angle(airplane_angle);
-    draw_region_rotated_at(minimap_x(airplane_x), minimap_y(airplane_y));
+    set_drawing_angle(heli_angle);
+    draw_region_rotated_at(minimap_x(heli_x), minimap_y(heli_y));
 }
 
 void render_world(float camera_x, float camera_y)

@@ -1,6 +1,6 @@
 #include "gameover.h"
 #include "../utils/definitions.h"
-#include "../game/airplane.h"
+#include "../game/heli.h"
 #include "video.h"
 #include "input.h"
 #include "time.h"
@@ -10,7 +10,7 @@ extern int game_state;
 void update_gameover() {
     // Volver al menú si se presiona START
     if(gamepad_button_start() == 1) {
-        reset_airplane();  // Reiniciar el estado del avión
+        reset_heli();  // Reiniciar el estado del avión
         game_state = StateMenu;
     }
 }
