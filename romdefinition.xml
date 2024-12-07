@@ -20,7 +20,9 @@
         <texture path="obj/enemyBoss.vtx" />
         <texture path="obj/dialog.vtx" />
         <texture path="obj/miniMap.vtx" />
-        <texture path="obj/battleship.vtx" />
+        <texture path="obj/largeShip.vtx" />
+        <texture path="obj/mediumShip.vtx" />
+        <texture path="obj/smallShip.vtx" />
     </textures>
     <sounds>
     </sounds>

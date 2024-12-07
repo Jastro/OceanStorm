@@ -6,6 +6,7 @@
 #include "game/island.h"
 #include "game/render_system.h"
 #include "game/soldier.h"
+#include "game/ship.h"
 #include "game/events.h"
 #include "game/turret.h"
 #include "game/dialog.h"
@@ -21,6 +22,7 @@
 #include "game/island_maps.c"
 #include "game/render_system.c"
 #include "game/soldier.c"
+#include "game/ship.c"
 #include "game/weapon.c"
 #include "game/pickup.c"
 #include "game/turret.c"
@@ -54,8 +56,8 @@ void main()
     initialize_enemies();
     initialize_portraits();
     initialize_dialog();
-    initialize_battleShip();
     initialize_minimap();
+    initialize_ships();
 
     // Establecer el estado inicial
     game_state = StateMenu;
@@ -91,16 +93,17 @@ void main()
                 update_bullets();
                 update_enemies();
                 update_bombs();
+                update_ships();
             }
 
             render_world(camera_x, camera_y);
             render_turrets();
             render_bullets();
-            render_airplane();
             render_pickups();
             render_enemies();
             render_bombs();
-
+            render_ships();
+            render_airplane();
             update_dialog();
             starting_dialog();
 

@@ -10,12 +10,6 @@ extern float[MaxIslands] island_y;
 extern int[MaxIslands][MaxTilesX][MaxTilesY] island_tiles;
 extern int num_islands;
 
-void initialize_battleShip()
-{
-    select_texture(TextureBattleship);
-    select_region(0);
-    define_region(0, 0, BattleShipSpriteWidth, BattleShipSpriteHeight, BattleShipSpriteWidth / 2, BattleShipSpriteHeight / 2);
-}
 void initialize_carrier()
 {
     select_texture(TextureCarrier);
@@ -178,13 +172,9 @@ void render_world(float camera_x, float camera_y)
 
     // 3. Dibujar las islas
     render_islands(camera_x, camera_y);
-
-    // 4. Dibujar objetivos actuales
-    render_objectives();
-
-    select_texture(TextureBattleship);
-    draw_region_at(StartingX + 10, StartingY);
-
     // 4. Dibujar el minimapa
     render_minimap();
+
+    // 5. Dibujar objetivos actuales
+    render_objectives();
 }

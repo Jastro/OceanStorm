@@ -19,7 +19,12 @@ enum Textures {
     TexturePortraitSoldier,
     TexturePortraitBoss,
     TextureDialog,
-    TextureMinimap
+    TextureMinimap,
+    TextureLargeShip,
+    TextureMediumShip,
+    TextureSmallShip,
+    TextureShipTurret,
+    TextureShipRocket
 };
 
 // ---- REGIONES ----
@@ -46,9 +51,6 @@ enum RegionsMinimap {
 #define AirplaneFrameWidth 128
 #define AirplaneFrameHeight 91
 #define AirplaneFramesPerRow 1
-
-#define BattleShipSpriteWidth 42
-#define BattleShipSpriteHeight 142
 
 // Soldado
 #define SoldierWidth 32
@@ -139,6 +141,23 @@ enum RegionsMinimap {
 #define BossPhase2FireRate 0.5 // Más lento pero más disperso
 #define BossPhase3FireRate 0.1
 
+// BARCOS
+#define LargeShipWidth 44
+#define LargeShipHeight 142
+#define LargeTurretWidth 20
+#define LargeTurretHeight 18
+
+#define MediumShipWidth 16
+#define MediumShipHeight 58
+#define MediumRocketWidth 12
+#define MediumRocketHeight 10
+#define MediumMachineGunWidth 9
+#define MediumMachineGunHeight 13
+
+#define SmallShipWidth 14
+#define SmallShipHeight 39
+
+
 // Tipos de enemigos
 #define EnemyTypeNormal 0
 #define EnemyTypeKamikaze 1
@@ -186,6 +205,7 @@ enum RegionsMinimap {
 
 #define EnemyKamikazeFrameWidth 96
 #define EnemyKamikazeFrameHeight 144
+
 
 // ---- DIMENSIONES DEL MUNDO ----
 #define WorldWidth 2048
@@ -262,63 +282,6 @@ enum RegionsMinimap {
 #define ShadowColor 0x80000000
 #define IslandColor 0xFF604020
 #define GreenColor 0xFF00FF00
-
-// En definitions.h
-
-// Barcos
-#define LargeShipWidth 42
-#define LargeShipHeight 142
-#define LargeTurretWidth 20
-#define LargeTurretHeight 18
-
-#define MediumShipWidth 16
-#define MediumShipHeight 58
-#define MediumRocketWidth 12
-#define MediumRocketHeight 10
-#define MediumMachineGunWidth 9
-#define MediumMachineGunHeight 13
-
-#define SmallShipWidth 14
-#define SmallShipHeight 39
-
-// Posiciones de torretas en barco grande
-#define LargeShipFrontTurretX 21 // Centrado en width
-#define LargeShipFrontTurretY 20 // Desde arriba
-#define LargeShipMidTurretX 21
-#define LargeShipMidTurretY 71 // A mitad de height
-#define LargeShipBackTurretX 21
-#define LargeShipBackTurretY 122 // Desde abajo
-
-// Posiciones barco mediano
-#define MediumShipRocketX 8
-#define MediumShipRocketY 15
-#define MediumShipGunX 8
-#define MediumShipGunY 43
-
-// Posiciones barco pequeño
-#define SmallShipGunFrontX 7
-#define SmallShipGunFrontY 10
-#define SmallShipGunBackX 7
-#define SmallShipGunBackY 29
-
-#define MissileLifetime 3.0
-#define MissileSpeed 3.0
-#define MissileTurnSpeed 0.1
-
-// Texturas
-#define TextureLargeShip 20
-#define TextureMediumShip 21
-#define TextureSmallShip 22
-#define TextureMissile 23
-
-// Regiones
-#define RegionShipNormal 0
-#define RegionShipDestroyed 1
-
-// Estados del misil
-#define MissileMaxSpeed 5.0
-#define MissileMinSpeed 2.0
-#define MissileAcceleration 0.1
 
 // ---- UI ----
 #define BlinkRate 30
