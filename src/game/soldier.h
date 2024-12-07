@@ -4,7 +4,7 @@
 #define MaxArmor 3
 #define ImmunityTime 1.0
 #define SoldierSpeed 2.0
-#define BombCount 2
+#define BombCount 5
 
 // Estados del soldado
 #define SoldierStateNone 0

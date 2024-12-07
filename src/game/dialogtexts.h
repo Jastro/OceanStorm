@@ -21,6 +21,8 @@ extern DialogText DT_MaxAlert;
 extern DialogText DT_MaxAlertReply;
 extern DialogText DT_DarkPhoenix;
 extern DialogText DT_DarkPhoenix_Reply;
+extern DialogText DT_FuelHalf;
+extern DialogText DT_FuelHalfReply;
 
 // para facilitar los caracteres en español
 #define a_      "\xE1"   // á

@@ -19,7 +19,12 @@ enum Textures {
     TexturePortraitSoldier,
     TexturePortraitBoss,
     TextureDialog,
-    TextureMinimap
+    TextureMinimap,
+    TextureLargeShip,
+    TextureMediumShip,
+    TextureSmallShip,
+    TextureShipTurret,
+    TextureShipRocket
 };
 
 // ---- REGIONES ----
@@ -51,7 +56,7 @@ enum RegionsMinimap {
 #define SoldierWidth 32
 #define SoldierHeight 32
 #define PistolDamage 25
-#define ShotgunDamage 15  // Por cada perdigón
+#define ShotgunDamage 15 // Por cada perdigón
 #define SubmachineGunDamage 10
 
 // Torreta
@@ -112,7 +117,6 @@ enum RegionsMinimap {
 #define ReloadTime 2.0
 #define ReloadTextOffset 30
 
-#define SoldierBulletSpeed 0.5
 #define KamikazeBulletSpeed 4.0
 #define BossBulletSpeed 4.5
 #define NormalEnemyBulletSpeed 4.0
@@ -120,14 +124,15 @@ enum RegionsMinimap {
 // Soldados enemigos
 #define MinSoldiersPerTurret 2
 #define MaxSoldiersPerTurret 4
-#define SoldierEnemyHealth 5
+#define SoldierEnemyHealth 10
 #define SoldierEnemyArmor 2
 #define SoldierEnemySpeed 0.4
-#define SoldierEnemyFireRate 1.0
+#define SoldierEnemyFireRate 0.05
 #define SoldierEnemyDamage 10
 #define SoldierBlinkTime 0.2
 #define SoldierEnemyRange 150.0
 #define SoldierSpawnRadius 100
+#define SoldierBulletSpeed 2.0
 #define EnemyCollisionRadius 40
 
 #define BossPhase1Health 400   // Cambia de fase cuando baja a este valor
@@ -135,6 +140,23 @@ enum RegionsMinimap {
 #define BossPhase1FireRate 0.2 // Dispara rápido pero preciso
 #define BossPhase2FireRate 0.5 // Más lento pero más disperso
 #define BossPhase3FireRate 0.1
+
+// BARCOS
+#define LargeShipWidth 44
+#define LargeShipHeight 142
+#define LargeTurretWidth 20
+#define LargeTurretHeight 18
+
+#define MediumShipWidth 16
+#define MediumShipHeight 58
+#define MediumRocketWidth 12
+#define MediumRocketHeight 10
+#define MediumMachineGunWidth 9
+#define MediumMachineGunHeight 13
+
+#define SmallShipWidth 14
+#define SmallShipHeight 39
+
 
 // Tipos de enemigos
 #define EnemyTypeNormal 0
@@ -161,8 +183,8 @@ enum RegionsMinimap {
 #define AIBehaviorShootAndRun 1 // Dispara y se aleja
 #define EnemySpeedBoss 1.0
 
-#define AIBehaviorChase 0     // Persigue al jugador
-#define AIBehaviorShootAndRun 1  // Dispara y se aleja
+#define AIBehaviorChase 0       // Persigue al jugador
+#define AIBehaviorShootAndRun 1 // Dispara y se aleja
 #define AIBehaviorKamikaze 2    // Va directo a chocar
 #define AIBehaviorBomber 3      // Bombardea al suelo
 
@@ -184,6 +206,7 @@ enum RegionsMinimap {
 #define EnemyKamikazeFrameWidth 96
 #define EnemyKamikazeFrameHeight 144
 
+
 // ---- DIMENSIONES DEL MUNDO ----
 #define WorldWidth 2048
 #define WorldHeight 2048
@@ -202,7 +225,8 @@ enum RegionsMinimap {
 #define DescentSpeed 0.005
 #define MaxScale 0.6
 #define MinScale 0.2
-#define AirplaneShadowOffset 20
+#define AirplaneShadowOffset 60     // Offset máximo de la sombra (cuando está en altura máxima)
+#define AirplaneShadowBaseOffset 10 // Offset mínimo de la sombra
 #define MaxFuel 1000
 #define FuelConsumption 0.5
 #define RefuelRate 2.0
@@ -243,6 +267,13 @@ enum RegionsMinimap {
 #define StateGame 1
 #define StateGameOver 2
 
+// ---- EVENTOS DEL JUEGO ----
+#define StartGame 0
+#define TurretDestroyed 1
+#define SpawnFlyingEnemies 2
+#define SpawnBoss 3
+#define LowFuel 4
+
 // ---- COLORES ----
 #define BackgroundColor 0xFF000000
 #define TextColor 0xFFFFFFFF
@@ -259,6 +290,8 @@ enum RegionsMinimap {
 #define UIDialogFrameWidth 552
 #define UIDialogFrameHeight 124
 #define UIDialogPortraitSize 100
+#define ObjectiveY 80       // Posición Y donde empezarán a mostrarse los objetivos
+#define ObjectiveSpacing 20 // Espacio entre cada línea de objetivo
 
 #define MinimapTileSize 3
 

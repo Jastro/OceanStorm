@@ -6,6 +6,7 @@
 #include "game/island.h"
 #include "game/render_system.h"
 #include "game/soldier.h"
+#include "game/ship.h"
 #include "game/events.h"
 #include "game/turret.h"
 #include "game/dialog.h"
@@ -21,6 +22,7 @@
 #include "game/island_maps.c"
 #include "game/render_system.c"
 #include "game/soldier.c"
+#include "game/ship.c"
 #include "game/weapon.c"
 #include "game/pickup.c"
 #include "game/turret.c"
@@ -55,6 +57,7 @@ void main()
     initialize_portraits();
     initialize_dialog();
     initialize_minimap();
+    initialize_ships();
 
     // Establecer el estado inicial
     game_state = StateMenu;
@@ -90,70 +93,24 @@ void main()
                 update_bullets();
                 update_enemies();
                 update_bombs();
+                update_ships();
             }
 
             render_world(camera_x, camera_y);
             render_turrets();
             render_bullets();
-            render_airplane();
             render_pickups();
             render_enemies();
             render_bombs();
-
+            render_ships();
+            render_airplane();
             update_dialog();
+            starting_dialog();
 
             if (!is_player_in_vehicle)
             {
                 render_soldier();
                 render_soldier_ui();
-
-                /*if (!has_event_happened(0))
-                {
-                    queue_dialog(DT_StartOperation, TexturePortraitCommander);
-                    queue_dialog(DT_StartOperationReply, TexturePortraitPlayer);
-                    start_dialog_sequence();
-
-                    mark_event_as_happened(0);
-                }
-
-                if (!has_event_happened(1))
-                {
-                    queue_dialog(DT_TurretDestroyed, TexturePortraitPlayer);
-                    queue_dialog(DT_EnemyDetected, TexturePortraitCommander);
-                    queue_dialog(DT_EnemyPenetration, TexturePortraitSoldier);
-                    start_dialog_sequence();
-
-                    mark_event_as_happened(1);
-                }
-                if (!has_event_happened(2))
-                {
-                    queue_dialog(DT_EnemyFighters, TexturePortraitCommander);
-                    queue_dialog(DT_EnemyFightersReply, TexturePortraitPlayer);
-                    queue_dialog(DT_AttackHeli, TexturePortraitSoldier);
-                    start_dialog_sequence();
-
-                    mark_event_as_happened(2);
-                }
-                if (!has_event_happened(3))
-                {
-                    queue_dialog(DT_GoHome, TexturePortraitPlayer);
-                    queue_dialog(DT_TurretsRemain, TexturePortraitCommander);
-                    queue_dialog(DT_TurretsRemainReply, TexturePortraitPlayer);
-                    start_dialog_sequence();
-
-                    mark_event_as_happened(3);
-                }
-
-                if (!has_event_happened(4))
-                {
-                    queue_dialog(DT_MaxAlert, TexturePortraitCommander);
-                    queue_dialog(DT_MaxAlertReply, TexturePortraitPlayer);
-                    queue_dialog(DT_DarkPhoenix, TexturePortraitBoss);
-                    queue_dialog(DT_DarkPhoenix_Reply, TexturePortraitPlayer);
-                    start_dialog_sequence();
-
-                    mark_event_as_happened(4);
-                }*/
             }
 
             if (dialog_active)

@@ -9,7 +9,6 @@ float[MaxActiveBombs] bomb_x;
 float[MaxActiveBombs] bomb_y;
 float[MaxActiveBombs] bomb_timer;
 int[MaxActiveBombs] bomb_active;
-
 void spawn_soldier_enemies(float x, float y, int count)
 {
     for (int i = 0; i < count; i++)
@@ -19,7 +18,28 @@ void spawn_soldier_enemies(float x, float y, int count)
         float spawn_x = x + cos(angle) * distance;
         float spawn_y = y + sin(angle) * distance;
 
-        spawn_enemy(spawn_x, spawn_y, EnemyTypeSoldier, AIBehaviorChase, SpreadTypeSingle);
+        // Elegir patrón de disparo aleatorio
+        int random_type = rand() % 100; // Número entre 0 y 99
+        int spread_type;
+
+        if (random_type < 40)
+        {                                   // 40% probabilidad
+            spread_type = SpreadTypeSingle; // Soldado con pistola
+        }
+        else if (random_type < 70)
+        {                                    // 30% probabilidad
+            spread_type = SpreadTypeShotgun; // Soldado con escopeta
+        }
+        else if (random_type < 90)
+        {                                 // 20% probabilidad
+            spread_type = SpreadTypeWall; // Soldado con patrón en Wall
+        }
+        else
+        {                                   // 10% probabilidad
+            spread_type = SpreadTypeCircle; // Soldado con disparo circular
+        }
+
+        spawn_enemy(spawn_x, spawn_y, EnemyTypeSoldier, AIBehaviorChase, spread_type);
     }
 }
 
@@ -112,6 +132,15 @@ void update_bombs()
 
         if (bomb_timer[i] <= 0)
         {
+            if (!has_event_happened(TurretDestroyed))
+            {
+                queue_dialog(DT_TurretDestroyed, TexturePortraitPlayer);
+                queue_dialog(DT_EnemyDetected, TexturePortraitCommander);
+                queue_dialog(DT_EnemyPenetration, TexturePortraitSoldier);
+                start_dialog_sequence();
+
+                mark_event_as_happened(TurretDestroyed);
+            }
             check_bomb_explosions();
         }
     }
