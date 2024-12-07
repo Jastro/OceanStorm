@@ -246,8 +246,8 @@ enum RegionsMinimap {
 // ---- PORTAAVIONES ----
 #define StartingX (WorldWidth / 2)
 #define StartingY (WorldHeight / 2)
-#define CarrierWidth 77
-#define CarrierHeight 255
+#define CarrierWidth 75
+#define CarrierHeight 250
 #define LandingDistance 80
 
 // ---- ISLAS ----
