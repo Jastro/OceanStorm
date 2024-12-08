@@ -108,8 +108,8 @@ enum RegionsMinimap {
 #define SoldierBarHeight 5
 #define SoldierBarOffsetY 40
 #define SoldierSwimSpeed (SoldierSpeed * 0.5)
-#define MaxStamina 100
-#define StaminaDrainRate 0.5
+#define MaxStamina 50
+#define StaminaDrainRate 10
 #define SoldierDrownScale 0.3
 
 // ---- CONFIGURACIÓN DE TORRETAS TERRESTRES ----
