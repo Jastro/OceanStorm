@@ -31,6 +31,10 @@ extern float[MaxBullets] bullet_speed;
 extern float[MaxBullets] bullet_damage;
 extern float[MaxBullets] bullet_distance;
 extern int[MaxBullets] bullet_active;
+extern int soldier_health;
+extern float soldier_stamina;
+extern float soldier_scale;
+extern int is_swimming;
 
 // Funciones del soldado
 void initialize_soldier();

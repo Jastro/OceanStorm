@@ -11,6 +11,7 @@
 #include "soldier.h"
 #include "events.h"
 #include "dialogTexts.h"
+#include "weapon.h"
 
 // Variables globales para el estado del avión
 float heli_x;
@@ -92,15 +93,16 @@ void render_fuel_gauge()
         }
     }
 
-    if (fuel <= (MaxFuel / 2)) {
+    if (fuel <= (MaxFuel / 2))
+    {
         if (!has_event_happened(LowFuel))
-            {
-                queue_dialog(DT_FuelHalf, TexturePortraitCommander);
-                queue_dialog(DT_FuelHalfReply, TexturePortraitPlayer);
-                start_dialog_sequence();
+        {
+            queue_dialog(DT_FuelHalf, TexturePortraitCommander);
+            queue_dialog(DT_FuelHalfReply, TexturePortraitPlayer);
+            start_dialog_sequence();
 
-                mark_event_as_happened(LowFuel);
-            }
+            mark_event_as_happened(LowFuel);
+        }
     }
 }
 
@@ -129,31 +131,31 @@ void initialize_heli()
     // Frame 1
     select_region(0);
     define_region(
-        0,                   // x inicial del primer frame
-        0,                   // y inicial (mismo para ambos)
+        0,               // x inicial del primer frame
+        0,               // y inicial (mismo para ambos)
         HeliFrameWidth,  // anchura del frame
         HeliFrameHeight, // altura completa
-        39,                  // punto central x (mitad del frame individual)
-        39                   // punto central y
+        39,              // punto central x (mitad del frame individual)
+        39               // punto central y
     );
 
     // Frame 2
     select_region(1);
     define_region(
         HeliFrameWidth,      // x inicial del segundo frame (mitad del sprite)
-        0,                       // y inicial
+        0,                   // y inicial
         HeliFrameWidth * 2,  // ancho total para el segundo frame
         HeliFrameHeight,     // altura completa
         39 + HeliFrameWidth, // punto central x (mitad del frame individual)
-        39                       // punto central y
+        39                   // punto central y
     );
 
     // Definir regiones de sombra
     // Sombra Frame 1
     select_region(RegionHeliShadow);
     define_region(
-        0,                      // x inicial del primer frame
-        0,                      // y inicial (mismo para ambos)
+        0,                  // x inicial del primer frame
+        0,                  // y inicial (mismo para ambos)
         HeliFrameWidth,     // anchura del frame
         HeliFrameHeight,    // altura completa
         HeliFrameWidth / 2, // punto central x (mitad del frame individual)
@@ -164,7 +166,7 @@ void initialize_heli()
     select_region(RegionHeliShadow + 1);
     define_region(
         HeliFrameWidth,       // x inicial del segundo frame (mitad del sprite)
-        0,                        // y inicial
+        0,                    // y inicial
         HeliFrameWidth * 2,   // ancho total para el segundo frame
         HeliFrameHeight,      // altura completa
         HeliFrameWidth * 1.5, // punto central x (mitad del frame individual)
@@ -199,7 +201,7 @@ void exit_vehicle()
     // Si ya estamos fuera, no hacer nada
     if (!is_player_in_vehicle)
         return;
-    
+
     // Intentar salir del heli por un lado
     soldier_x = heli_x + cos(heli_angle) * 30;
     soldier_y = heli_y + sin(heli_angle) * 30;
@@ -209,13 +211,13 @@ void exit_vehicle()
         // Intentar salir por el lado contrario
         soldier_x = heli_x - cos(heli_angle) * 30;
         soldier_y = heli_y - sin(heli_angle) * 30;
-        
+
         // Si no podemos, cancelar la salida
         // (reproducir sonido indicandolo)
         if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
             return;
     }
-    
+
     // Actualizar estado solo si hemos salido
     is_player_in_vehicle = 0;
     soldier_state = SoldierStateActive;
@@ -227,7 +229,7 @@ void enter_vehicle()
     // Si ya estamos dentro, no hacer nada
     if (is_player_in_vehicle)
         return;
-    
+
     is_player_in_vehicle = 1;
     soldier_state = SoldierStateNone;
     target_zoom = CameraZoomAir;
@@ -237,6 +239,7 @@ void update_heli()
 {
     if (!is_player_in_vehicle)
         return;
+
     // Obtener entrada del control
     int direction_x, direction_y;
     gamepad_direction(&direction_x, &direction_y);
@@ -278,17 +281,34 @@ void update_heli()
     // Comprobar aterrizaje
     if (heli_scale <= LandingScale)
     {
-        // Si estamos sobre el carrier o una isla, permitir aterrizaje
         if (is_over_carrier() || is_over_island(heli_x, heli_y))
         {
             // Aterrizaje exitoso
             heli_scale = LandingScale; // Mantenemos esta escala para que se vea bien
 
-            // Solo repostar si estamos en el carrier
+            // Solo repostar y curar si estamos en el carrier
             if (is_over_carrier())
             {
+                // Recargar combustible
                 fuel = clamp(fuel + RefuelRate, 0, MaxFuel);
                 reload_heli();
+
+                // Curar helicóptero
+                heli_health = clamp(heli_health + RefuelRate, 0, HeliMaxHealth);
+
+                // Restaurar soldado completamente
+                soldier_health = SoldierMaxHealth;
+                soldier_armor = MaxArmor;
+                soldier_bombs = BombCount;
+
+                // Recargar todas las armas del soldado
+                for (int i = 0; i < 3; i++)
+                {
+                    if (soldier_has_weapon[i])
+                    {
+                        weapon_current_ammo[i] = weapon_max_ammo[i];
+                    }
+                }
             }
         }
         else if (heli_scale <= MinScale)
@@ -389,8 +409,11 @@ void render_heli()
     if (is_player_in_vehicle)
     {
         render_ui();
-    } else {
-        if (heli_scale > LandingScale) {
+    }
+    else
+    {
+        if (heli_scale > LandingScale)
+        {
             heli_scale = clamp(heli_scale - DescentSpeed, MinScale, MaxScale);
         }
     }
@@ -403,7 +426,6 @@ void render_heli()
 
 void update_camera_zoom()
 {
-    // Interpolar suavemente entre el zoom actual y el objetivo
     if (camera_zoom != target_zoom)
     {
         float diff = target_zoom - camera_zoom;

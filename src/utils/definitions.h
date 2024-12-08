@@ -103,9 +103,17 @@ enum RegionsMinimap {
 #define PistolDamage 25
 #define ShotgunDamage 15
 #define SubmachineGunDamage 10
+#define SoldierMaxHealth 100
+#define SoldierBarWidth 50
+#define SoldierBarHeight 5
+#define SoldierBarOffsetY 40
+#define SoldierSwimSpeed (SoldierSpeed * 0.5)
+#define MaxStamina 100
+#define StaminaDrainRate 0.5
+#define SoldierDrownScale 0.3
 
 // ---- CONFIGURACIÓN DE TORRETAS TERRESTRES ----
-#define MaxTurrets 10
+#define MaxTurrets 9
 #define TurretBaseWidth 32
 #define TurretBaseHeight 32
 #define TurretGunWidth 32

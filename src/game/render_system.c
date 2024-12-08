@@ -68,9 +68,12 @@ void render_objectives()
         break;
 
     case 2: // Fase final de torretas
-        print_at(10, ObjectiveY, "TORRETAS RESTANTES: ");
+        print_at(10, ObjectiveY, "TORRETAS: ");
         itoa(num_active_turrets(), number_buffer, 10);
-        print_at(170, ObjectiveY, number_buffer);
+        print_at(100, ObjectiveY, number_buffer);
+        print_at(110, ObjectiveY, "/");
+        itoa(MaxTurrets, number_buffer, 10);
+        print_at(120, ObjectiveY, number_buffer);
         break;
 
     case 3:                           // Fase del boss

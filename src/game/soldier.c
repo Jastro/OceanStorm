@@ -21,6 +21,10 @@ int soldier_bombs;
 float soldier_immunity_timer;
 float soldier_blink_timer;
 int[3] soldier_has_weapon;
+int soldier_health;
+float soldier_stamina = MaxStamina;
+float soldier_scale = 1.0;
+int is_swimming = 0;
 
 // Variable externa que necesitamos
 extern float camera_x;
@@ -36,12 +40,12 @@ void initialize_soldier()
     select_texture(TextureSoldier);
     select_region(RegionSoldier);
     define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
-    
+
     // Inicialmente solo tiene la pistola
     soldier_has_weapon[0] = 1;
     soldier_has_weapon[1] = 0;
     soldier_has_weapon[2] = 0;
-    
+
     reset_soldier();
 }
 
@@ -52,10 +56,11 @@ void reset_soldier()
     soldier_state = SoldierStateActive;
     soldier_x = StartingX;
     soldier_y = StartingY - 50;
-    soldier_angle = -pi/2;
-    
+    soldier_angle = -pi / 2;
+
     // Estado inicial
     soldier_armor = MaxArmor;
+    soldier_health = SoldierMaxHealth;
     soldier_bombs = BombCount;
     soldier_immunity_timer = 0;
     soldier_blink_timer = 0;
@@ -94,18 +99,50 @@ void update_soldier()
     }
 
     // Movimiento del soldado
-    int direction_x, direction_y;
+    int direction_x, direction_y, currentSpeed;
     gamepad_direction(&direction_x, &direction_y);
 
     // Calcular nueva posición potencial
-    float new_x = soldier_x + direction_x * SoldierSpeed;
-    float new_y = soldier_y + direction_y * SoldierSpeed;
+    if (is_swimming) {
+        currentSpeed = SoldierSwimSpeed;
+    } else {
+        currentSpeed = SoldierSpeed;
+    }
 
-    // Solo mover si la nueva posición está en terreno válido
-    if (soldier_is_over_carrier(new_x, new_y) || is_over_island(new_x, new_y))
+    float new_x = soldier_x + direction_x * currentSpeed;
+    float new_y = soldier_y + direction_y * currentSpeed;
+
+    // Comprobar si la nueva posición está en terreno válido
+    int on_valid_ground = soldier_is_over_carrier(new_x, new_y) || is_over_island(new_x, new_y);
+
+    // Si no está en terreno válido, está nadando
+    is_swimming = !on_valid_ground;
+
+    if (on_valid_ground)
     {
+        // En tierra firme
+        soldier_stamina = MaxStamina;
+        soldier_scale = 1.0;
         soldier_x = new_x;
         soldier_y = new_y;
+    }
+    else
+    {
+        // En el agua
+        soldier_stamina -= StaminaDrainRate / 60.0;
+
+        if (soldier_stamina <= 0)
+        {
+            // Ahogándose
+            soldier_scale = SoldierDrownScale;
+            game_state = StateGameOver;
+        }
+        else
+        {
+            // Permitir movimiento en el agua
+            soldier_x = new_x;
+            soldier_y = new_y;
+        }
     }
 
     // Actualizar la cámara para seguir al soldado
@@ -180,11 +217,28 @@ void render_soldier()
     // Dibujar soldado usando el sprite
     select_texture(TextureSoldier);
     select_region(RegionSoldier);
-    set_multiply_color(TextColor);
 
-    // Rotar el sprite según el ángulo de apuntado
+    // Color según estado
+    if (soldier_state == SoldierStateImmune || soldier_state == SoldierStateBlinking)
+    {
+        if ((get_frame_counter() / 4) % 2)
+        {                                  // Parpadeo rápido
+            set_multiply_color(TextColor); // Color normal
+        }
+        else
+        {
+            set_multiply_color(0xFFFFFFFF); // Blanco
+        }
+    }
+    else
+    {
+        set_multiply_color(TextColor);
+    }
+
+    // Rotar y escalar el sprite
     set_drawing_angle(soldier_angle);
-    draw_region_rotated_at(soldier_x - camera_x, soldier_y - camera_y);
+    set_drawing_scale(soldier_scale, soldier_scale);
+    draw_region_rotozoomed_at(soldier_x - camera_x, soldier_y - camera_y);
 
     // Indicador de poder subir al avión
     float dx = soldier_x - heli_x;
@@ -208,6 +262,104 @@ void render_soldier()
             (int)(soldier_x - camera_x - 30),
             (int)(soldier_y - camera_y - ReloadTextOffset),
             "RECARGANDO");
+    }
+
+    // Solo mostrar barra de vida cuando no hay armadura
+    if (soldier_armor == 0)
+    {
+        float bar_x = soldier_x - SoldierBarWidth / 2 - camera_x;
+        float bar_y = soldier_y - SoldierBarOffsetY - camera_y;
+
+        // Usar textura de BIOS para dibujar punto
+        select_texture(-1);
+        select_region(0);
+        define_region(0, 0, 1, 1, 0, 0);
+
+        // Fondo de la barra (negro semi-transparente)
+        set_multiply_color(GreenColor);
+        for (int x = 0; x < SoldierBarWidth; x++)
+        {
+            for (int y = 0; y < SoldierBarHeight; y++)
+            {
+                draw_region_at(bar_x + x, bar_y + y);
+            }
+        }
+
+        // Dibujar barra de vida
+        float health_percent = soldier_health / (float)SoldierMaxHealth;
+        int current_width = SoldierBarWidth * health_percent;
+
+        // Verde cuando está llena, roja cuando está baja
+        if (health_percent > 0.5)
+        {
+            set_multiply_color(GreenColor);
+        }
+        else
+        {
+            set_multiply_color(RedColor);
+        }
+
+        for (int x = 0; x < current_width; x++)
+        {
+            for (int y = 0; y < SoldierBarHeight; y++)
+            {
+                draw_region_at(bar_x + x, bar_y + y);
+            }
+        }
+    }
+
+    // Dibujar indicadores de armadura si hay
+    /*if (soldier_armor > 0)
+    {
+        float bar_x = soldier_x - SoldierBarWidth / 2 - camera_x;
+        float bar_y = soldier_y - SoldierBarOffsetY - camera_y;
+        float armor_spacing = SoldierBarWidth / MaxArmor;
+
+        select_texture(-1);
+        select_region(0);
+        define_region(0, 0, 1, 1, 0, 0);
+        set_multiply_color(TextColor); // Blanco para la armadura
+
+        for (int i = 0; i < soldier_armor; i++)
+        {
+            for (int y = 0; y < SoldierBarHeight; y++)
+            {
+                draw_region_at(bar_x + i * armor_spacing, bar_y + y);
+            }
+        }
+    }*/
+
+    // Dibujar barra de estamina si está nadando
+    if (is_swimming)
+    {
+        float bar_x = soldier_x - SoldierBarWidth / 2 - camera_x;
+        float bar_y = soldier_y - SoldierBarOffsetY - 10 - camera_y; // Encima de la barra de vida
+
+        // Fondo de la barra
+        select_texture(-1);
+        select_region(0);
+        define_region(0, 0, 1, 1, 0, 0);
+        set_multiply_color(0x80000000); // Negro semi-transparente
+
+        for (int x = 0; x < SoldierBarWidth; x++)
+        {
+            for (int y = 0; y < SoldierBarHeight; y++)
+            {
+                draw_region_at(bar_x + x, bar_y + y);
+            }
+        }
+
+        // Barra de estamina
+        int stamina_width = (soldier_stamina / MaxStamina) * SoldierBarWidth;
+        set_multiply_color(0xFF0000FF); // Azul para la estamina
+
+        for (int x = 0; x < stamina_width; x++)
+        {
+            for (int y = 0; y < SoldierBarHeight; y++)
+            {
+                draw_region_at(bar_x + x, bar_y + y);
+            }
+        }
     }
 }
 
@@ -243,20 +395,26 @@ void render_soldier_ui()
 
 void soldier_take_damage()
 {
-    if (soldier_state == SoldierStateImmune ||
-        soldier_state == SoldierStateBlinking)
+    if (soldier_state == SoldierStateImmune || soldier_state == SoldierStateBlinking)
         return;
 
-    soldier_armor--;
+    if (soldier_armor > 0)
+    {
+        soldier_armor--;
+    }
+    else if (soldier_health > 0)
+    {
+        soldier_health -= 25;
+    }
 
-    if (soldier_armor <= 0)
+    if (soldier_health <= 0)
     {
         game_state = StateGameOver;
     }
     else
     {
         soldier_state = SoldierStateBlinking;
-        soldier_blink_timer = 0.5; // Medio segundo de parpadeo
+        soldier_blink_timer = 0.5;
         soldier_immunity_timer = ImmunityTime;
     }
 }
