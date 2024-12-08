@@ -1,6 +1,14 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+// ---- DIMENSIONES DEL MUNDO Y PANTALLA ----
+#define WorldWidth 2048
+#define WorldHeight 2048
+#define ScreenWidth 640
+#define ScreenHeight 360
+#define ScreenCenterX (ScreenWidth / 2)
+#define ScreenCenterY (ScreenHeight / 2)
+
 // ---- TEXTURAS ----
 enum Textures {
     TextureHeli,
@@ -21,10 +29,10 @@ enum Textures {
     TextureDialog,
     TextureMinimap,
     TextureLargeShip,
-    TextureMediumShip,
-    TextureSmallShip,
     TextureShipTurret,
-    TextureShipRocket
+    TextureShipRocketTurret,
+    TextureShipRocket,
+    TextureShipBackTurret
 };
 
 // ---- REGIONES ----
@@ -44,33 +52,10 @@ enum RegionsMinimap {
     RegionMapHeli
 };
 
-// ---- DIMENSIONES DE SPRITES ----
-// Avión
-#define HeliSpriteWidth 128
-#define HeliSpriteHeight 91
-#define HeliFrameWidth 128
-#define HeliFrameHeight 91
-#define HeliFramesPerRow 1
-
-// Soldado
-#define SoldierWidth 32
-#define SoldierHeight 32
-#define PistolDamage 25
-#define ShotgunDamage 15 // Por cada perdigón
-#define SubmachineGunDamage 10
-
-// Torreta
-#define TurretBaseWidth 32
-#define TurretBaseHeight 32
-#define TurretGunWidth 32
-#define TurretGunHeight 38
-
 // ---- SISTEMA DE TILES ----
 #define TileSize 64
 #define MaxTilesX 6
 #define MaxTilesY 6
-
-// Tipos de tiles
 #define TileEmpty 0
 #define TileGround 1
 #define TileEdgeTop 2
@@ -83,23 +68,48 @@ enum RegionsMinimap {
 #define TileCornerBL 9
 #define TileHouse 10
 
-// ---- CONFIGURACIÓN DE CÁMARA ----
-#define CameraZoomAir 1.0
-#define CameraZoomGround 0.5
-#define CameraZoomSpeed 0.05
+// ---- CONFIGURACIÓN DEL HELICÓPTERO ----
+#define HeliSpriteWidth 128
+#define HeliSpriteHeight 91
+#define HeliFrameWidth 128
+#define HeliFrameHeight 91
+#define HeliFramesPerRow 1
+#define NumHeliFrames 2
+#define HeliAnimSpeed 10
+#define HeliMaxHealth 100
+#define RotationSpeed 0.05
+#define MovementSpeed 3.0
+#define AscendSpeed 0.005
+#define DescentSpeed 0.005
+#define MaxScale 0.6
+#define MinScale 0.2
+#define HeliShadowOffset 60
+#define HeliShadowBaseOffset 10
+#define MaxFuel 1000
+#define FuelConsumption 0.5
+#define RefuelRate 2.0
+#define InitialScale 0.4
+#define LandingScale 0.4
+#define HeliMaxAmmo 100
+#define HeliFireRate 0.1
+#define HeliReloadRate 2.0
+#define HeliBulletRange 500.0
+#define HeliBulletSpeed 8.0
+#define HeliBulletDamage 25.0
 
-// ---- SISTEMA DE BOMBAS ----
-#define BombTimerSeconds 5.0
-#define MaxActiveBombs 5
-#define BombExplosionRadius 50.0
+// ---- CONFIGURACIÓN DEL SOLDADO ----
+#define SoldierWidth 32
+#define SoldierHeight 32
+#define PistolDamage 25
+#define ShotgunDamage 15
+#define SubmachineGunDamage 10
 
-// ---- SISTEMA DE PROYECTILES ----
-#define MaxBullets 50
-#define BulletSpeed 5.0
-#define BulletSize 8
-
-// ---- CONFIGURACIÓN DE TORRETAS ----
+// ---- CONFIGURACIÓN DE TORRETAS TERRESTRES ----
 #define MaxTurrets 10
+#define TurretBaseWidth 32
+#define TurretBaseHeight 32
+#define TurretGunWidth 32
+#define TurretGunHeight 38
 #define TurretVisionRange 300.0
 #define TurretFireRate 10.0
 #define TurretBulletSpeed 8.0
@@ -108,55 +118,39 @@ enum RegionsMinimap {
 #define TurretMaxSpread 6
 #define TurretDamagePerBullet 25
 
-// ---- ENEMIGOS ----
-#define MaxEnemies 20
-#define EnemyTypeSoldier 0
-#define EnemyTypeHeli 1
-#define EnemyBulletRange 300.0
-#define EnemyBlinkTime 0.1
-#define ReloadTime 2.0
-#define ReloadTextOffset 30
-
-#define KamikazeBulletSpeed 4.0
-#define BossBulletSpeed 4.5
-#define NormalEnemyBulletSpeed 4.0
-
-// Soldados enemigos
-#define MinSoldiersPerTurret 2
-#define MaxSoldiersPerTurret 4
-#define SoldierEnemyHealth 10
-#define SoldierEnemyArmor 2
-#define SoldierEnemySpeed 0.4
-#define SoldierEnemyFireRate 0.05
-#define SoldierEnemyDamage 10
-#define SoldierBlinkTime 0.2
-#define SoldierEnemyRange 150.0
-#define SoldierSpawnRadius 100
-#define SoldierBulletSpeed 2.0
-#define EnemyCollisionRadius 40
-
-#define BossPhase1Health 400   // Cambia de fase cuando baja a este valor
-#define BossPhase2Health 200   // Y a este
-#define BossPhase1FireRate 0.2 // Dispara rápido pero preciso
-#define BossPhase2FireRate 0.5 // Más lento pero más disperso
-#define BossPhase3FireRate 0.1
-
-// BARCOS
+// ---- CONFIGURACIÓN DE BARCOS ----
+#define MaxShips 2
 #define LargeShipWidth 44
 #define LargeShipHeight 142
 #define LargeTurretWidth 20
 #define LargeTurretHeight 18
+#define LargeRocketWidth 12
+#define LargeRocketHeight 10
 
-#define MediumShipWidth 16
-#define MediumShipHeight 58
-#define MediumRocketWidth 12
-#define MediumRocketHeight 10
-#define MediumMachineGunWidth 9
-#define MediumMachineGunHeight 13
+// Posiciones de torretas en barcos
+#define FrontTurretOffsetX 80
+#define FrontTurretOffsetY 50
+#define BackTurretOffsetX 0
+#define BackTurretOffsetY 0
+#define RocketTurretOffsetX 0
+#define RocketTurretOffsetY 50
 
-#define SmallShipWidth 14
-#define SmallShipHeight 39
+// Configuración de armas de barco
+#define ShipTurretFireRate 1.0
+#define ShipMissileFireRate 3.0
+#define ShipTurretRange 300.0
+#define ShipBulletSpeed 4.0
+#define ShipMissileSpeed 3.0
+#define MissileLifetime 5.0
+#define ShipTurretDamage 20
+#define ShipMissileDamage 50
+#define ShipTurretWidth 20
+#define ShipTurretHeight 18
+#define ShipRocketTurretWidth 12
+#define ShipRocketTurretHeight 18
 
+// ---- CONFIGURACIÓN DE ENEMIGOS ----
+#define MaxEnemies 20
 
 // Tipos de enemigos
 #define EnemyTypeNormal 0
@@ -174,74 +168,67 @@ enum RegionsMinimap {
 #define EnemyBlinkTime 0.1
 #define KamikazeDamage 5
 
-// Velocidades de movimiento
+// Velocidades
 #define EnemySpeedNormal 3.0
 #define EnemySpeedKamikaze 2.0
-#define EnemySpeedBoss 5.0
-
-#define AIBehaviorChase 0       // Persigue al jugador
-#define AIBehaviorShootAndRun 1 // Dispara y se aleja
 #define EnemySpeedBoss 1.0
+#define KamikazeBulletSpeed 4.0
+#define BossBulletSpeed 4.5
+#define NormalEnemyBulletSpeed 4.0
 
-#define AIBehaviorChase 0       // Persigue al jugador
-#define AIBehaviorShootAndRun 1 // Dispara y se aleja
-#define AIBehaviorKamikaze 2    // Va directo a chocar
-#define AIBehaviorBomber 3      // Bombardea al suelo
+// Comportamientos IA
+#define AIBehaviorChase 0
+#define AIBehaviorShootAndRun 1
+#define AIBehaviorKamikaze 2
+#define AIBehaviorBomber 3
 
 // Patrones de disparo
 #define SpreadTypeNormal 0
-#define SpreadTypeCircle 1  // 8 balas en círculo
-#define SpreadTypeCross 2   // 4 balas en cruz
-#define SpreadTypeWall 3    // Muro de balas con espacios
-#define SpreadTypeShotgun 4 // Grupo de balas con dispersión
+#define SpreadTypeCircle 1
+#define SpreadTypeCross 2
+#define SpreadTypeWall 3
+#define SpreadTypeShotgun 4
 #define SpreadTypeSpiral 5
 #define SpreadTypeSingle 6
 
+// ---- DIMENSIONES DE SPRITES ENEMIGOS ----
 #define EnemyHoverFrameWidth 114
 #define EnemyHoverFrameHeight 80
-
 #define EnemyBossFrameWidth 320
 #define EnemyBossFrameHeight 240
-
 #define EnemyKamikazeFrameWidth 96
 #define EnemyKamikazeFrameHeight 144
 
+// ---- CONFIGURACIÓN DE SOLDADOS ENEMIGOS ----
+#define MinSoldiersPerTurret 2
+#define MaxSoldiersPerTurret 4
+#define SoldierEnemyHealth 10
+#define SoldierEnemyArmor 2
+#define SoldierEnemySpeed 0.4
+#define SoldierEnemyFireRate 0.05
+#define SoldierEnemyDamage 10
+#define SoldierBlinkTime 0.2
+#define SoldierEnemyRange 150.0
+#define SoldierSpawnRadius 100
+#define SoldierBulletSpeed 2.0
+#define EnemyCollisionRadius 40
 
-// ---- DIMENSIONES DEL MUNDO ----
-#define WorldWidth 2048
-#define WorldHeight 2048
-#define ScreenWidth 640
-#define ScreenHeight 360
-#define ScreenCenterX (ScreenWidth / 2)
-#define ScreenCenterY (ScreenHeight / 2)
+// ---- CONFIGURACIÓN DEL JEFE ----
+#define BossPhase1Health 400
+#define BossPhase2Health 200
+#define BossPhase1FireRate 0.2
+#define BossPhase2FireRate 0.5
+#define BossPhase3FireRate 0.1
 
-// ---- CONFIGURACIÓN DEL AVIÓN ----
-#define NumHeliFrames 2
-#define HeliAnimSpeed 10
-#define HeliMaxHealth 100
-#define RotationSpeed 0.05
-#define MovementSpeed 3.0
-#define AscendSpeed 0.005
-#define DescentSpeed 0.005
-#define MaxScale 0.6
-#define MinScale 0.2
-#define HeliShadowOffset 60     // Offset máximo de la sombra (cuando está en altura máxima)
-#define HeliShadowBaseOffset 10 // Offset mínimo de la sombra
-#define MaxFuel 1000
-#define FuelConsumption 0.5
-#define RefuelRate 2.0
-#define InitialScale 0.4
-#define LandingScale 0.4
-#define HeliMaxAmmo 100
-#define HeliFireRate 0.1
-#define HeliReloadRate 2.0
-#define HeliBulletRange 500.0
-#define HeliBulletSpeed 8.0
-#define HeliBulletDamage 25.0
+// ---- SISTEMA DE PROYECTILES ----
+#define MaxBullets 50
+#define BulletSpeed 5.0
+#define BulletSize 8
 
-// ---- ÁREA DE ATERRIZAJE ----
-#define LandingAreaWidth 77
-#define LandingAreaHeight 255
+// ---- SISTEMA DE BOMBAS ----
+#define MaxActiveBombs 5
+#define BombTimerSeconds 5.0
+#define BombExplosionRadius 50.0
 
 // ---- PORTAAVIONES ----
 #define StartingX (WorldWidth / 2)
@@ -249,6 +236,8 @@ enum RegionsMinimap {
 #define CarrierWidth 75
 #define CarrierHeight 250
 #define LandingDistance 80
+#define LandingAreaWidth 77
+#define LandingAreaHeight 255
 
 // ---- ISLAS ----
 #define MaxIslands 9
@@ -256,23 +245,38 @@ enum RegionsMinimap {
 #define MaxIslandSize 192
 #define NumIslandVariants 4
 
-// ---- EVENTOS ----
+// ---- EVENTOS Y ESTADOS ----
+#define MaxEvents 10
 #define EventFirstExit 0
 #define EventFirstTurret 1
 #define EventFirstPickup 2
-#define MaxEvents 10
 
-// ---- ESTADOS DEL JUEGO ----
-#define StateMenu 0
-#define StateGame 1
-#define StateGameOver 2
-
-// ---- EVENTOS DEL JUEGO ----
 #define StartGame 0
 #define TurretDestroyed 1
 #define SpawnFlyingEnemies 2
 #define SpawnBoss 3
 #define LowFuel 4
+
+#define StateMenu 0
+#define StateGame 1
+#define StateGameOver 2
+
+// ---- INTERFAZ Y UI ----
+#define UIDialogFrameWidth 552
+#define UIDialogFrameHeight 124
+#define UIDialogPortraitSize 100
+#define ObjectiveY 80
+#define ObjectiveSpacing 20
+#define MinimapTileSize 3
+#define BlinkRate 30
+#define HealthFlashTime 0.5
+#define ReloadTime 2.0
+#define ReloadTextOffset 30
+
+// ---- CÁMARA ----
+#define CameraZoomAir 1.0
+#define CameraZoomGround 0.5
+#define CameraZoomSpeed 0.05
 
 // ---- COLORES ----
 #define BackgroundColor 0xFF000000
@@ -282,17 +286,5 @@ enum RegionsMinimap {
 #define ShadowColor 0x80000000
 #define IslandColor 0xFF604020
 #define GreenColor 0xFF00FF00
-
-// ---- UI ----
-#define BlinkRate 30
-#define HealthFlashTime 0.5
-
-#define UIDialogFrameWidth 552
-#define UIDialogFrameHeight 124
-#define UIDialogPortraitSize 100
-#define ObjectiveY 80       // Posición Y donde empezarán a mostrarse los objetivos
-#define ObjectiveSpacing 20 // Espacio entre cada línea de objetivo
-
-#define MinimapTileSize 3
 
 #endif

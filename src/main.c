@@ -54,10 +54,10 @@ void main()
     initialize_turrets();
     initialize_bombs();
     initialize_enemies();
+    initialize_ships();
     initialize_portraits();
     initialize_dialog();
     initialize_minimap();
-    initialize_ships();
 
     // Establecer el estado inicial
     game_state = StateMenu;
@@ -91,9 +91,9 @@ void main()
                 update_pickups();
                 update_camera_zoom();
                 update_bullets();
+                //update_ships();
                 update_enemies();
                 update_bombs();
-                update_ships();
             }
 
             render_world(camera_x, camera_y);
@@ -101,8 +101,8 @@ void main()
             render_bullets();
             render_pickups();
             render_enemies();
-            render_bombs();
             render_ships();
+            render_bombs();
             render_heli();
             update_dialog();
             starting_dialog();

@@ -1,45 +1,50 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#define MaxShips 6
-#define MinLargeShips 2
-#define DefaultTurretOffset 20
+#define ShipDetectionRange 400
+#define ShipRotationSpeed 0.02
+#define ShipBaseSpeed 1.0
+#define ShipHealth 200
+#define MaxMissiles 10
 
-// Tipos de barcos
-#define ShipTypeLarge 0
-#define ShipTypeMedium 1
-#define ShipTypeSmall 2
-
-// Estados del barco
-#define ShipStateActive 0
-#define ShipStateDestroyed 1
-
-// Puntos de montaje de armas
-#define WeaponMountFront 0
-#define WeaponMountMiddle 1
-#define WeaponMountBack 2
-
-// Arrays para almacenar el estado de los barcos
+// Estado global del barco
 extern float[MaxShips] ship_x;
 extern float[MaxShips] ship_y;
 extern float[MaxShips] ship_angle;
-extern float[MaxShips] ship_speed;
-extern int[MaxShips] ship_type;
-extern int[MaxShips] ship_state;
+extern float[MaxShips] ship_target_angle;
 extern int[MaxShips] ship_health;
 extern int[MaxShips] ship_active;
+extern float[MaxShips] ship_blink_timer;
+extern int[MaxShips] ship_frame;
 
-// Arrays para las armas de los barcos grandes
-extern float[MaxShips][3] ship_weapon_offset_x;  // Offset X para cada punto de montaje
-extern float[MaxShips][3] ship_weapon_offset_y;  // Offset Y para cada punto de montaje
-extern int[MaxShips][3] ship_weapon_type;        // 0 = torreta, 1 = lanzacohetes
+// Estado de las torretas de cada barco
+extern float[MaxShips] front_turret_angle;
+extern float[MaxShips] back_turret_angle;
+extern float[MaxShips] rocket_turret_angle;
+extern float[MaxShips] turret_fire_timer;
+extern float[MaxShips] missile_fire_timer;
 
+// Estado de los misiles
+extern float[MaxShips][MaxMissiles] missile_x;
+extern float[MaxShips][MaxMissiles] missile_y;
+extern float[MaxShips][MaxMissiles] missile_angle;
+extern float[MaxShips][MaxMissiles] missile_lifetime;
+extern int[MaxShips][MaxMissiles] missile_active;
+
+// Funciones auxiliares
+float get_target_angle(float current_angle, float desired_angle);  // <-- Añadir esta línea
+void get_turret_position(int ship_index, float offset_x, float offset_y, float* out_x, float* out_y);
+
+// Funciones principales
 void initialize_ships();
-void spawn_ships();
+void spawn_ship(float x, float y);
 void update_ships();
 void render_ships();
-int find_valid_ship_position(float* out_x, float* out_y);
-int check_ship_collision(float x, float y, float width, float height, int current_ship);
 void damage_ship(int index, int damage);
+int check_ship_collision(float x, float y, float radius);
+void spawn_wave_of_ships(int count);
+void update_ship_weapons(int index);
+void update_missiles();
+
 
 #endif

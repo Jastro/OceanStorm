@@ -616,6 +616,7 @@ void damage_enemy(int index, int damage)
 
 void spawn_wave_of_enemies()
 {
+    spawn_wave_of_ships(2);
     // spawn_boss();
     //spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
     //  spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
@@ -630,7 +631,7 @@ void check_phase_progress()
         //if (num_active_turrets() <= MaxTurrets / 2)
         if (num_active_turrets() == 9)
         {
-            spawn_wave_of_enemies();
+            //spawn_wave_of_enemies();
             phase = 1;
             phase_time = 0;
         }

@@ -1,250 +1,391 @@
+// ship.c
 #include "ship.h"
 #include "../utils/definitions.h"
-#include "video.h"
 #include "island.h"
+#include "video.h"
 #include "math.h"
 
+// Variables globales
 float[MaxShips] ship_x;
 float[MaxShips] ship_y;
 float[MaxShips] ship_angle;
-float[MaxShips] ship_speed;
-int[MaxShips] ship_type;
-int[MaxShips] ship_state;
+float[MaxShips] ship_target_angle;
 int[MaxShips] ship_health;
 int[MaxShips] ship_active;
-float[MaxShips][3] ship_weapon_offset_x;
-float[MaxShips][3] ship_weapon_offset_y;
-int[MaxShips][3] ship_weapon_type;
+float[MaxShips] ship_blink_timer;
+int[MaxShips] ship_frame;
+
+float[MaxShips] front_turret_angle;
+float[MaxShips] back_turret_angle;
+float[MaxShips] rocket_turret_angle;
+float[MaxShips] turret_fire_timer;
+float[MaxShips] missile_fire_timer;
+
+float[MaxShips][MaxMissiles] missile_x;
+float[MaxShips][MaxMissiles] missile_y;
+float[MaxShips][MaxMissiles] missile_angle;
+float[MaxShips][MaxMissiles] missile_lifetime;
+int[MaxShips][MaxMissiles] missile_active;
+
+extern float heli_x;
+extern float heli_y;
+extern int is_player_in_vehicle;
+extern float camera_x;
+extern float camera_y;
+
+void get_turret_position(int ship_index, float offset_x, float offset_y, float *out_x, float *out_y)
+{
+    float cos_angle = cos(ship_angle[ship_index]);
+    float sin_angle = sin(ship_angle[ship_index]);
+
+    *out_x = ship_x[ship_index] + (offset_x * cos_angle - offset_y * sin_angle);
+    *out_y = ship_y[ship_index] + (offset_x * sin_angle + offset_y * cos_angle);
+}
+
+void update_ship_weapons(int index)
+{
+    if (!ship_active[index] || ship_health[index] <= 0)
+        return;
+
+    float dx = heli_x - ship_x[index];
+    float dy = heli_y - ship_y[index];
+    float distance = sqrt(dx * dx + dy * dy);
+
+    if (distance <= ShipTurretRange && is_player_in_vehicle)
+    {
+        // Calcular ángulos deseados para todas las torretas
+        float target_angle = atan2(dy, dx);
+
+        // Actualizar ángulos gradualmente
+        front_turret_angle[index] = get_target_angle(front_turret_angle[index], target_angle);
+        back_turret_angle[index] = get_target_angle(back_turret_angle[index], target_angle);
+        rocket_turret_angle[index] = get_target_angle(rocket_turret_angle[index], target_angle);
+
+        // Actualizar timers
+        turret_fire_timer[index] -= 1.0 / 60.0;
+        missile_fire_timer[index] -= 1.0 / 60.0;
+
+        // Disparar balas si es tiempo
+        if (turret_fire_timer[index] <= 0)
+        {
+            float front_x, front_y, back_x, back_y;
+
+            // Disparar desde torreta frontal
+            get_turret_position(index, FrontTurretOffsetX, FrontTurretOffsetY, &front_x, &front_y);
+            create_bullet(front_x, front_y, front_turret_angle[index], 0, BulletTypeTurret);
+
+            // Disparar desde torreta trasera
+            get_turret_position(index, BackTurretOffsetX, BackTurretOffsetY, &back_x, &back_y);
+            create_bullet(back_x, back_y, back_turret_angle[index], 0, BulletTypeTurret);
+
+            turret_fire_timer[index] = ShipTurretFireRate;
+        }
+
+        // Disparar misil si es tiempo
+        if (missile_fire_timer[index] <= 0)
+        {
+            float rocket_x, rocket_y;
+            get_turret_position(index, RocketTurretOffsetX, RocketTurretOffsetY, &rocket_x, &rocket_y);
+
+            // Buscar slot libre para misil
+            for (int m = 0; m < MaxMissiles; m++)
+            {
+                if (!missile_active[index][m])
+                {
+                    missile_x[index][m] = rocket_x;
+                    missile_y[index][m] = rocket_y;
+                    missile_angle[index][m] = rocket_turret_angle[index];
+                    missile_lifetime[index][m] = MissileLifetime;
+                    missile_active[index][m] = 1;
+                    break;
+                }
+            }
+
+            missile_fire_timer[index] = ShipMissileFireRate;
+        }
+    }
+}
+
+void update_missiles()
+{
+    float missile_rotation_speed = ShipRotationSpeed * 2; // Hacer que gire más rápido que el barco
+
+    for (int i = 0; i < MaxShips; i++)
+    {
+        for (int m = 0; m < MaxMissiles; m++)
+        {
+            if (!missile_active[i][m])
+                continue;
+
+            missile_lifetime[i][m] -= 1.0 / 60.0;
+            if (missile_lifetime[i][m] <= 0)
+            {
+                missile_active[i][m] = 0;
+                continue;
+            }
+
+            // Calcular dirección al jugador
+            float dx = heli_x - missile_x[i][m];
+            float dy = heli_y - missile_y[i][m];
+            float target_angle = atan2(dy, dx);
+
+            // Rotar más suavemente
+            float angle_diff = target_angle - missile_angle[i][m];
+
+            // Normalizar la diferencia de ángulo
+            while (angle_diff > pi)
+                angle_diff -= 2 * pi;
+            while (angle_diff < -pi)
+                angle_diff += 2 * pi;
+
+            // Aplicar rotación
+            if (angle_diff > 0)
+            {
+                missile_angle[i][m] += missile_rotation_speed;
+            }
+            else if (angle_diff < 0)
+            {
+                missile_angle[i][m] -= missile_rotation_speed;
+            }
+
+            // Mover en la dirección actual
+            missile_x[i][m] += cos(missile_angle[i][m]) * ShipMissileSpeed;
+            missile_y[i][m] += sin(missile_angle[i][m]) * ShipMissileSpeed;
+
+            // Comprobar colisión
+            if (is_player_in_vehicle)
+            {
+                dx = missile_x[i][m] - heli_x;
+                dy = missile_y[i][m] - heli_y;
+                if (sqrt(dx * dx + dy * dy) < HeliFrameWidth * heli_scale * 0.3)
+                {
+                    missile_active[i][m] = 0;
+                    heli_health -= ShipMissileDamage;
+                    health_flash_timer = HealthFlashTime;
+                }
+            }
+        }
+    }
+}
+
+float get_target_angle(float current_angle, float desired_angle)
+{
+    float diff = desired_angle - current_angle;
+
+    // Normalizar la diferencia al rango [-pi, pi]
+    while (diff > pi)
+        diff -= 2 * pi;
+    while (diff < -pi)
+        diff += 2 * pi;
+
+    // Aplicar rotación suave
+    if (diff > 0)
+    {
+        return current_angle + ShipRotationSpeed;
+    }
+    if (diff < 0)
+    {
+        return current_angle - ShipRotationSpeed;
+    }
+    return current_angle;
+}
+
+void spawn_wave_of_ships(int count)
+{
+    // Limitar el número de barcos al máximo permitido
+    if (count > MaxShips)
+        count = MaxShips;
+
+    // Calcular posiciones iniciales distribuidas en la parte superior
+    float start_x = WorldWidth / (count + 1);
+
+    for (int i = 0; i < count; i++)
+    {
+        // Intentar hacer spawn con separación
+        float spawn_x = start_x * (i + 1);
+        float spawn_y = WorldHeight - LargeShipHeight; // Justo fuera de la pantalla
+
+        // Verificar que no hay colisión en el punto de spawn
+        if (!check_ship_collision(spawn_x, spawn_y, LargeShipWidth))
+        {
+            spawn_ship(spawn_x, spawn_y);
+        }
+    }
+}
+
+int check_ship_collision(float x, float y, float radius)
+{
+    // Comprobar colisión con carrier
+    float dx = x - StartingX;
+    float dy = y - StartingY;
+    float carrier_dist = sqrt(dx * dx + dy * dy);
+    if (carrier_dist < CarrierWidth + radius)
+        return 1;
+
+    // Comprobar colisión con islas
+    for (int i = 0; i < num_islands; i++)
+    {
+        float island_center_x = island_x[i] + (MaxTilesX * TileSize / 2);
+        float island_center_y = island_y[i] + (MaxTilesY * TileSize / 2);
+        dx = x - island_center_x;
+        dy = y - island_center_y;
+        float island_dist = sqrt(dx * dx + dy * dy);
+        if (island_dist < island_radius[i] + radius)
+            return 1;
+    }
+
+    // Comprobar colisión con otros barcos
+    for (int i = 0; i < MaxShips; i++)
+    {
+        if (!ship_active[i] || ship_health[i] <= 0)
+            continue;
+
+        dx = x - ship_x[i];
+        dy = y - ship_y[i];
+        float ship_dist = sqrt(dx * dx + dy * dy);
+
+        if (ship_dist < (LargeShipWidth + radius))
+            return 1;
+    }
+
+    return 0;
+}
 
 void initialize_ships()
 {
+    // Inicializar todos los barcos como inactivos primero
     for (int i = 0; i < MaxShips; i++)
     {
         ship_active[i] = 0;
-        ship_state[i] = ShipStateActive;
+        ship_blink_timer[i] = 0;
+        ship_frame[i] = 0;
 
-        // Inicializar offsets por defecto
-        for (int j = 0; j < 3; j++)
+        // Inicializar ángulos de torretas y timers
+        front_turret_angle[i] = 0;
+        back_turret_angle[i] = 0;
+        rocket_turret_angle[i] = 0;
+        turret_fire_timer[i] = 0;
+        missile_fire_timer[i] = 0;
+
+        // Inicializar misiles
+        for (int m = 0; m < MaxMissiles; m++)
         {
-            ship_weapon_offset_x[i][j] = 0;
-            ship_weapon_offset_y[i][j] = DefaultTurretOffset * j;
-            ship_weapon_type[i][j] = 0;
-        }
-    }
-    spawn_ships();
-}
-
-// Función auxiliar para comprobar si un punto está en el agua
-int is_in_water(float x, float y)
-{
-    // No está sobre ninguna isla y está dentro del mundo
-    return !is_over_island(x, y) &&
-           x >= 0 && x < WorldWidth &&
-           y >= 0 && y < WorldHeight;
-}
-
-int check_ship_collision(float x, float y, float width, float height, int current_ship)
-{
-    for (int i = 0; i < MaxShips; i++)
-    {
-        if (!ship_active[i] || i == current_ship)
-            continue;
-
-        // Obtener dimensiones según el tipo
-        float other_width, other_height;
-        switch (ship_type[i])
-        {
-        case ShipTypeLarge:
-            other_width = LargeShipWidth;
-            other_height = LargeShipHeight;
-            break;
-        case ShipTypeMedium:
-            other_width = MediumShipWidth;
-            other_height = MediumShipHeight;
-            break;
-        default:
-            other_width = SmallShipWidth;
-            other_height = SmallShipHeight;
-            break;
-        }
-
-        // Comprobar colisión rectangular
-        if (x < ship_x[i] + other_width &&
-            x + width > ship_x[i] &&
-            y < ship_y[i] + other_height &&
-            y + height > ship_y[i])
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int find_valid_ship_position(float *out_x, float *out_y)
-{
-    int max_attempts = 100;
-    int attempt = 0;
-
-    while (attempt < max_attempts)
-    {
-        float test_x = rand() % WorldWidth;
-        float test_y = rand() % WorldHeight;
-
-        // Comprobar un área grande alrededor del punto para asegurar que hay espacio
-        int valid = 1;
-        for (float dx = -LargeShipWidth; dx <= LargeShipWidth; dx += LargeShipWidth / 2)
-        {
-            for (float dy = -LargeShipHeight; dy <= LargeShipHeight; dy += LargeShipHeight / 2)
-            {
-                if (!is_in_water(test_x + dx, test_y + dy))
-                {
-                    valid = 0;
-                    break;
-                }
-            }
-            if (!valid)
-                break;
-        }
-
-        if (valid)
-        {
-            *out_x = test_x;
-            *out_y = test_y;
-            return 1;
-        }
-
-        attempt++;
-    }
-
-    return 0;
-}
-
-void spawn_ships()
-{
-    int num_large = 0;
-
-    // Primero spawneamos los barcos grandes obligatorios
-    for (int i = 0; i < MinLargeShips; i++)
-    {
-        float spawn_x, spawn_y;
-        if (find_valid_ship_position(&spawn_x, &spawn_y))
-        {
-            for (int j = 0; j < MaxShips; j++)
-            {
-                if (!ship_active[j])
-                {
-                    ship_x[j] = spawn_x;
-                    ship_y[j] = spawn_y;
-                    ship_type[j] = ShipTypeLarge;
-                    ship_active[j] = 1;
-                    ship_health[j] = 100;
-                    ship_speed[j] = 1.0;
-                    ship_angle[j] = 0;
-                    num_large++;
-                    break;
-                }
-            }
+            missile_active[i][m] = 0;
         }
     }
 
-    // Luego llenamos el resto con barcos aleatorios
-    while (num_large < MaxShips)
-    {
-        float spawn_x, spawn_y;
-        if (find_valid_ship_position(&spawn_x, &spawn_y))
-        {
-            for (int j = 0; j < MaxShips; j++)
-            {
-                if (!ship_active[j])
-                {
-                    ship_x[j] = spawn_x;
-                    ship_y[j] = spawn_y;
-                    ship_type[j] = (rand() % 2) + 1; // Medium o Small
-                    ship_active[j] = 1;
-
-                    // Establecer vida según tipo
-                    if (ship_type[j] == ShipTypeMedium)
-                    {
-                        ship_health[j] = 75; // 50 + 25
-                    }
-                    else
-                    {
-                        ship_health[j] = 50; // Barco pequeño
-                    }
-
-                    // Establecer velocidad según tipo
-                    if (ship_type[j] == ShipTypeMedium)
-                    {
-                        ship_speed[j] = 1.2; // 1.5 - 0.3
-                    }
-                    else
-                    {
-                        ship_speed[j] = 1.5; // Barco pequeño
-                    }
-
-                    ship_angle[j] = 0;
-                    break;
-                }
-            }
-        }
-        num_large++;
-    }
+    // Hacer spawn de la primera ola
+    spawn_wave_of_ships(3); // O el número que prefieras
 }
 
-void update_ships()
+void spawn_ship(float x, float y)
 {
     for (int i = 0; i < MaxShips; i++)
     {
-        if (!ship_active[i] || ship_state[i] == ShipStateDestroyed)
-            continue;
-
-        // Obtener dimensiones del barco actual
-        float width, height;
-        switch (ship_type[i])
+        if (!ship_active[i])
         {
-        case ShipTypeLarge:
-            width = LargeShipWidth;
-            height = LargeShipHeight;
-            break;
-        case ShipTypeMedium:
-            width = MediumShipWidth;
-            height = MediumShipHeight;
-            break;
-        default:
-            width = SmallShipWidth;
-            height = SmallShipHeight;
-            break;
-        }
+            ship_x[i] = x;
+            ship_y[i] = y;
+            ship_angle[i] = pi / 2;
+            ship_target_angle[i] = ship_angle[i];
+            ship_health[i] = ShipHealth;
+            ship_active[i] = 1;
+            ship_blink_timer[i] = 0;
+            ship_frame[i] = 0;
 
-        // Calcular nueva posición potencial
-        float new_x = ship_x[i] + cos(ship_angle[i]) * ship_speed[i];
-        float new_y = ship_y[i] + sin(ship_angle[i]) * ship_speed[i];
+            // Añadir inicialización de torretas
+            front_turret_angle[i] = ship_angle[i];
+            back_turret_angle[i] = ship_angle[i];
+            rocket_turret_angle[i] = ship_angle[i];
+            turret_fire_timer[i] = 0;
+            missile_fire_timer[i] = 0;
 
-        // Verificar colisiones
-        if (is_in_water(new_x, new_y) &&
-            is_in_water(new_x + width, new_y) &&
-            is_in_water(new_x, new_y + height) &&
-            is_in_water(new_x + width, new_y + height) &&
-            !check_ship_collision(new_x, new_y, width, height, i))
-        {
-
-            ship_x[i] = new_x;
-            ship_y[i] = new_y;
-        }
-        else
-        {
-            // Si hay colisión, intentar cambiar de dirección
-            int random_direction = rand() % 2;
-            if (random_direction == 0)
+            for (int m = 0; m < MaxMissiles; m++)
             {
-                ship_angle[i] += pi / 4;
+                missile_active[i][m] = 0;
             }
-            else
-            {
-                ship_angle[i] -= pi / 4;
-            }
+            break;
         }
     }
+}
+
+void damage_ship(int index, int damage)
+{
+    if (ship_health[index] <= 0)
+        return;
+
+    ship_health[index] -= damage;
+    ship_blink_timer[index] = 0.5;
+
+    if (ship_health[index] <= 0)
+    {
+        ship_frame[index] = 1; // Cambiar al frame de destrucción
+    }
+}
+
+void update_ships() {
+   for(int i = 0; i < MaxShips; i++) {
+       if(!ship_active[i] || ship_health[i] <= 0) continue;
+
+       if(ship_blink_timer[i] > 0) {
+           ship_blink_timer[i] -= 1.0/60.0;
+       }
+
+       float dx = heli_x - ship_x[i];
+       float dy = heli_y - ship_y[i];
+       float distance = sqrt(dx*dx + dy*dy);
+
+       // Determinar el comportamiento
+       float desired_angle;
+
+       // Siempre comprobar obstáculos primero, independientemente del modo
+       float look_ahead_x = ship_x[i] + cos(ship_angle[i]) * LargeShipWidth * 2;
+       float look_ahead_y = ship_y[i] + sin(ship_angle[i]) * LargeShipWidth * 2;
+
+       if(check_ship_collision(look_ahead_x, look_ahead_y, LargeShipWidth)) {
+           // Si hay obstáculo, girar para evitarlo
+           if(rand() % 2 == 0) {
+               desired_angle = ship_angle[i] + pi/4;
+           } else {
+               desired_angle = ship_angle[i] - pi/4;
+           }
+       } else if(distance < ShipDetectionRange && is_player_in_vehicle) {
+           // Si no hay obstáculo y el jugador está en rango, perseguirlo
+           desired_angle = atan2(dy, dx);
+       } else {
+           // Si no hay obstáculo ni jugador, mantener rumbo
+           desired_angle = ship_angle[i];
+       }
+
+       // Rotar suavemente
+       ship_angle[i] = get_target_angle(ship_angle[i], desired_angle);
+
+       // Mover siempre en la dirección actual
+       float new_x = ship_x[i] + cos(ship_angle[i]) * ShipBaseSpeed;
+       float new_y = ship_y[i] + sin(ship_angle[i]) * ShipBaseSpeed;
+
+       // Teletransportar al otro lado del mapa
+       if(new_y < -LargeShipHeight) {
+           new_y = WorldHeight;
+       } else if(new_y > WorldHeight) {
+           new_y = -LargeShipHeight;
+       }
+
+       if(new_x < -LargeShipWidth) {
+           new_x = WorldWidth;
+       } else if(new_x > WorldWidth) {
+           new_x = -LargeShipWidth;
+       }
+
+       ship_x[i] = new_x;
+       ship_y[i] = new_y;
+
+       // Actualizar armas
+       update_ship_weapons(i);
+   }
+
+   // Actualizar misiles una sola vez fuera del bucle
+   update_missiles();
 }
 
 void render_ships()
@@ -254,100 +395,88 @@ void render_ships()
         if (!ship_active[i])
             continue;
 
-        // Definir región según tipo primero
-        float width, height;
-        switch (ship_type[i])
+        // Color según estado de parpadeo
+        if (ship_blink_timer[i] > 0 && ((int)(ship_blink_timer[i] * 60) % 2))
         {
-        case ShipTypeLarge:
-            width = LargeShipWidth;
-            height = LargeShipHeight;
-            break;
-        case ShipTypeMedium:
-            width = MediumShipWidth;
-            height = MediumShipHeight;
-            break;
-        default:
-            width = SmallShipWidth;
-            height = SmallShipHeight;
-            break;
+            set_multiply_color(RedColor);
         }
-
-        // Seleccionar textura según tipo
-        switch (ship_type[i])
+        else
         {
-        case ShipTypeLarge:
-            select_texture(TextureLargeShip);
-            break;
-        case ShipTypeMedium:
-            select_texture(TextureMediumShip);
-            break;
-        case ShipTypeSmall:
-            select_texture(TextureSmallShip);
-            break;
+            set_multiply_color(TextColor);
         }
-        set_multiply_color(TextColor);
-        // Calcular el offset X basado en si está destruido
-        int x_offset = 0;
-        if (ship_state[i] == ShipStateDestroyed)
-        {
-            x_offset = width;
-        }
-
-        // Seleccionar si es normal o destruido
-        select_region(ship_state[i]);
-
-        define_region(
-            x_offset,         // X inicial
-            0,                // Y inicial
-            x_offset + width, // X final
-            height,           // Y final
-            width / 2,        // Punto central X
-            height / 2        // Punto central Y
-        );
 
         // Dibujar barco
-        set_drawing_angle(ship_angle[i] - pi/2);
-        draw_region_rotated_at(ship_x[i] - camera_x, ship_y[i] - camera_y);
+        select_texture(TextureLargeShip);
+        select_region(ship_frame[i]);
+        define_region(
+            ship_frame[i] * LargeShipWidth,
+            0,
+            (ship_frame[i] + 1) * LargeShipWidth,
+            LargeShipHeight,
+            LargeShipWidth / 2,
+            LargeShipHeight / 2);
 
-        // Dibujar armas para barcos grandes
-        if (ship_type[i] == ShipTypeLarge && ship_state[i] != ShipStateDestroyed)
+        set_drawing_angle(ship_angle[i] - pi / 2);
+        draw_region_rotated_at(
+            ship_x[i] - camera_x,
+            ship_y[i] - camera_y);
+
+        // Renderizar torretas solo si el barco no está destruido
+        if (ship_health[i] > 0)
         {
-            for (int j = 0; j < 3; j++)
-            {
-                float weapon_x = ship_x[i] + ship_weapon_offset_x[i][j];
-                float weapon_y = ship_y[i] + ship_weapon_offset_y[i][j];
+            float turret_x, turret_y;
+            set_multiply_color(TextColor);
 
-                if (ship_weapon_type[i][j] == 0)
-                { // Torreta
-                    select_texture(TextureShipTurret);
-                    select_region(0);
-                    define_region(0, 0, LargeTurretWidth, LargeTurretHeight,
-                                  LargeTurretWidth / 2, LargeTurretHeight / 2);
-                }
-                else
-                { // Lanzacohetes
-                    select_texture(TextureShipRocket);
-                    select_region(0);
-                    define_region(0, 0, MediumRocketWidth, MediumRocketHeight,
-                                  MediumRocketWidth / 2, MediumRocketHeight / 2);
-                }
+            // Torreta frontal
+            get_turret_position(i, FrontTurretOffsetX, FrontTurretOffsetY, &turret_x, &turret_y);
+            select_texture(TextureShipTurret);
+            select_region(0);
+            define_region(0, 0, ShipTurretWidth, ShipTurretHeight,
+                          ShipTurretWidth / 2, ShipTurretHeight / 2);
+            set_drawing_angle(front_turret_angle[i]);
+            draw_region_rotated_at(turret_x - camera_x, turret_y - camera_y);
 
-                draw_region_rotated_at(
-                    weapon_x - camera_x,
-                    weapon_y - camera_y);
-            }
+            // Torreta trasera
+            get_turret_position(i, BackTurretOffsetX, BackTurretOffsetY, &turret_x, &turret_y);
+            select_texture(TextureShipBackTurret);
+            select_region(0);
+            define_region(0, 0, ShipTurretWidth, ShipTurretHeight,
+                          ShipTurretWidth / 2, ShipTurretHeight / 2);
+            set_drawing_angle(back_turret_angle[i]);
+            draw_region_rotated_at(turret_x - camera_x, turret_y - camera_y);
+
+            // Lanzamisiles
+            get_turret_position(i, RocketTurretOffsetX, RocketTurretOffsetY, &turret_x, &turret_y);
+            select_texture(TextureShipRocketTurret);
+            select_region(0);
+            define_region(0, 0, ShipRocketTurretWidth, ShipRocketTurretHeight,
+                          ShipRocketTurretWidth / 2, ShipRocketTurretHeight / 2);
+            set_drawing_angle(rocket_turret_angle[i]);
+            draw_region_rotated_at(turret_x - camera_x, turret_y - camera_y);
         }
-    }
-}
 
-void damage_ship(int index, int damage)
-{
-    if (ship_active[index] && ship_state[index] != ShipStateDestroyed)
-    {
-        ship_health[index] -= damage;
-        if (ship_health[index] <= 0)
+        // Renderizar misiles activos
+        for (int m = 0; m < MaxMissiles; m++)
         {
-            ship_state[index] = ShipStateDestroyed;
+            if (!missile_active[i][m])
+                continue;
+
+            select_texture(TextureShipRocket);
+
+            // Calcular el frame de la animación (4 frames)
+            int missile_frame = (get_frame_counter() / 6) % 4; // Cambiar cada 6 frames
+            select_region(missile_frame);
+            define_region(
+                missile_frame * 9, // Cada frame mide 9 de ancho
+                0,
+                (missile_frame + 1) * 9,
+                20,
+                9 / 2, // Punto central horizontal
+                10     // Punto central vertical
+            );
+
+            set_drawing_angle(missile_angle[i][m] - pi / 2);
+            draw_region_rotated_at(missile_x[i][m] - camera_x, missile_y[i][m] - camera_y);
         }
     }
 }
