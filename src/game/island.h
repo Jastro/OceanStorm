@@ -14,7 +14,7 @@ extern int num_islands;
 extern int[8][4][4] small_islands;
 extern int[8][6][6] large_islands;
 
-void initialize_islands();
+bool initialize_islands();
 void render_islands(float camera_x, float camera_y);
 int is_over_island(float x, float y);
 

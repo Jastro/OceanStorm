@@ -45,7 +45,13 @@ void main()
 {
     // Inicializar sistemas en orden
     initialize_carrier();  // Inicializar el carrier primero
-    initialize_islands();  // Luego las islas
+    
+    // La generacion de islas puede no encontrar
+    // solucion y atascarse; si es asi la reiniciamos
+    // para que pruebe distintas soluciones
+    while( !initialize_islands() )
+    { /* bucle vacio */ };
+    
     initialize_heli(); // El avión
     initialize_soldier();  // El soldado
     initialize_weapons();  // Las armas

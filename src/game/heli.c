@@ -95,8 +95,8 @@ void render_fuel_gauge()
     if (fuel <= (MaxFuel / 2)) {
         if (!has_event_happened(LowFuel))
             {
-                queue_dialog(DT_FuelHalf, TexturePortraitCommander);
-                queue_dialog(DT_FuelHalfReply, TexturePortraitPlayer);
+                queue_dialog(DT_FuelHalf, RegionPortraitCommander);
+                queue_dialog(DT_FuelHalfReply, RegionPortraitPlayer);
                 start_dialog_sequence();
 
                 mark_event_as_happened(LowFuel);
