@@ -26,7 +26,6 @@ enum Textures {
 
 // ---- REGIONES ----
 #define RegionHeli 0
-#define RegionHeliShadow 2
 #define RegionCarrier 0
 #define RegionIsland 0
 #define RegionSoldier 0
@@ -229,7 +228,7 @@ enum RegionsMinimap {
 #define DescentSpeed 0.005
 #define MaxScale 0.6
 #define MinScale 0.2
-#define HeliShadowOffset 60     // Offset máximo de la sombra (cuando está en altura máxima)
+#define HeliShadowOffset 40     // Offset máximo de la sombra (cuando está en altura máxima)
 #define HeliShadowBaseOffset 10 // Offset mínimo de la sombra
 #define MaxFuel 1000
 #define FuelConsumption 0.5

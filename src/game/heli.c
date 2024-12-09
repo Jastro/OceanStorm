@@ -133,7 +133,7 @@ void initialize_heli()
         0,                   // y inicial (mismo para ambos)
         HeliFrameWidth,  // anchura del frame
         HeliFrameHeight, // altura completa
-        39,                  // punto central x (mitad del frame individual)
+        47,                  // punto central x (mitad del frame individual)
         39                   // punto central y
     );
 
@@ -144,33 +144,10 @@ void initialize_heli()
         0,                       // y inicial
         HeliFrameWidth * 2,  // ancho total para el segundo frame
         HeliFrameHeight,     // altura completa
-        39 + HeliFrameWidth, // punto central x (mitad del frame individual)
+        47 + HeliFrameWidth, // punto central x (mitad del frame individual)
         39                       // punto central y
     );
-
-    // Definir regiones de sombra
-    // Sombra Frame 1
-    select_region(RegionHeliShadow);
-    define_region(
-        0,                      // x inicial del primer frame
-        0,                      // y inicial (mismo para ambos)
-        HeliFrameWidth,     // anchura del frame
-        HeliFrameHeight,    // altura completa
-        HeliFrameWidth / 2, // punto central x (mitad del frame individual)
-        HeliFrameHeight / 2 // punto central y
-    );
-
-    // Sombra Frame 2
-    select_region(RegionHeliShadow + 1);
-    define_region(
-        HeliFrameWidth,       // x inicial del segundo frame (mitad del sprite)
-        0,                        // y inicial
-        HeliFrameWidth * 2,   // ancho total para el segundo frame
-        HeliFrameHeight,      // altura completa
-        HeliFrameWidth * 1.5, // punto central x (mitad del frame individual)
-        HeliFrameHeight / 2   // punto central y
-    );
-
+    
     heli_frame = 0;
     anim_timer = 0;
     reset_heli();
@@ -366,17 +343,27 @@ void render_heli()
 {
     float height_factor = (heli_scale - LandingScale) / (MaxScale - LandingScale);
     float max_shadow_distance = HeliShadowOffset;
-    float shadow_offset = height_factor * max_shadow_distance;
+    
+    // Evitar que la sombra vaya al lado contrario
+    // cuando estamos por debajo de las islas
+    float shadow_offset = 2 + max(0, height_factor * max_shadow_distance);
 
+    // Si la sombra esta sobre el mar reducirla para dar efecto
+    // de mas distancia
+    float shadow_x = heli_x + shadow_offset;
+    float shadow_y = heli_y + shadow_offset;
+    float shadow_scale = heli_scale;
+    
+    if(!is_over_island(shadow_x, shadow_y) && !soldier_is_over_carrier(shadow_x, shadow_y))
+        shadow_scale *= 0.7;
+    
     // 1. Dibujar la sombra primero
     select_texture(TextureHeli);
-    select_region(RegionHeliShadow + heli_frame);
+    select_region(RegionHeli + heli_frame);
     set_multiply_color(0x80000000); // Negro semi-transparente
-    set_drawing_scale(heli_scale, heli_scale);
+    set_drawing_scale(shadow_scale, shadow_scale);
     set_drawing_angle(heli_angle);
-    draw_region_rotozoomed_at(
-        heli_x - camera_x + shadow_offset,
-        heli_y - camera_y + shadow_offset);
+    draw_region_rotozoomed_at(shadow_x - camera_x, shadow_y - camera_y);
 
     // 2. Dibujar el avión
     set_multiply_color(0xFFFFFFFF);
