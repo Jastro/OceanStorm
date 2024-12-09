@@ -47,7 +47,8 @@ void generate_island_layout(int island_index, bool is_large) {
     }
 }
 
-void initialize_islands() {
+// Devuelve true si tuvo exito
+bool initialize_islands() {
     srand(get_time());
     
     // definir el tileset
@@ -90,6 +91,7 @@ void initialize_islands() {
             
             // Comprobar distancia a otras islas
             bool too_close = false;
+            int current_retries = 0;
             
             for(int j = 0; j < i; j++) {
                 dx = center_x - (island_x[j] + (MaxTilesX * TileSize / 2));
@@ -99,6 +101,14 @@ void initialize_islands() {
                 
                 if(island_dist < safe_radius) {
                     too_close = true;
+                    current_retries++;
+                    
+                    // Despues de 200 reintentos entendemos que no va a encontrar
+                    // solucion nunca, asi que abandonamos para reiniciar la
+                    // generacion desde el principio con otras islas iniciales
+                    if( current_retries > 200 )
+                      return false;
+                    
                     break;
                 }
             }
@@ -113,6 +123,8 @@ void initialize_islands() {
         
         generate_island_layout(i, is_large);
     }
+    
+    return true;
 }
 
 void render_islands(float camera_x, float camera_y) {
