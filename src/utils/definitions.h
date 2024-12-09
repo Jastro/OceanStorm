@@ -14,10 +14,7 @@ enum Textures {
     TextureEnemy,
     TextureEnemyKamikaze,
     TextureEnemyBoss,
-    TexturePortraitPlayer,
-    TexturePortraitCommander,
-    TexturePortraitSoldier,
-    TexturePortraitBoss,
+    TexturePortraits,
     TextureDialog,
     TextureMinimap,
     TextureLargeShip,
@@ -35,6 +32,13 @@ enum Textures {
 #define RegionSoldier 0
 #define RegionTurretBase 0
 #define RegionTurretGun 1
+
+enum RegionsPortraits {
+    RegionPortraitPlayer,
+    RegionPortraitCommander,
+    RegionPortraitSoldier,
+    RegionPortraitBoss
+};
 
 enum RegionsMinimap {
     RegionMapFrame,

@@ -134,9 +134,9 @@ void update_bombs()
         {
             if (!has_event_happened(TurretDestroyed))
             {
-                queue_dialog(DT_TurretDestroyed, TexturePortraitPlayer);
-                queue_dialog(DT_EnemyDetected, TexturePortraitCommander);
-                queue_dialog(DT_EnemyPenetration, TexturePortraitSoldier);
+                queue_dialog(DT_TurretDestroyed, RegionPortraitPlayer);
+                queue_dialog(DT_EnemyDetected, RegionPortraitCommander);
+                queue_dialog(DT_EnemyPenetration, RegionPortraitSoldier);
                 start_dialog_sequence();
 
                 mark_event_as_happened(TurretDestroyed);
