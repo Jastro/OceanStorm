@@ -78,7 +78,18 @@ bool initialize_islands() {
         if(is_large) island_radius[i] = TileSize * 4;
         else         island_radius[i] = TileSize * 3;
         
+        int current_retries = 0;
+        
         while(!valid_position) {
+            
+            current_retries++;
+            
+            // Despues de 300 reintentos entendemos que no va a encontrar
+            // solucion nunca, asi que abandonamos para reiniciar la
+            // generacion desde el principio con otras islas iniciales
+            if( current_retries > 300 )
+              return false;
+            
             min_x = rand() % (int)(WorldWidth  - MaxTilesX * TileSize);
             min_y = rand() % (int)(WorldHeight - MaxTilesY * TileSize);
             float center_x = min_x + (MaxTilesX * TileSize / 2);
@@ -91,7 +102,6 @@ bool initialize_islands() {
             
             // Comprobar distancia a otras islas
             bool too_close = false;
-            int current_retries = 0;
             
             for(int j = 0; j < i; j++) {
                 dx = center_x - (island_x[j] + (MaxTilesX * TileSize / 2));
@@ -101,14 +111,6 @@ bool initialize_islands() {
                 
                 if(island_dist < safe_radius) {
                     too_close = true;
-                    current_retries++;
-                    
-                    // Despues de 200 reintentos entendemos que no va a encontrar
-                    // solucion nunca, asi que abandonamos para reiniciar la
-                    // generacion desde el principio con otras islas iniciales
-                    if( current_retries > 200 )
-                      return false;
-                    
                     break;
                 }
             }
