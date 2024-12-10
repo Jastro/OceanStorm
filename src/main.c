@@ -6,7 +6,6 @@
 #include "game/island.h"
 #include "game/render_system.h"
 #include "game/soldier.h"
-#include "game/ship.h"
 #include "game/events.h"
 #include "game/turret.h"
 #include "game/dialog.h"
@@ -22,7 +21,6 @@
 #include "game/island_maps.c"
 #include "game/render_system.c"
 #include "game/soldier.c"
-#include "game/ship.c"
 #include "game/weapon.c"
 #include "game/pickup.c"
 #include "game/turret.c"
@@ -54,7 +52,6 @@ void main()
     initialize_turrets();
     initialize_bombs();
     initialize_enemies();
-    initialize_ships();
     initialize_portraits();
     initialize_dialog();
     initialize_minimap();
@@ -91,7 +88,6 @@ void main()
                 update_pickups();
                 update_camera_zoom();
                 update_bullets();
-                //update_ships();
                 update_enemies();
                 update_bombs();
             }
@@ -101,7 +97,6 @@ void main()
             render_bullets();
             render_pickups();
             render_enemies();
-            render_ships();
             render_bombs();
             render_heli();
             update_dialog();

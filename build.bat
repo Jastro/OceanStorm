@@ -28,11 +28,6 @@ echo --------------------------
 %PNG2VIRCON% assets/enemyBoss.png -o obj/enemyBoss.vtx || goto :failed
 %PNG2VIRCON% assets/dialog.png -o obj/dialog.vtx || goto :failed
 %PNG2VIRCON% assets/miniMap.png -o obj/miniMap.vtx || goto :failed
-%PNG2VIRCON% assets/largeShip.png -o obj/largeShip.vtx || goto :failed
-%PNG2VIRCON% assets/shipTurret.png -o obj/shipTurret.vtx || goto :failed
-%PNG2VIRCON% assets/shipRocketTurret.png -o obj/shipRocketTurret.vtx || goto :failed
-%PNG2VIRCON% assets/shipRocket.png -o obj/shipRocket.vtx || goto :failed
-%PNG2VIRCON% assets/shipBackTurret.png -o obj/shipBackTurret.vtx || goto :failed
 
 echo Compile the C code
 echo --------------------------

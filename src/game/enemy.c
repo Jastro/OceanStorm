@@ -616,7 +616,6 @@ void damage_enemy(int index, int damage)
 
 void spawn_wave_of_enemies()
 {
-    spawn_wave_of_ships(2);
     // spawn_boss();
     //spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
     //  spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);

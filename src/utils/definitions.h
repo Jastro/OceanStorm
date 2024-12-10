@@ -28,11 +28,6 @@ enum Textures {
     TexturePortraitBoss,
     TextureDialog,
     TextureMinimap,
-    TextureLargeShip,
-    TextureShipTurret,
-    TextureShipRocketTurret,
-    TextureShipRocket,
-    TextureShipBackTurret
 };
 
 // ---- REGIONES ----
@@ -125,37 +120,6 @@ enum RegionsMinimap {
 #define TurretMinSpread 3
 #define TurretMaxSpread 6
 #define TurretDamagePerBullet 25
-
-// ---- CONFIGURACIÓN DE BARCOS ----
-#define MaxShips 2
-#define LargeShipWidth 44
-#define LargeShipHeight 142
-#define LargeTurretWidth 20
-#define LargeTurretHeight 18
-#define LargeRocketWidth 12
-#define LargeRocketHeight 10
-
-// Posiciones de torretas en barcos
-#define FrontTurretOffsetX 80
-#define FrontTurretOffsetY 50
-#define BackTurretOffsetX 0
-#define BackTurretOffsetY 0
-#define RocketTurretOffsetX 0
-#define RocketTurretOffsetY 50
-
-// Configuración de armas de barco
-#define ShipTurretFireRate 1.0
-#define ShipMissileFireRate 3.0
-#define ShipTurretRange 300.0
-#define ShipBulletSpeed 4.0
-#define ShipMissileSpeed 3.0
-#define MissileLifetime 5.0
-#define ShipTurretDamage 20
-#define ShipMissileDamage 50
-#define ShipTurretWidth 20
-#define ShipTurretHeight 18
-#define ShipRocketTurretWidth 12
-#define ShipRocketTurretHeight 18
 
 // ---- CONFIGURACIÓN DE ENEMIGOS ----
 #define MaxEnemies 20
