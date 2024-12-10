@@ -98,14 +98,39 @@ void update_soldier()
         return;
     }
 
+    /*
+        // Eje X: Calcular nueva posición potencial
+        float new_x = soldier_x + direction_x * SoldierSpeed;
+
+        // Solo mover en X si la nueva posición está en terreno válido
+        if (!is_over_ocean(new_x, soldier_y))
+            soldier_x = new_x;
+
+        // Eje Y: Calcular nueva posición potencial
+        float new_y = soldier_y + direction_y * SoldierSpeed;
+
+        // Solo mover en Y si la nueva posición está en terreno válido
+        if (!is_over_ocean(soldier_x, new_y))
+            soldier_y = new_y;
+    */
+
     // Movimiento del soldado
     int direction_x, direction_y, currentSpeed;
     gamepad_direction(&direction_x, &direction_y);
 
     // Calcular nueva posición potencial
-    if (is_swimming) {
+    if (is_swimming)
+    {
+        if (soldier_scale > 0.7)
+        {
+            soldier_scale = clamp(soldier_scale - 0.005, 0.5, 1);
+        }
         currentSpeed = SoldierSwimSpeed;
-    } else {
+    }
+    else
+    {
+        if (soldier_scale < 1)
+            soldier_scale = clamp(soldier_scale + 0.005, 0.5, 0.9);
         currentSpeed = SoldierSpeed;
     }
 
@@ -113,7 +138,7 @@ void update_soldier()
     float new_y = soldier_y + direction_y * currentSpeed;
 
     // Comprobar si la nueva posición está en terreno válido
-    int on_valid_ground = soldier_is_over_carrier(new_x, new_y) || is_over_island(new_x, new_y);
+    int on_valid_ground = is_over_carrier(new_x, new_y) || is_over_island(new_x, new_y);
 
     // Si no está en terreno válido, está nadando
     is_swimming = !on_valid_ground;
@@ -144,19 +169,6 @@ void update_soldier()
             soldier_y = new_y;
         }
     }
-    // Eje X: Calcular nueva posición potencial
-    float new_x = soldier_x + direction_x * SoldierSpeed;
-    
-    // Solo mover en X si la nueva posición está en terreno válido
-    if (!is_over_ocean(new_x, soldier_y))
-        soldier_x = new_x;
-    
-    // Eje Y: Calcular nueva posición potencial
-    float new_y = soldier_y + direction_y * SoldierSpeed;
-
-    // Solo mover en Y si la nueva posición está en terreno válido
-    if (!is_over_ocean(soldier_x, new_y))
-        soldier_y = new_y;
 
     // Actualizar la cámara para seguir al soldado
     if (!is_player_in_vehicle)
