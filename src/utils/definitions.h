@@ -22,22 +22,25 @@ enum Textures {
     TextureEnemy,
     TextureEnemyKamikaze,
     TextureEnemyBoss,
-    TexturePortraitPlayer,
-    TexturePortraitCommander,
-    TexturePortraitSoldier,
-    TexturePortraitBoss,
+    TexturePortraits,
     TextureDialog,
     TextureMinimap,
 };
 
 // ---- REGIONES ----
 #define RegionHeli 0
-#define RegionHeliShadow 2
 #define RegionCarrier 0
 #define RegionIsland 0
 #define RegionSoldier 0
 #define RegionTurretBase 0
 #define RegionTurretGun 1
+
+enum RegionsPortraits {
+    RegionPortraitPlayer,
+    RegionPortraitCommander,
+    RegionPortraitSoldier,
+    RegionPortraitBoss
+};
 
 enum RegionsMinimap {
     RegionMapFrame,
@@ -63,7 +66,7 @@ enum RegionsMinimap {
 #define TileCornerBL 9
 #define TileHouse 10
 
-// ---- CONFIGURACIÓN DEL HELICÓPTERO ----
+// ---- CONFIGURACIÓN DEL AVIÓN ----
 #define HeliSpriteWidth 128
 #define HeliSpriteHeight 91
 #define HeliFrameWidth 128
@@ -78,7 +81,7 @@ enum RegionsMinimap {
 #define DescentSpeed 0.005
 #define MaxScale 0.6
 #define MinScale 0.2
-#define HeliShadowOffset 60
+#define HeliShadowOffset 40
 #define HeliShadowBaseOffset 10
 #define MaxFuel 1000
 #define FuelConsumption 0.5

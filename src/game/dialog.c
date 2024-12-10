@@ -5,7 +5,7 @@
 
 int dialog_active = 0;
 int[256] dialog_text;
-int dialog_texture;
+int dialog_region;
 
 int current_dialog = 0;
 int[MaxDialogs][256] dialog_sequence;
@@ -28,10 +28,10 @@ void start_dialog_sequence() {
     }
 }
 
-void show_dialog(int* text, int texture_id) {
+void show_dialog(int* text, int region_id) {
     dialog_active = 1;
     strcpy(dialog_text, text);
-    dialog_texture = texture_id;
+    dialog_region = region_id;
 }
 
 void update_dialog() {
@@ -68,9 +68,9 @@ void render_dialog() {
     draw_region_at(dialog_x + 10, dialog_y + 10);
     
     // Dibujar la imagen si hay una
-    if(dialog_texture >= 0) {
-        select_texture(dialog_texture);
-        select_region(0);
+    if(dialog_region >= 0) {
+        select_texture(TexturePortraits);
+        select_region(dialog_region);
         draw_region_at(dialog_x - 205, dialog_y + 10);
     }
     

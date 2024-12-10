@@ -47,7 +47,8 @@ void generate_island_layout(int island_index, bool is_large) {
     }
 }
 
-void initialize_islands() {
+// Devuelve true si tuvo exito
+bool initialize_islands() {
     srand(get_time());
     
     // definir el tileset
@@ -77,7 +78,18 @@ void initialize_islands() {
         if(is_large) island_radius[i] = TileSize * 4;
         else         island_radius[i] = TileSize * 3;
         
+        int current_retries = 0;
+        
         while(!valid_position) {
+            
+            current_retries++;
+            
+            // Despues de 300 reintentos entendemos que no va a encontrar
+            // solucion nunca, asi que abandonamos para reiniciar la
+            // generacion desde el principio con otras islas iniciales
+            if( current_retries > 300 )
+              return false;
+            
             min_x = rand() % (int)(WorldWidth  - MaxTilesX * TileSize);
             min_y = rand() % (int)(WorldHeight - MaxTilesY * TileSize);
             float center_x = min_x + (MaxTilesX * TileSize / 2);
@@ -113,6 +125,8 @@ void initialize_islands() {
         
         generate_island_layout(i, is_large);
     }
+    
+    return true;
 }
 
 void render_islands(float camera_x, float camera_y) {
@@ -146,21 +160,4 @@ void render_islands(float camera_x, float camera_y) {
             }
         }
     }
-}
-
-int is_over_island(float x, float y) {
-    for(int i = 0; i < num_islands; i++) {
-        float local_x = (x - island_x[i]) / TileSize;
-        float local_y = (y - island_y[i]) / TileSize;
-        
-        if(local_x >= 0 && local_x < MaxTilesX && 
-           local_y >= 0 && local_y < MaxTilesY) {
-            int tile_x = local_x;
-            int tile_y = local_y;
-            if(island_tiles[i][tile_x][tile_y] != TileEmpty) {
-                return 1;
-            }
-        }
-    }
-    return 0;
 }

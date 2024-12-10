@@ -24,21 +24,17 @@ void initialize_dialog()
 }
 void initialize_portraits()
 {
-    select_texture(TexturePortraitPlayer);
-    select_region(0);
-    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize / 2, UIDialogPortraitSize / 2);
-
-    select_texture(TexturePortraitCommander);
-    select_region(0);
-    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize / 2, UIDialogPortraitSize / 2);
-
-    select_texture(TexturePortraitSoldier);
-    select_region(0);
-    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize / 2, UIDialogPortraitSize / 2);
-
-    select_texture(TexturePortraitBoss);
-    select_region(0);
-    define_region(0, 0, UIDialogPortraitSize, UIDialogPortraitSize, UIDialogPortraitSize / 2, UIDialogPortraitSize / 2);
+    select_texture(TexturePortraits);
+    
+    define_region_matrix
+    (
+        RegionPortraitPlayer,                               // ID de la primera region
+        0, 0,                                               // X e Y minimas primera region
+        UIDialogPortraitSize-1, UIDialogPortraitSize-1,     // X e Y maximas primera region
+        UIDialogPortraitSize/2, UIDialogPortraitSize/2,     // X e Y de referencia primera region
+        4, 10,                                              // dimensiones matrix (columnas, filas)
+        0                                                   // separacion entre regiones en pixels
+    );
 }
 
 void render_objectives()
@@ -95,8 +91,8 @@ void starting_dialog()
 {
     if (!has_event_happened(StartGame))
     {
-        queue_dialog(DT_StartOperation, TexturePortraitCommander);
-        queue_dialog(DT_StartOperationReply, TexturePortraitPlayer);
+        queue_dialog(DT_StartOperation, RegionPortraitCommander);
+        queue_dialog(DT_StartOperationReply, RegionPortraitPlayer);
         start_dialog_sequence();
 
         mark_event_as_happened(StartGame);

@@ -144,6 +144,19 @@ void update_soldier()
             soldier_y = new_y;
         }
     }
+    // Eje X: Calcular nueva posición potencial
+    float new_x = soldier_x + direction_x * SoldierSpeed;
+    
+    // Solo mover en X si la nueva posición está en terreno válido
+    if (!is_over_ocean(new_x, soldier_y))
+        soldier_x = new_x;
+    
+    // Eje Y: Calcular nueva posición potencial
+    float new_y = soldier_y + direction_y * SoldierSpeed;
+
+    // Solo mover en Y si la nueva posición está en terreno válido
+    if (!is_over_ocean(soldier_x, new_y))
+        soldier_y = new_y;
 
     // Actualizar la cámara para seguir al soldado
     if (!is_player_in_vehicle)

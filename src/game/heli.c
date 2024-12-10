@@ -41,25 +41,6 @@ void reload_heli()
         HeliMaxAmmo);
 }
 
-int soldier_is_over_carrier(float x, float y)
-{
-    float dx = x - (StartingX - CarrierWidth / 2);
-    float dy = y - (StartingY - CarrierHeight / 2);
-
-    // El área de aterrizaje cubre todo el carrier
-    return (dx >= 0 && dx <= CarrierWidth) && (dy >= 0 && dy <= CarrierHeight);
-}
-
-int is_over_carrier()
-{
-    // Comprobar si estamos sobre el carrier completo
-    float dx = heli_x - (StartingX - CarrierWidth / 2);
-    float dy = heli_y - (StartingY - CarrierHeight / 2);
-
-    // El área de aterrizaje cubre todo el carrier
-    return (dx >= 0 && dx <= CarrierWidth) && (dy >= 0 && dy <= CarrierHeight);
-}
-
 void render_fuel_gauge()
 {
     // Fondo de la barra de combustible (barra vacía)
@@ -96,10 +77,10 @@ void render_fuel_gauge()
     if (fuel <= (MaxFuel / 2))
     {
         if (!has_event_happened(LowFuel))
-        {
-            queue_dialog(DT_FuelHalf, TexturePortraitCommander);
-            queue_dialog(DT_FuelHalfReply, TexturePortraitPlayer);
-            start_dialog_sequence();
+            {
+                queue_dialog(DT_FuelHalf, RegionPortraitCommander);
+                queue_dialog(DT_FuelHalfReply, RegionPortraitPlayer);
+                start_dialog_sequence();
 
             mark_event_as_happened(LowFuel);
         }
@@ -135,8 +116,8 @@ void initialize_heli()
         0,               // y inicial (mismo para ambos)
         HeliFrameWidth,  // anchura del frame
         HeliFrameHeight, // altura completa
-        39,              // punto central x (mitad del frame individual)
-        39               // punto central y
+        47,                  // punto central x (mitad del frame individual)
+        39                   // punto central y
     );
 
     // Frame 2
@@ -146,33 +127,10 @@ void initialize_heli()
         0,                   // y inicial
         HeliFrameWidth * 2,  // ancho total para el segundo frame
         HeliFrameHeight,     // altura completa
-        39 + HeliFrameWidth, // punto central x (mitad del frame individual)
-        39                   // punto central y
+        47 + HeliFrameWidth, // punto central x (mitad del frame individual)
+        39                       // punto central y
     );
-
-    // Definir regiones de sombra
-    // Sombra Frame 1
-    select_region(RegionHeliShadow);
-    define_region(
-        0,                  // x inicial del primer frame
-        0,                  // y inicial (mismo para ambos)
-        HeliFrameWidth,     // anchura del frame
-        HeliFrameHeight,    // altura completa
-        HeliFrameWidth / 2, // punto central x (mitad del frame individual)
-        HeliFrameHeight / 2 // punto central y
-    );
-
-    // Sombra Frame 2
-    select_region(RegionHeliShadow + 1);
-    define_region(
-        HeliFrameWidth,       // x inicial del segundo frame (mitad del sprite)
-        0,                    // y inicial
-        HeliFrameWidth * 2,   // ancho total para el segundo frame
-        HeliFrameHeight,      // altura completa
-        HeliFrameWidth * 1.5, // punto central x (mitad del frame individual)
-        HeliFrameHeight / 2   // punto central y
-    );
-
+    
     heli_frame = 0;
     anim_timer = 0;
     reset_heli();
@@ -206,7 +164,7 @@ void exit_vehicle()
     soldier_x = heli_x + cos(heli_angle) * 30;
     soldier_y = heli_y + sin(heli_angle) * 30;
 
-    if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+    if (is_over_ocean(soldier_x, soldier_y))
     {
         // Intentar salir por el lado contrario
         soldier_x = heli_x - cos(heli_angle) * 30;
@@ -214,7 +172,7 @@ void exit_vehicle()
 
         // Si no podemos, cancelar la salida
         // (reproducir sonido indicandolo)
-        if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+        if (is_over_ocean(soldier_x, soldier_y))
             return;
     }
 
@@ -281,13 +239,14 @@ void update_heli()
     // Comprobar aterrizaje
     if (heli_scale <= LandingScale)
     {
-        if (is_over_carrier() || is_over_island(heli_x, heli_y))
+        // Si estamos sobre el carrier o una isla, permitir aterrizaje
+        if (is_over_carrier(heli_x, heli_y) || is_over_island(heli_x, heli_y))
         {
             // Aterrizaje exitoso
             heli_scale = LandingScale; // Mantenemos esta escala para que se vea bien
 
-            // Solo repostar y curar si estamos en el carrier
-            if (is_over_carrier())
+            // Solo repostar si estamos en el carrier
+            if (is_over_carrier(heli_x, heli_y))
             {
                 // Recargar combustible
                 fuel = clamp(fuel + RefuelRate, 0, MaxFuel);
@@ -319,7 +278,7 @@ void update_heli()
     }
 
     // Game over si nos quedamos sin combustible y sin altura
-    if (fuel <= 0 && heli_scale <= MinScale && !is_over_carrier() && !is_over_island(heli_x, heli_y))
+    if (fuel <= 0 && heli_scale <= MinScale && !is_over_carrier(heli_x, heli_y) && !is_over_island(heli_x, heli_y))
     {
         game_state = StateGameOver;
     }
@@ -334,7 +293,7 @@ void update_heli()
         camera_y = heli_y - ScreenCenterY;
     }
 
-    if ((is_over_carrier() || is_over_island(heli_x, heli_y)) && gamepad_button_b() == 1)
+    if ((is_over_carrier(heli_x, heli_y) || is_over_island(heli_x, heli_y)) && gamepad_button_b() == 1)
     {
         exit_vehicle();
         return;
@@ -386,17 +345,27 @@ void render_heli()
 {
     float height_factor = (heli_scale - LandingScale) / (MaxScale - LandingScale);
     float max_shadow_distance = HeliShadowOffset;
-    float shadow_offset = height_factor * max_shadow_distance;
+    
+    // Evitar que la sombra vaya al lado contrario
+    // cuando estamos por debajo de las islas
+    float shadow_offset = 2 + max(0, height_factor * max_shadow_distance);
 
+    // Si la sombra esta sobre el mar reducirla para dar efecto
+    // de mas distancia
+    float shadow_x = heli_x + shadow_offset;
+    float shadow_y = heli_y + shadow_offset;
+    float shadow_scale = heli_scale;
+    
+    if(is_over_ocean(shadow_x, shadow_y))
+        shadow_scale *= 0.7;
+    
     // 1. Dibujar la sombra primero
     select_texture(TextureHeli);
-    select_region(RegionHeliShadow + heli_frame);
+    select_region(RegionHeli + heli_frame);
     set_multiply_color(0x80000000); // Negro semi-transparente
-    set_drawing_scale(heli_scale, heli_scale);
+    set_drawing_scale(shadow_scale, shadow_scale);
     set_drawing_angle(heli_angle);
-    draw_region_rotozoomed_at(
-        heli_x - camera_x + shadow_offset,
-        heli_y - camera_y + shadow_offset);
+    draw_region_rotozoomed_at(shadow_x - camera_x, shadow_y - camera_y);
 
     // 2. Dibujar el avión
     set_multiply_color(0xFFFFFFFF);
