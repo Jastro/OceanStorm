@@ -16,6 +16,5 @@ extern int[8][6][6] large_islands;
 
 bool initialize_islands();
 void render_islands(float camera_x, float camera_y);
-int is_over_island(float x, float y);
 
 #endif

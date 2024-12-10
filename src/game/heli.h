@@ -24,8 +24,6 @@ void reset_heli();
 void update_heli();
 void render_heli();
 void render_fuel_gauge();
-int soldier_is_over_carrier(float x, float y);
-int is_over_carrier();
 void exit_vehicle();
 void shoot_from_heli();
 void reload_heli();

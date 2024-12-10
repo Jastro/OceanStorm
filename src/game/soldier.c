@@ -102,7 +102,7 @@ void update_soldier()
     float new_y = soldier_y + direction_y * SoldierSpeed;
 
     // Solo mover si la nueva posición está en terreno válido
-    if (soldier_is_over_carrier(new_x, new_y) || is_over_island(new_x, new_y))
+    if (!is_over_ocean(new_x, new_y))
     {
         soldier_x = new_x;
         soldier_y = new_y;

@@ -40,25 +40,6 @@ void reload_heli()
         HeliMaxAmmo);
 }
 
-int soldier_is_over_carrier(float x, float y)
-{
-    float dx = x - (StartingX - CarrierWidth / 2);
-    float dy = y - (StartingY - CarrierHeight / 2);
-
-    // El área de aterrizaje cubre todo el carrier
-    return (dx >= 0 && dx <= CarrierWidth) && (dy >= 0 && dy <= CarrierHeight);
-}
-
-int is_over_carrier()
-{
-    // Comprobar si estamos sobre el carrier completo
-    float dx = heli_x - (StartingX - CarrierWidth / 2);
-    float dy = heli_y - (StartingY - CarrierHeight / 2);
-
-    // El área de aterrizaje cubre todo el carrier
-    return (dx >= 0 && dx <= CarrierWidth) && (dy >= 0 && dy <= CarrierHeight);
-}
-
 void render_fuel_gauge()
 {
     // Fondo de la barra de combustible (barra vacía)
@@ -181,7 +162,7 @@ void exit_vehicle()
     soldier_x = heli_x + cos(heli_angle) * 30;
     soldier_y = heli_y + sin(heli_angle) * 30;
 
-    if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+    if (is_over_ocean(soldier_x, soldier_y))
     {
         // Intentar salir por el lado contrario
         soldier_x = heli_x - cos(heli_angle) * 30;
@@ -189,7 +170,7 @@ void exit_vehicle()
         
         // Si no podemos, cancelar la salida
         // (reproducir sonido indicandolo)
-        if (!is_over_island(soldier_x, soldier_y) && !soldier_is_over_carrier(soldier_x, soldier_y))
+        if (is_over_ocean(soldier_x, soldier_y))
             return;
     }
     
@@ -256,13 +237,13 @@ void update_heli()
     if (heli_scale <= LandingScale)
     {
         // Si estamos sobre el carrier o una isla, permitir aterrizaje
-        if (is_over_carrier() || is_over_island(heli_x, heli_y))
+        if (is_over_carrier(heli_x, heli_y) || is_over_island(heli_x, heli_y))
         {
             // Aterrizaje exitoso
             heli_scale = LandingScale; // Mantenemos esta escala para que se vea bien
 
             // Solo repostar si estamos en el carrier
-            if (is_over_carrier())
+            if (is_over_carrier(heli_x, heli_y))
             {
                 fuel = clamp(fuel + RefuelRate, 0, MaxFuel);
                 reload_heli();
@@ -276,7 +257,7 @@ void update_heli()
     }
 
     // Game over si nos quedamos sin combustible y sin altura
-    if (fuel <= 0 && heli_scale <= MinScale && !is_over_carrier() && !is_over_island(heli_x, heli_y))
+    if (fuel <= 0 && heli_scale <= MinScale && !is_over_carrier(heli_x, heli_y) && !is_over_island(heli_x, heli_y))
     {
         game_state = StateGameOver;
     }
@@ -291,7 +272,7 @@ void update_heli()
         camera_y = heli_y - ScreenCenterY;
     }
 
-    if ((is_over_carrier() || is_over_island(heli_x, heli_y)) && gamepad_button_b() == 1)
+    if ((is_over_carrier(heli_x, heli_y) || is_over_island(heli_x, heli_y)) && gamepad_button_b() == 1)
     {
         exit_vehicle();
         return;
@@ -354,7 +335,7 @@ void render_heli()
     float shadow_y = heli_y + shadow_offset;
     float shadow_scale = heli_scale;
     
-    if(!is_over_island(shadow_x, shadow_y) && !soldier_is_over_carrier(shadow_x, shadow_y))
+    if(is_over_ocean(shadow_x, shadow_y))
         shadow_scale *= 0.7;
     
     // 1. Dibujar la sombra primero
