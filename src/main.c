@@ -2,6 +2,7 @@
 #include "input.h"
 #include "time.h"
 #include "utils/definitions.h"
+#include "utils/globals.h"
 #include "game/heli.h"
 #include "game/island.h"
 #include "game/render_system.h"
@@ -31,6 +32,7 @@
 #include "game/events.c"
 #include "states/menu.c"
 #include "utils/utilities.c"
+#include "utils/globals.c"
 #include "states/gameover.c"
 #include "game/bullet.c"
 
@@ -42,6 +44,7 @@ float target_zoom = 1.0;
 void main()
 {
     // Inicializar sistemas en orden
+    initialize_world();    // Crear nuestro tileset y tilemap
     initialize_carrier();  // Inicializar el carrier primero
     
     // La generacion de islas puede no encontrar

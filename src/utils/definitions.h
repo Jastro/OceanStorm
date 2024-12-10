@@ -1,13 +1,10 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-// ---- DIMENSIONES DEL MUNDO Y PANTALLA ----
-#define WorldWidth 2048
-#define WorldHeight 2048
-#define ScreenWidth 640
-#define ScreenHeight 360
-#define ScreenCenterX (ScreenWidth / 2)
-#define ScreenCenterY (ScreenHeight / 2)
+// Incluir librerias aquí para que las puedan
+// usar todos los demás archivos del proyecto
+#include "../libraries/vector2d.h"
+#include "../libraries/tilemap.h"
 
 // ---- TEXTURAS ----
 enum Textures {
@@ -194,6 +191,16 @@ enum RegionsMinimap {
 #define BossPhase1FireRate 0.2
 #define BossPhase2FireRate 0.5
 #define BossPhase3FireRate 0.1
+
+// ---- DIMENSIONES DEL MUNDO Y PANTALLA ----
+#define WorldTilesX 32
+#define WorldTilesY 32
+#define WorldWidth  (WorldTilesX * TileSize) // 2048
+#define WorldHeight (WorldTilesY * TileSize) // 2048
+#define ScreenWidth 640
+#define ScreenHeight 360
+#define ScreenCenterX (ScreenWidth / 2)
+#define ScreenCenterY (ScreenHeight / 2)
 
 // ---- SISTEMA DE PROYECTILES ----
 #define MaxBullets 50
