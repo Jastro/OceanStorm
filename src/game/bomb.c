@@ -9,37 +9,59 @@ float[MaxActiveBombs] bomb_x;
 float[MaxActiveBombs] bomb_y;
 float[MaxActiveBombs] bomb_timer;
 int[MaxActiveBombs] bomb_active;
+
 void spawn_soldier_enemies(float x, float y, int count)
 {
     for (int i = 0; i < count; i++)
     {
-        float angle = (rand() % 360) * pi / 180.0;
-        float distance = 50 + (rand() % SoldierSpawnRadius);
-        float spawn_x = x + cos(angle) * distance;
-        float spawn_y = y + sin(angle) * distance;
+        float spawn_x, spawn_y;
+        int valid_position = 0;
+        int max_attempts = 10;  // Número máximo de intentos para encontrar posición válida
+        int attempts = 0;
+        
+        // Intentar encontrar una posición válida
+        while(!valid_position && attempts < max_attempts)
+        {
+            float angle = (rand() % 360) * pi / 180.0;
+            float distance = 50 + (rand() % SoldierSpawnRadius);
+            spawn_x = x + cos(angle) * distance;
+            spawn_y = y + sin(angle) * distance;
+            
+            // Comprobar si la posición está sobre terreno válido
+            if(is_over_island(spawn_x, spawn_y))
+            {
+                valid_position = 1;
+            }
+            
+            attempts++;
+        }
+        
+        // Solo crear el enemigo si encontramos una posición válida
+        if(valid_position)
+        {
+            // Elegir patrón de disparo aleatorio
+            int random_type = rand() % 100;
+            int spread_type;
 
-        // Elegir patrón de disparo aleatorio
-        int random_type = rand() % 100; // Número entre 0 y 99
-        int spread_type;
+            if (random_type < 40)
+            {
+                spread_type = SpreadTypeSingle;
+            }
+            else if (random_type < 70)
+            {
+                spread_type = SpreadTypeShotgun;
+            }
+            else if (random_type < 90)
+            {
+                spread_type = SpreadTypeWall;
+            }
+            else
+            {
+                spread_type = SpreadTypeCircle;
+            }
 
-        if (random_type < 40)
-        {                                   // 40% probabilidad
-            spread_type = SpreadTypeSingle; // Soldado con pistola
+            spawn_enemy(spawn_x, spawn_y, EnemyTypeSoldier, AIBehaviorChase, spread_type);
         }
-        else if (random_type < 70)
-        {                                    // 30% probabilidad
-            spread_type = SpreadTypeShotgun; // Soldado con escopeta
-        }
-        else if (random_type < 90)
-        {                                 // 20% probabilidad
-            spread_type = SpreadTypeWall; // Soldado con patrón en Wall
-        }
-        else
-        {                                   // 10% probabilidad
-            spread_type = SpreadTypeCircle; // Soldado con disparo circular
-        }
-
-        spawn_enemy(spawn_x, spawn_y, EnemyTypeSoldier, AIBehaviorChase, spread_type);
     }
 }
 
@@ -51,23 +73,37 @@ void initialize_bombs()
     }
 }
 
-int can_plant_bomb(float x, float y)
-{
-    for (int i = 0; i < MaxTurrets; i++)
-    {
-        if (!turret_active[i])
-            continue;
-
-        float dx = x - turret_x[i];
-        float dy = y - turret_y[i];
-        float distance = sqrt(dx * dx + dy * dy);
-
-        if (distance < TurretBaseWidth)
-        {
+int is_bomb_at_position(float x, float y) {
+    for(int i = 0; i < MaxActiveBombs; i++) {
+        if(!bomb_active[i]) continue;
+        
+        // Comprobar si hay una bomba dentro de un radio cercano
+        float dx = x - bomb_x[i];
+        float dy = y - bomb_y[i];
+        float distance = sqrt(dx*dx + dy*dy);
+        
+        // Si hay una bomba a menos de la mitad del radio de explosión
+        if(distance < BombExplosionRadius/2) {
             return 1;
         }
     }
     return 0;
+}
+
+int can_plant_bomb(float x, float y) {
+    for(int i = 0; i < MaxTurrets; i++) {
+        if(!turret_active[i]) continue;
+        
+        float dx = x - turret_x[i];
+        float dy = y - turret_y[i];
+        float distance = sqrt(dx*dx + dy*dy);
+        
+        if(distance < TurretBaseWidth) {
+            return !is_bomb_at_position(x, y);
+        }
+    }
+    
+    return 0;  // No hay torreta cerca
 }
 
 void plant_bomb(float x, float y)

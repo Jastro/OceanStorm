@@ -630,7 +630,7 @@ void check_phase_progress()
         //if (num_active_turrets() <= MaxTurrets / 2)
         if (num_active_turrets() == 9)
         {
-            spawn_wave_of_enemies();
+            //spawn_wave_of_enemies();
             phase = 1;
             phase_time = 0;
         }
