@@ -118,6 +118,10 @@ void update_soldier()
     int direction_x, direction_y, currentSpeed;
     gamepad_direction(&direction_x, &direction_y);
 
+    int over_carrier = is_over_carrier(soldier_x, soldier_y);
+    int over_island = is_over_island(soldier_x, soldier_y);
+    int on_valid_ground = over_carrier || over_island;
+    is_swimming = !on_valid_ground;
     // Calcular nueva posición potencial
     if (is_swimming)
     {
@@ -126,34 +130,12 @@ void update_soldier()
             soldier_scale = clamp(soldier_scale - 0.005, 0.5, 1);
         }
         currentSpeed = SoldierSwimSpeed;
-    }
-    else
-    {
-        if (soldier_scale < 1)
-            soldier_scale = clamp(soldier_scale + 0.005, 0.5, 0.9);
-        currentSpeed = SoldierSpeed;
-    }
 
-    float new_x = soldier_x + direction_x * currentSpeed;
-    float new_y = soldier_y + direction_y * currentSpeed;
+        // En el agua usamos movimiento libre
+        float new_x = soldier_x + direction_x * currentSpeed;
+        float new_y = soldier_y + direction_y * currentSpeed;
 
-    // Comprobar si la nueva posición está en terreno válido
-    int on_valid_ground = is_over_carrier(new_x, new_y) || is_over_island(new_x, new_y);
-
-    // Si no está en terreno válido, está nadando
-    is_swimming = !on_valid_ground;
-
-    if (on_valid_ground)
-    {
-        // En tierra firme
-        soldier_stamina = MaxStamina;
-        soldier_scale = 1.0;
-        soldier_x = new_x;
-        soldier_y = new_y;
-    }
-    else
-    {
-        // En el agua
+        // Reducir estamina
         soldier_stamina -= StaminaDrainRate / 60.0;
 
         if (soldier_stamina <= 0)
@@ -167,6 +149,34 @@ void update_soldier()
             // Permitir movimiento en el agua
             soldier_x = new_x;
             soldier_y = new_y;
+        }
+    }
+    else
+    {
+        // En tierra firme usamos el movimiento por ejes
+        if (soldier_scale < 1)
+        {
+            soldier_scale = 1;
+        }
+        currentSpeed = SoldierSpeed;
+        soldier_stamina = MaxStamina; // Recuperar estamina en tierra
+
+        // Movimiento en X
+        float new_x = soldier_x + direction_x * currentSpeed;
+        if (is_over_carrier(new_x, soldier_y) || is_over_island(new_x, soldier_y))
+        {
+            soldier_x = new_x;
+        }else {
+            soldier_x = new_x;
+        }
+
+        // Movimiento en Y
+        float new_y = soldier_y + direction_y * currentSpeed;
+        if (is_over_carrier(soldier_x, new_y) || is_over_island(soldier_x, new_y))
+        {
+            soldier_y = new_y;
+        }else {
+             soldier_y = new_y;
         }
     }
 
