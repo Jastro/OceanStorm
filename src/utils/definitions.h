@@ -55,8 +55,8 @@ enum RegionsMinimap {
 
 // ---- SISTEMA DE TILES ----
 #define TileSize 64
-#define MaxTilesX 6
-#define MaxTilesY 6
+#define MaxTilesX 9
+#define MaxTilesY 9
 #define TileEmpty 0
 #define TileGround 1
 #define TileEdgeTop 2
@@ -86,9 +86,9 @@ enum RegionsMinimap {
 #define MinScale 0.2
 #define HeliShadowOffset 40
 #define HeliShadowBaseOffset 10
-#define MaxFuel 1000
+#define MaxFuel 1500
 #define FuelConsumption 0.5
-#define RefuelRate 2.0
+#define RefuelRate 3.0
 #define InitialScale 0.4
 #define LandingScale 0.4
 #define HeliMaxAmmo 100
@@ -199,10 +199,10 @@ enum RegionsMinimap {
 #define BossPhase3FireRate 0.1
 
 // ---- DIMENSIONES DEL MUNDO Y PANTALLA ----
-#define WorldTilesX 32
-#define WorldTilesY 32
-#define WorldWidth  (WorldTilesX * TileSize) // 2048
-#define WorldHeight (WorldTilesY * TileSize) // 2048
+#define WorldTilesX 48
+#define WorldTilesY 48
+#define WorldWidth  (WorldTilesX * TileSize) // 3072
+#define WorldHeight (WorldTilesY * TileSize) // 3072
 #define ScreenWidth 640
 #define ScreenHeight 360
 #define ScreenCenterX (ScreenWidth / 2)
@@ -255,7 +255,7 @@ enum RegionsMinimap {
 #define UIDialogPortraitSize 100
 #define ObjectiveY 80
 #define ObjectiveSpacing 20
-#define MinimapTileSize 3
+#define MinimapTileSize 2
 #define BlinkRate 30
 #define HealthFlashTime 0.5
 #define ReloadTime 2.0

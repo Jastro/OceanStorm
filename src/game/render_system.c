@@ -141,7 +141,7 @@ void render_minimap()
     // si son grandes o pequeñas, pero no su forma
     for (int i = 0; i < num_islands; i++)
     {
-        bool is_large = (island_radius[i] > TileSize * 3);
+        bool is_large = (island_radius[i] > TileSize * 4);
         select_region(RegionMapSmallIsland + is_large);
         draw_region_at(minimap_x(island_x[i]), minimap_y(island_y[i]));
     }
