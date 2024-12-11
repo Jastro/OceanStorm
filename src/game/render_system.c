@@ -1,14 +1,6 @@
 #include "render_system.h"
 #include "../utils/definitions.h"
-#include "video.h"
 #include "island.h"
-#include "string.h"
-
-// Variables externas de island.h
-extern float[MaxIslands] island_x;
-extern float[MaxIslands] island_y;
-extern int[MaxIslands][MaxTilesX][MaxTilesY] island_tiles;
-extern int num_islands;
 
 void initialize_carrier()
 {
@@ -16,12 +8,14 @@ void initialize_carrier()
     select_region(RegionCarrier);
     define_region(0, 0, CarrierWidth, CarrierHeight, CarrierWidth / 2, CarrierHeight / 2);
 }
+
 void initialize_dialog()
 {
     select_texture(TextureDialog);
     select_region(0);
     define_region(0, 0, UIDialogFrameWidth, UIDialogFrameHeight, UIDialogFrameWidth / 2, UIDialogFrameHeight / 2);
 }
+
 void initialize_portraits()
 {
     select_texture(TexturePortraits);
@@ -158,22 +152,24 @@ void render_minimap()
     draw_region_rotated_at(minimap_x(heli_x), minimap_y(heli_y));
 }
 
-void render_world(float camera_x, float camera_y)
+void render_world()
 {
-    // 1. Limpiar pantalla con el mar
-    clear_screen(SeaColor);
-    set_multiply_color(color_white);
-
+    // restringimos la posicion de la camara para que,
+    // incluso si el heli esta cerca del borde del mapa,
+    // la pantalla nunca muestre nada fuera de los limites
+    tilemap_clip_camera_position( &world_map );
+    
+    // dibujar el tilemap teniendo en cuenta la camara
+    tilemap_draw_from_camera( &world_map );
+    
     // 2. Dibujar el portaaviones
     select_texture(TextureCarrier);
     select_region(RegionCarrier);
-    draw_region_at(StartingX - camera_x, StartingY - camera_y);
+    tilemap_draw_region(&world_map, StartingX, StartingY);
 
-    // 3. Dibujar las islas
-    render_islands(camera_x, camera_y);
-    // 4. Dibujar el minimapa
+    // 3. Dibujar el minimapa
     render_minimap();
 
-    // 5. Dibujar objetivos actuales
+    // 4. Dibujar objetivos actuales
     render_objectives();
 }

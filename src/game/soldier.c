@@ -1,12 +1,7 @@
 #include "soldier.h"
 #include "../utils/definitions.h"
 #include "weapon.h"
-#include "video.h"
-#include "input.h"
-#include "math.h"
-#include "string.h"
-#include "misc.h"
-#include "./bullet.h"
+#include "bullet.h"
 #include "bomb.h"
 
 extern int is_player_in_vehicle;
@@ -27,8 +22,6 @@ float soldier_scale = 1.0;
 int is_swimming = 0;
 
 // Variable externa que necesitamos
-extern float camera_x;
-extern float camera_y;
 extern int game_state;
 extern float[MaxBullets] bullet_x;
 extern float[MaxBullets] bullet_y;
@@ -183,8 +176,8 @@ void update_soldier()
     // Actualizar la cámara para seguir al soldado
     if (!is_player_in_vehicle)
     {
-        camera_x = soldier_x - ScreenCenterX;
-        camera_y = soldier_y - ScreenCenterY;
+        world_map.camera_position.x = soldier_x;
+        world_map.camera_position.y = soldier_y;
     }
 
     // Apuntar con cruceta
@@ -273,7 +266,7 @@ void render_soldier()
     // Rotar y escalar el sprite
     set_drawing_angle(soldier_angle);
     set_drawing_scale(soldier_scale, soldier_scale);
-    draw_region_rotozoomed_at(soldier_x - camera_x, soldier_y - camera_y);
+    tilemap_draw_region_rotozoomed(&world_map, soldier_x, soldier_y);
 
     // Indicador de poder subir al avión
     float dx = soldier_x - heli_x;
@@ -283,42 +276,38 @@ void render_soldier()
     if (distance < 50.0)
     {
         set_multiply_color(0xFF00FF00); // Verde
-        print_at((int)(soldier_x - camera_x),
-                 (int)(soldier_y - camera_y - 30),
-                 "Press B to enter");
+        tilemap_print(
+            &world_map,
+            soldier_x,
+            soldier_y - 30,
+            "Press B to enter");
     }
 
     // Mostrar texto de recarga si está recargando
     if (weapon_is_reloading[current_weapon])
     {
-        select_texture(-1);
         set_multiply_color(RedColor);
-        print_at(
-            (int)(soldier_x - camera_x - 30),
-            (int)(soldier_y - camera_y - ReloadTextOffset),
+        tilemap_print(
+            &world_map,
+            soldier_x - 30,
+            soldier_y - ReloadTextOffset,
             "RECARGANDO");
     }
 
     // Solo mostrar barra de vida cuando no hay armadura
     if (soldier_armor == 0)
     {
-        float bar_x = soldier_x - SoldierBarWidth / 2 - camera_x;
-        float bar_y = soldier_y - SoldierBarOffsetY - camera_y;
+        float bar_x = soldier_x - SoldierBarWidth / 2;
+        float bar_y = soldier_y - SoldierBarOffsetY;
 
         // Usar textura de BIOS para dibujar punto
         select_texture(-1);
-        select_region(0);
-        define_region(0, 0, 1, 1, 0, 0);
+        select_region(256);
 
         // Fondo de la barra (negro semi-transparente)
-        set_multiply_color(GreenColor);
-        for (int x = 0; x < SoldierBarWidth; x++)
-        {
-            for (int y = 0; y < SoldierBarHeight; y++)
-            {
-                draw_region_at(bar_x + x, bar_y + y);
-            }
-        }
+        set_multiply_color(ShadowColor);
+        set_drawing_scale(SoldierBarWidth, SoldierBarHeight);
+        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
 
         // Dibujar barra de vida
         float health_percent = soldier_health / (float)SoldierMaxHealth;
@@ -334,68 +323,46 @@ void render_soldier()
             set_multiply_color(RedColor);
         }
 
-        for (int x = 0; x < current_width; x++)
-        {
-            for (int y = 0; y < SoldierBarHeight; y++)
-            {
-                draw_region_at(bar_x + x, bar_y + y);
-            }
-        }
+        set_drawing_scale(current_width, SoldierBarHeight);
+        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
     }
 
     // Dibujar indicadores de armadura si hay
     /*if (soldier_armor > 0)
     {
-        float bar_x = soldier_x - SoldierBarWidth / 2 - camera_x;
-        float bar_y = soldier_y - SoldierBarOffsetY - camera_y;
+        float bar_x = soldier_x - SoldierBarWidth / 2;
+        float bar_y = soldier_y - SoldierBarOffsetY;
         float armor_spacing = SoldierBarWidth / MaxArmor;
 
         select_texture(-1);
-        select_region(0);
-        define_region(0, 0, 1, 1, 0, 0);
+        select_region(256);
         set_multiply_color(TextColor); // Blanco para la armadura
-
-        for (int i = 0; i < soldier_armor; i++)
-        {
-            for (int y = 0; y < SoldierBarHeight; y++)
-            {
-                draw_region_at(bar_x + i * armor_spacing, bar_y + y);
-            }
-        }
+        set_drawing_scale(soldier_armor, SoldierBarHeight);
+        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
     }*/
 
     // Dibujar barra de estamina si está nadando
     if (is_swimming)
     {
-        float bar_x = soldier_x - SoldierBarWidth / 2 - camera_x;
-        float bar_y = soldier_y - SoldierBarOffsetY - 10 - camera_y; // Encima de la barra de vida
+        float bar_x = soldier_x - SoldierBarWidth / 2;
+        float bar_y = soldier_y - SoldierBarOffsetY - 10; // Encima de la barra de vida
 
         // Fondo de la barra
         select_texture(-1);
-        select_region(0);
-        define_region(0, 0, 1, 1, 0, 0);
-        set_multiply_color(0x80000000); // Negro semi-transparente
-
-        for (int x = 0; x < SoldierBarWidth; x++)
-        {
-            for (int y = 0; y < SoldierBarHeight; y++)
-            {
-                draw_region_at(bar_x + x, bar_y + y);
-            }
-        }
+        select_region(256);
+        set_multiply_color(ShadowColor); // Negro semi-transparente
+        set_drawing_scale(SoldierBarWidth, SoldierBarHeight);
+        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
 
         // Barra de estamina
         int stamina_width = (soldier_stamina / MaxStamina) * SoldierBarWidth;
-        set_multiply_color(0xFF0000FF); // Azul para la estamina
-
-        for (int x = 0; x < stamina_width; x++)
-        {
-            for (int y = 0; y < SoldierBarHeight; y++)
-            {
-                draw_region_at(bar_x + x, bar_y + y);
-            }
-        }
+        set_multiply_color(0xFFFF0000); // Azul para la estamina
+        set_drawing_scale(stamina_width, SoldierBarHeight);
+        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
     }
+    
+    // Restaurar color
+    set_multiply_color(color_white);
 }
 
 void render_soldier_ui()

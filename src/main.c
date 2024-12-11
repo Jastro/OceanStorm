@@ -1,7 +1,6 @@
-#include "video.h"
-#include "input.h"
-#include "time.h"
+// Incluir las cabeceras
 #include "utils/definitions.h"
+#include "game/worldmap.h"
 #include "game/heli.h"
 #include "game/island.h"
 #include "game/render_system.h"
@@ -16,6 +15,7 @@
 #include "states/gameover.h"
 
 // Incluir las implementaciones
+#include "game/worldmap.c"
 #include "game/heli.c"
 #include "game/island.c"
 #include "game/island_maps.c"
@@ -42,6 +42,7 @@ float target_zoom = 1.0;
 void main()
 {
     // Inicializar sistemas en orden
+    initialize_world();    // Crear nuestro tileset y tilemap
     initialize_carrier();  // Inicializar el carrier primero
     
     // La generacion de islas puede no encontrar
@@ -98,7 +99,7 @@ void main()
                 update_bombs();
             }
 
-            render_world(camera_x, camera_y);
+            render_world();
             render_turrets();
             render_bullets();
             render_pickups();

@@ -18,20 +18,10 @@ bool is_over_carrier(float x, float y) {
 }
 
 bool is_over_island(float x, float y) {
-    for(int i = 0; i < num_islands; i++) {
-        float local_x = (x - island_x[i]) / TileSize;
-        float local_y = (y - island_y[i]) / TileSize;
-        
-        if(local_x >= 0 && local_x < MaxTilesX && 
-           local_y >= 0 && local_y < MaxTilesY) {
-            int tile_x = local_x;
-            int tile_y = local_y;
-            if(island_tiles[i][tile_x][tile_y] != TileEmpty) {
-                return 1;
-            }
-        }
-    }
-    return 0;
+    
+    int tile_x = x / TileSize;
+    int tile_y = y / TileSize;
+    return (world_grid[tile_y][tile_x] != TileEmpty);
 }
 
 bool is_over_ocean(float x, float y) {

@@ -1,7 +1,5 @@
 #include "weapon.h"
 #include "../utils/definitions.h"
-#include "time.h"
-#include "misc.h"
 #include "bullet.h"
 
 // Arrays para características de armas

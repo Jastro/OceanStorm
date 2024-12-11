@@ -1,8 +1,5 @@
 #include "bomb.h"
-#include "video.h"
 #include "turret.h"
-#include "time.h"
-#include "string.h"
 
 // Definición de los arrays globales
 float[MaxActiveBombs] bomb_x;
@@ -193,15 +190,15 @@ void render_bombs()
 
         // Dibujar la bomba
         set_multiply_color(RedColor);
-        draw_region_at(bomb_x[i] - camera_x, bomb_y[i] - camera_y);
+        tilemap_draw_region(&world_map, bomb_x[i], bomb_y[i]);
 
         // Mostrar el temporizador
         set_multiply_color(RedColor);
         int[8] timer_text;
         itoa((int)bomb_timer[i] + 1, timer_text, 10);
-        print_at(
-            (int)(bomb_x[i] - camera_x) - 5,
-            (int)(bomb_y[i] - camera_y) - 20,
-            timer_text);
+        tilemap_print(&world_map, bomb_x[i] - 5, bomb_y[i] - 20, timer_text);
     }
+    
+    // Restaurar el color
+    set_multiply_color(color_white);
 }

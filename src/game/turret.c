@@ -1,21 +1,14 @@
 // turret.c
+#include "../utils/definitions.h"
 #include "turret.h"
 #include "island.h"
-#include "../utils/definitions.h"
-#include "video.h"
-#include "math.h"
+#include "heli.h"
 
 float[MaxTurrets] turret_x;
 float[MaxTurrets] turret_y;
 float[MaxTurrets] turret_angle;
 float[MaxTurrets] turret_last_shot;
 int[MaxTurrets] turret_active;
-extern int num_islands;
-extern float[MaxIslands] island_x;
-extern float[MaxIslands] island_y;
-extern float heli_x;
-extern float heli_y;
-extern int is_player_in_vehicle;
 
 void initialize_turrets()
 {
@@ -61,13 +54,13 @@ void render_turrets()
         // Dibujar base
         select_texture(TextureTurretBase);
         select_region(RegionTurretBase);
-        draw_region_at(turret_x[i] - camera_x, turret_y[i] - camera_y);
+        tilemap_draw_region(&world_map, turret_x[i], turret_y[i]);
 
         // Dibujar cañón
         select_texture(TextureTurretGun);
         select_region(RegionTurretGun);
         set_drawing_angle(turret_angle[i]);
-        draw_region_rotated_at(turret_x[i] - camera_x, turret_y[i] - camera_y);
+        tilemap_draw_region_rotated(&world_map, turret_x[i], turret_y[i]);
     }
 }
 
