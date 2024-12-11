@@ -312,31 +312,21 @@ void render_ui()
     // Barra de vida
     set_multiply_color(RedColor);
     print_at(10, 35, "HP:");
-    for (int x = 0; x < max_bar_width; x++)
-    {
-        for (int y = 0; y < bar_height; y++)
-        {
-            draw_region_at(60 + x, 30 + y);
-        }
-    }
+    
+    set_multiply_color(ShadowColor);
+    select_texture(-1);
+    select_region(256);
+    set_drawing_scale(max_bar_width, bar_height);
+    draw_region_zoomed_at(60, 30);
 
     // Verde normal, rojo cuando recibe daño
     if (health_flash_timer > 0)
-    {
         set_multiply_color(RedColor);
-    }
     else
-    {
         set_multiply_color(GreenColor);
-    }
-
-    for (int x = 0; x < health_width; x++)
-    {
-        for (int y = 0; y < bar_height; y++)
-        {
-            draw_region_at(60 + x, 30 + y);
-        }
-    }
+    
+    set_drawing_scale(health_width, bar_height);
+    draw_region_zoomed_at(60, 30);
 
     // Restaurar el color
     set_multiply_color(color_white);
