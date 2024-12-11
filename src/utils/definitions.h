@@ -3,6 +3,12 @@
 
 // Incluir librerias aquí para que las puedan
 // usar todos los demás archivos del proyecto
+#include "video.h"
+#include "math.h"
+#include "time.h"
+#include "string.h"
+#include "misc.h"
+#include "input.h"
 #include "../libraries/vector2d.h"
 #include "../libraries/tilemap.h"
 

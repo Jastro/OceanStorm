@@ -8,6 +8,6 @@ void starting_dialog();
 void render_objectives();
 void initialize_minimap();
 void render_minimap();
-void render_world(float camera_x, float camera_y);
+void render_world();
 
 #endif

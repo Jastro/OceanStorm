@@ -16,8 +16,6 @@
 // Variables globales para el estado del avión
 float heli_x;
 float heli_y;
-float camera_x;
-float camera_y;
 float heli_angle;
 float heli_scale;
 float heli_velocity;
@@ -150,8 +148,8 @@ void reset_heli()
     heli_last_shot_time = 0;
 
     // Centrar la cámara en el avión
-    camera_x = heli_x - ScreenCenterX;
-    camera_y = heli_y - ScreenCenterY;
+    world_map.camera_position.x = heli_x;
+    world_map.camera_position.y = heli_y;
 }
 
 void exit_vehicle()
@@ -289,8 +287,8 @@ void update_heli()
 
     if (is_player_in_vehicle)
     {
-        camera_x = heli_x - ScreenCenterX;
-        camera_y = heli_y - ScreenCenterY;
+        world_map.camera_position.x = heli_x;
+        world_map.camera_position.y = heli_y;
     }
 
     if ((is_over_carrier(heli_x, heli_y) || is_over_island(heli_x, heli_y)) && gamepad_button_b() == 1)
@@ -339,6 +337,9 @@ void render_ui()
             draw_region_at(60 + x, 30 + y);
         }
     }
+
+    // Restaurar el color
+    set_multiply_color(color_white);
 }
 
 void render_heli()
@@ -365,15 +366,18 @@ void render_heli()
     set_multiply_color(0x80000000); // Negro semi-transparente
     set_drawing_scale(shadow_scale, shadow_scale);
     set_drawing_angle(heli_angle);
-    draw_region_rotozoomed_at(shadow_x - camera_x, shadow_y - camera_y);
+    tilemap_draw_region_rotozoomed(&world_map, shadow_x, shadow_y);
 
     // 2. Dibujar el avión
     set_multiply_color(0xFFFFFFFF);
     select_region(heli_frame);
     set_drawing_scale(heli_scale, heli_scale);
     set_drawing_angle(heli_angle);
-    draw_region_rotozoomed_at(heli_x - camera_x, heli_y - camera_y);
+    tilemap_draw_region_rotozoomed(&world_map, heli_x, heli_y);
 
+    // Restaurar el color
+    set_multiply_color(color_white);
+    
     // 3. Dibujar la interfaz
     if (is_player_in_vehicle)
     {

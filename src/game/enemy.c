@@ -162,9 +162,10 @@ void update_enemy(int index)
         // Mostrar texto de recarga
         select_texture(-1);
         set_multiply_color(RedColor);
-        print_at(
-            (int)(enemy_x[index] - camera_x - 30),
-            (int)(enemy_y[index] - camera_y - ReloadTextOffset),
+        tilemap_print(
+            &world_map, 
+            enemy_x[index] - 30,
+            enemy_y[index] - ReloadTextOffset,
             "RECARGANDO");
 
         // Si ha pasado el tiempo, completar recarga
@@ -579,21 +580,22 @@ void render_enemies()
         if (enemy_type[i] == EnemyTypeSoldier)
         {
             set_drawing_angle(enemy_angle[i]);
-            draw_region_rotated_at(enemy_x[i] - camera_x, enemy_y[i] - camera_y);
+            tilemap_draw_region_rotated(&world_map, enemy_x[i], enemy_y[i]);
         }
         else
         {
             set_drawing_angle(enemy_angle[i] + 80);
-            draw_region_rotozoomed_at(enemy_x[i] - camera_x, enemy_y[i] - camera_y);
+            tilemap_draw_region_rotozoomed(&world_map, enemy_x[i], enemy_y[i]);
         }
 
         if (enemy_active[i] && enemy_health[i] > 0 && enemy_is_reloading[i])
         {
             select_texture(-1);
             set_multiply_color(RedColor);
-            print_at(
-                (int)(enemy_x[i] - camera_x - 30),
-                (int)(enemy_y[i] - camera_y - ReloadTextOffset),
+            tilemap_print(
+                &world_map,
+                enemy_x[i] - 30,
+                enemy_y[i] - ReloadTextOffset,
                 "RECARGANDO");
         }
     }

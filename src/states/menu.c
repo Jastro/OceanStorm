@@ -1,8 +1,5 @@
 #include "menu.h"
 #include "../utils/definitions.h"
-#include "video.h"
-#include "input.h"
-#include "time.h"
 
 // Variable externa para el estado del juego
 extern int game_state;

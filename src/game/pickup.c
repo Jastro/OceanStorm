@@ -1,7 +1,6 @@
 #include "pickup.h"
 #include "../utils/definitions.h"
 #include "weapon.h"
-#include "video.h"
 #include "soldier.h"
 
 // Variables globales para los pickups
@@ -41,8 +40,9 @@ void render_pickups() {
     
     for(int i = 0; i < MaxPickups; i++) {
         if(pickup_active[i]) {
-            float screen_x = pickup_x[i] - camera_x;
-            float screen_y = pickup_y[i] - camera_y;
+            float screen_x = pickup_x[i];
+            float screen_y = pickup_y[i];
+            tilemap_convert_position_to_screen(&world_map, &screen_x, &screen_y);
             
             // Solo renderizar si está en pantalla
             if(screen_x >= 0 && screen_x <= ScreenWidth &&

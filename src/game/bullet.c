@@ -2,9 +2,6 @@
 #include "weapon.h"
 #include "heli.h"
 #include "soldier.h"
-#include "math.h"
-#include "video.h"
-#include "misc.h"
 
 float[MaxBullets] bullet_x;
 float[MaxBullets] bullet_y;
@@ -268,7 +265,8 @@ void render_bullets()
             }
 
             select_region(0);
-            draw_region_at(bullet_x[i] - camera_x, bullet_y[i] - camera_y);
+            float render_x = bullet_x[i], render_y = bullet_y[i];
+            tilemap_draw_region(&world_map, bullet_x[i], bullet_y[i]);
         }
     }
 }

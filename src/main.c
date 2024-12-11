@@ -1,8 +1,6 @@
-#include "video.h"
-#include "input.h"
-#include "time.h"
+// Incluir las cabeceras
 #include "utils/definitions.h"
-#include "utils/globals.h"
+#include "game/worldmap.h"
 #include "game/heli.h"
 #include "game/island.h"
 #include "game/render_system.h"
@@ -17,6 +15,7 @@
 #include "states/gameover.h"
 
 // Incluir las implementaciones
+#include "game/worldmap.c"
 #include "game/heli.c"
 #include "game/island.c"
 #include "game/island_maps.c"
@@ -32,7 +31,6 @@
 #include "game/events.c"
 #include "states/menu.c"
 #include "utils/utilities.c"
-#include "utils/globals.c"
 #include "states/gameover.c"
 #include "game/bullet.c"
 
@@ -101,7 +99,7 @@ void main()
                 update_bombs();
             }
 
-            render_world(camera_x, camera_y);
+            render_world();
             render_turrets();
             render_bullets();
             render_pickups();

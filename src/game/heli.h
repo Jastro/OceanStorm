@@ -4,8 +4,6 @@
 // Variables globales para el estado del heli
 extern float heli_x;
 extern float heli_y;
-extern float camera_x;
-extern float camera_y;
 extern float heli_angle;
 extern float heli_scale;
 extern float heli_velocity;

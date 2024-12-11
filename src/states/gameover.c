@@ -1,9 +1,6 @@
 #include "gameover.h"
 #include "../utils/definitions.h"
 #include "../game/heli.h"
-#include "video.h"
-#include "input.h"
-#include "time.h"
 
 extern int game_state;
 

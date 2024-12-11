@@ -1,49 +1,30 @@
 #include "island.h"
 #include "../utils/definitions.h"
-#include "video.h"
-#include "misc.h"
-#include "string.h"
-#include "time.h"
 
 // Variables globales
 float[MaxIslands] island_x;
 float[MaxIslands] island_y;
 float[MaxIslands] island_radius;
-int[MaxIslands][MaxTilesX][MaxTilesY] island_tiles;
 int num_islands;
-
-int get_tile(int island_index, int x, int y) {
-    if(x < 0 || x >= MaxTilesX || y < 0 || y >= MaxTilesY) {
-        return TileEmpty;
-    }
-    return island_tiles[island_index][x][y];
-}
 
 void generate_island_layout(int island_index, bool is_large) {
     
-    // Limpiar tiles
-    for(int y = 0; y < MaxTilesY; y++) {
-        for(int x = 0; x < MaxTilesX; x++) {
-            island_tiles[island_index][x][y] = TileEmpty;
-        }
-    }
-    
     int island_model = rand() % 8;
+    int min_tile_x = island_x[ island_index ] / TileSize;
+    int min_tile_y = island_y[ island_index ] / TileSize;
     
     if( is_large )
     {
         for(int y = 0; y < 6; y++)
             for(int x = 0; x < 6; x++)
-                if(large_islands[island_model][y][x])
-                    island_tiles[island_index][x][y] = large_islands[island_model][y][x] - 1;  // invertir x e y en arrays
+                world_grid[min_tile_y + y][min_tile_x + x] = large_islands[island_model][y][x] - 1;
     }
     
     else
     {
         for(int y = 0; y < 4; y++)
             for(int x = 0; x < 4; x++)
-                if(small_islands[island_model][y][x])
-                    island_tiles[island_index][x+1][y+1] = small_islands[island_model][y][x] - 1;  // invertir x e y en arrays
+                world_grid[min_tile_y + y + 1][min_tile_x + x + 1] = small_islands[island_model][y][x] - 1;
     }
 }
 
@@ -67,6 +48,10 @@ bool initialize_islands() {
     num_islands = MaxIslands;
     float carrier_safe_zone = 500; // Zona segura alrededor del carrier
     
+    // Limpiar todo el mapa con tiles de mar
+    memset( world_grid, TileEmpty, sizeof(world_grid) );
+    
+    // Generar cada isla
     for(int i = 0; i < num_islands; i++) {
         bool valid_position = false;
         float min_x, min_y;
@@ -90,8 +75,8 @@ bool initialize_islands() {
             if( current_retries > 300 )
               return false;
             
-            min_x = rand() % (int)(WorldWidth  - MaxTilesX * TileSize);
-            min_y = rand() % (int)(WorldHeight - MaxTilesY * TileSize);
+            min_x = TileSize * (rand() % (int)(WorldTilesX - MaxTilesX));
+            min_y = TileSize * (rand() % (int)(WorldTilesY - MaxTilesY));
             float center_x = min_x + (MaxTilesX * TileSize / 2);
             float center_y = min_y + (MaxTilesY * TileSize / 2);
             
@@ -127,37 +112,4 @@ bool initialize_islands() {
     }
     
     return true;
-}
-
-void render_islands(float camera_x, float camera_y) {
-    select_texture(TextureIsland);
-    
-    for(int i = 0; i < num_islands; i++) {
-        float base_x = island_x[i];
-        float base_y = island_y[i];
-        
-        // Comprobar si la isla está en el área visible
-        float screen_x = base_x - camera_x;
-        float screen_y = base_y - camera_y;
-        
-        // Solo procesar la isla si está en el área visible
-        if(screen_x >= -TileSize * MaxTilesX && 
-           screen_x <= ScreenWidth + TileSize * MaxTilesX &&
-           screen_y >= -TileSize * MaxTilesY && 
-           screen_y <= ScreenHeight + TileSize * MaxTilesY) {
-            
-            // Dibujar cada tile de la isla
-            for(int y = 0; y < MaxTilesY; y++) {
-                for(int x = 0; x < MaxTilesX; x++) {
-                    if(island_tiles[i][x][y] != TileEmpty) {
-                        float tile_x = base_x + (x * TileSize) - camera_x;
-                        float tile_y = base_y + (y * TileSize) - camera_y;
-                        
-                        select_region(island_tiles[i][x][y]);
-                        draw_region_at(tile_x, tile_y);
-                    }
-                }
-            }
-        }
-    }
 }

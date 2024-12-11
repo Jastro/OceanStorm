@@ -1,9 +1,7 @@
 /* *****************************************************************************
-*  Vircon32 library: "tilemap.h"                    File version: 2023/11/01   *
+*  Vircon32 library: "tilemap.h"                                               *
 *  --------------------------------------------------------------------------- *
-*  This header defines tile sets and tile maps, and automates the process of   *
-*  handling tile map based backgrounds. Included here are functions to point   *
-*  camera view at map points and draw the map on screen following that view.   *
+*  This version of the header has been slightly modified for this game.        *
 ***************************************************************************** */
 
 // *****************************************************************************
@@ -220,7 +218,7 @@ void tilemap_draw_from_camera( tilemap* tm )
 // stored in map coordinates; this function receives x and y
 // variables in map coordinates and transforms them to screen
 // coordinates, allowing us to draw map objects on screen
-void tilemap_convert_position_to_screen( tilemap* tm, int* position_x, int* position_y )
+void tilemap_convert_position_to_screen( tilemap* tm, float* position_x, float* position_y )
 {
     *position_x += -tm->camera_position.x + screen_width  / 2;
     *position_y += -tm->camera_position.y + screen_height / 2;
@@ -228,88 +226,52 @@ void tilemap_convert_position_to_screen( tilemap* tm, int* position_x, int* posi
 
 
 // =============================================================================
-//   FUNCTIONS FOR TILE MAP COLLISIONS
+//   CUSTOM DRAW FUNCTIONS FOR THIS GAME
 // =============================================================================
 
 
-// these 4 functions (one for each tile edge) are meant to
-// ensure that objects only collide with exposed tile edges,
-// and prevent unreal inner edges from affecting movements
-bool tilemap_is_tile_left_exposed( tilemap* tm, int tile_x, int tile_y )
+void tilemap_draw_region( tilemap* tm, float position_x, float position_y )
 {
-    // at map limits, all tile sides are exposed
-    if( tile_x == 0 ) return true;
-    
-    // otherwise, analyze the neighbour left tile
-    int tile_at_left = tm->map[ tile_y * tm->map_width + (tile_x-1) ];
-    return !tileset_is_tile_solid( tm->tiles, tile_at_left );
+    float render_x = position_x, render_y = position_y;
+    tilemap_convert_position_to_screen( tm, &render_x, &render_y );
+    draw_region_at(render_x, render_y);
 }
 
 // ---------------------------------------------------------
 
-bool tilemap_is_tile_right_exposed( tilemap* tm, int tile_x, int tile_y )
+void tilemap_draw_region_zoomed( tilemap* tm, float position_x, float position_y )
 {
-    // at map limits, all tile sides are exposed
-    if( tile_x == (tm->map_width-1) ) return true;
-    
-    // otherwise, analyze the neighbour right tile
-    int tile_at_right = tm->map[ tile_y * tm->map_width + (tile_x+1) ];
-    return !tileset_is_tile_solid( tm->tiles, tile_at_right );
+    float render_x = position_x, render_y = position_y;
+    tilemap_convert_position_to_screen( tm, &render_x, &render_y );
+    draw_region_zoomed_at(render_x, render_y);
 }
 
 // ---------------------------------------------------------
 
-bool tilemap_is_tile_top_exposed( tilemap* tm, int tile_x, int tile_y )
+void tilemap_draw_region_rotated( tilemap* tm, float position_x, float position_y )
 {
-    // at map limits, all tile sides are exposed
-    if( tile_y == 0 ) return true;
-    
-    // otherwise, analyze the neighbour top tile
-    int tile_at_top = tm->map[ (tile_y-1) * tm->map_width + tile_x ];
-    return !tileset_is_tile_solid( tm->tiles, tile_at_top );
+    float render_x = position_x, render_y = position_y;
+    tilemap_convert_position_to_screen( tm, &render_x, &render_y );
+    draw_region_rotated_at(render_x, render_y);
 }
 
 // ---------------------------------------------------------
 
-bool tilemap_is_tile_bottom_exposed( tilemap* tm, int tile_x, int tile_y )
+void tilemap_draw_region_rotozoomed( tilemap* tm, float position_x, float position_y )
 {
-    // at map limits, all tile sides are exposed
-    if( tile_y == (tm->map_height-1) ) return true;
-    
-    // otherwise, analyze the neighbour bottom tile
-    int tile_at_bottom = tm->map[ (tile_y+1) * tm->map_width + tile_x ];
-    return !tileset_is_tile_solid( tm->tiles, tile_at_bottom );
+    float render_x = position_x, render_y = position_y;
+    tilemap_convert_position_to_screen( tm, &render_x, &render_y );
+    draw_region_rotozoomed_at(render_x, render_y);
 }
 
 // ---------------------------------------------------------
 
-int* tilemap_get_tile_at_point( tilemap* tm, vector2d* point )
+void tilemap_print( tilemap* tm, float position_x, float position_y, int* text )
 {
-    // no tiles outside the map
-    if( point->x < 0 || point->x > tilemap_total_width( tm ) )
-      return NULL;
-    
-    if( point->y < 0 || point->y > tilemap_total_height( tm ) )
-      return NULL;
-    
-    int tile_step_x = tileset_get_step_x( tm->tiles );
-    int tile_step_y = tileset_get_step_y( tm->tiles );
-    int tile_x = point->x / tile_step_x;
-    int tile_y = point->y / tile_step_y;
-    return &tm->map[ tm->map_width * tile_y + tile_x ];
+    float render_x = position_x, render_y = position_y;
+    tilemap_convert_position_to_screen( tm, &render_x, &render_y );
+    print_at(render_x, render_y, text);
 }
-
-// ---------------------------------------------------------
-
-bool tilemap_overlaps_point( tilemap* tm, vector2d* point )
-{
-    // get the target tile, if any
-    int* tile_at_point = tilemap_get_tile_at_point( tm, point );
-    if( tile_at_point ) return false;
-    
-    return tileset_is_tile_solid( tm->tiles, *tile_at_point );
-}
-
 
 // *****************************************************************************
     // end include guard

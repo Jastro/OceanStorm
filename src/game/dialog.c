@@ -1,7 +1,5 @@
 // dialog.c
 #include "dialog.h"
-#include "video.h"
-#include "input.h"
 
 int dialog_active = 0;
 int[256] dialog_text;
