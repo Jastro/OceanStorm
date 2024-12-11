@@ -10,8 +10,8 @@ extern float[MaxIslands] island_radius;  // radio de separacion
 extern int num_islands;
 
 // mapas de las islas
-extern int[8][4][4] small_islands;
-extern int[8][6][6] large_islands;
+extern int[8][6][6] small_islands;
+extern int[8][9][9] large_islands;
 
 bool initialize_islands();
 

@@ -15,15 +15,15 @@ void generate_island_layout(int island_index, bool is_large) {
     
     if( is_large )
     {
-        for(int y = 0; y < 6; y++)
-            for(int x = 0; x < 6; x++)
+        for(int y = 0; y < 9; y++)
+            for(int x = 0; x < 9; x++)
                 world_grid[min_tile_y + y][min_tile_x + x] = large_islands[island_model][y][x] - 1;
     }
     
     else
     {
-        for(int y = 0; y < 4; y++)
-            for(int x = 0; x < 4; x++)
+        for(int y = 0; y < 6; y++)
+            for(int x = 0; x < 6; x++)
                 world_grid[min_tile_y + y + 1][min_tile_x + x + 1] = small_islands[island_model][y][x] - 1;
     }
 }
@@ -46,7 +46,7 @@ bool initialize_islands() {
     );
     
     num_islands = MaxIslands;
-    float carrier_safe_zone = 500; // Zona segura alrededor del carrier
+    float carrier_safe_zone = 600; // Zona segura alrededor del carrier
     
     // Limpiar todo el mapa con tiles de mar
     memset( world_grid, TileEmpty, sizeof(world_grid) );
@@ -60,8 +60,8 @@ bool initialize_islands() {
         bool is_large = (i < 4);
         
         // esto lo usamos para las separaciones
-        if(is_large) island_radius[i] = TileSize * 4;
-        else         island_radius[i] = TileSize * 3;
+        if(is_large) island_radius[i] = TileSize * 6;
+        else         island_radius[i] = TileSize * 4;
         
         int current_retries = 0;
         
