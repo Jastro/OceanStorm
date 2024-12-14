@@ -17,6 +17,7 @@
         <texture path="obj/portraits.vtx" />
         <texture path="obj/dialog.vtx" />
         <texture path="obj/miniMap.vtx" />
+        <texture path="obj/pickups.vtx" />
     </textures>
     <sounds>
     </sounds>

@@ -611,6 +611,7 @@ void damage_enemy(int index, int damage)
 
     if (enemy_health[index] <= 0)
     {
+        spawn_random_pickup(enemy_x[index], enemy_y[index]);
         enemy_active[index] = 0; // Aquí estaba el error, usaba 'i' en vez de 'index'
         num_active_enemies--;
     }

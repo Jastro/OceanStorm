@@ -28,6 +28,7 @@ enum Textures {
     TexturePortraits,
     TextureDialog,
     TextureMinimap,
+    TexturePickups
 };
 
 // ---- REGIONES ----
@@ -197,6 +198,14 @@ enum RegionsMinimap {
 #define BossPhase1FireRate 0.2
 #define BossPhase2FireRate 0.5
 #define BossPhase3FireRate 0.1
+
+
+// ---- SISTEMA DE PICKUPS ----
+#define MaxPickups 20             // Máximo número de pickups activos
+#define PickupShotgun 0          // Frame 0 - Escopeta
+#define PickupSubmachine 1       // Frame 1 - Metralleta  
+#define PickupArmor 2           // Frame 2 - Armadura
+#define PickupHealth 3          // Frame 3 - Vida
 
 // ---- DIMENSIONES DEL MUNDO Y PANTALLA ----
 #define WorldTilesX 48

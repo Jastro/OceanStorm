@@ -11,7 +11,17 @@ int[MaxPickups] pickup_active;
 int[MaxPickups] pickup_value;
 
 void initialize_pickups() {
-    // Inicializar todos los pickups como inactivos
+    select_texture(TexturePickups);
+    define_region_matrix(
+        0,                  // ID primera región
+        0, 0,              // Punto inicial
+        31, 31,            // Punto final (32x32 - 1)
+        16, 16,            // Punto de referencia (centro)
+        4, 1,              // Matriz de 4x1 frames
+        0                  // Sin separación
+    );
+
+    // Inicializar arrays
     for(int i = 0; i < MaxPickups; i++) {
         pickup_active[i] = 0;
     }
@@ -31,34 +41,79 @@ void spawn_pickup(float x, float y, int type, int value) {
     }
 }
 
+void spawn_random_pickup(float x, float y) {
+    int[4] available_types;
+    available_types[0] = PickupHealth;
+    available_types[1] = PickupArmor;
+    available_types[2] = -1;
+    available_types[3] = -1;
+    int num_types = 2;  // Empezamos con salud y armadura siempre disponibles
+    
+    // Añadir escopeta si no la tiene
+    if(!soldier_has_weapon[WeaponTypeShotgun]) {
+        available_types[num_types++] = PickupShotgun;
+    }
+    
+    // Añadir metralleta si no la tiene
+    if(!soldier_has_weapon[WeaponTypeSubmachine]) {
+        available_types[num_types++] = PickupSubmachine;
+    }
+    
+    // 30% de probabilidad de generar pickup
+    if(rand() % 100 < 30) {
+        int type = available_types[rand() % num_types];
+        spawn_pickup(x, y, type, 1);  // El valor ya no es necesario realmente
+    }
+}
+
 void update_pickups() {
-    // Aquí podríamos añadir efectos de flotación, rotación, etc.
+    for(int i = 0; i < MaxPickups; i++) {
+        if(!pickup_active[i]) continue;
+        
+        // Comprobar distancia con el jugador
+        float dx = pickup_x[i] - soldier_x;
+        float dy = pickup_y[i] - soldier_y;
+        float distance = sqrt(dx*dx + dy*dy);
+        
+        // Si está suficientemente cerca, recoger automáticamente
+        if(distance < 10.0) {  // Radio de recolección menor que el radio de mostrar texto
+            collect_pickup(i);
+        }
+    }
 }
 
 void render_pickups() {
-    select_texture(-1);  // Usar textura de la BIOS para dibujar formas simples
+    select_texture(TexturePickups);
     
     for(int i = 0; i < MaxPickups; i++) {
-        if(pickup_active[i]) {
-            float screen_x = pickup_x[i];
-            float screen_y = pickup_y[i];
-            tilemap_convert_position_to_screen(&world_map, &screen_x, &screen_y);
-            
-            // Solo renderizar si está en pantalla
-            if(screen_x >= 0 && screen_x <= ScreenWidth &&
-               screen_y >= 0 && screen_y <= ScreenHeight) {
-                
-                // Color según tipo
-                if(pickup_type[i] == PickupWeapon) {
-                    set_multiply_color(0xFF0000FF); // Rojo para armas
-                } else if(pickup_type[i] == PickupAmmo) {
-                    set_multiply_color(0xFF00FF00); // Verde para munición
-                } else {
-                    set_multiply_color(0xFFFFFF00); // Amarillo para armadura
-                }
-                
-                // Por ahora, un simple círculo
-                draw_region_at(screen_x, screen_y);
+        if(!pickup_active[i]) continue;
+        
+        // Seleccionar la región según el tipo de pickup
+        select_region(pickup_type[i]);  // Ahora el tipo coincide con el frame
+        
+        // Dibujar el pickup
+        tilemap_draw_region(&world_map, pickup_x[i], pickup_y[i]);
+        
+        // Mostrar un texto flotante si el jugador está cerca
+        float dx = pickup_x[i] - soldier_x;
+        float dy = pickup_y[i] - soldier_y;
+        float distance = sqrt(dx*dx + dy*dy);
+        
+        if(distance < 50.0) {  // Radio de 50 pixels para mostrar el texto
+            set_multiply_color(TextColor);
+            switch(pickup_type[i]) {
+                case PickupShotgun:
+                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "SHOTGUN");
+                    break;
+                case PickupSubmachine:
+                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "SUBMACHINE");
+                    break;
+                case PickupArmor:
+                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "ARMOR");
+                    break;
+                case PickupHealth:
+                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "HEALTH");
+                    break;
             }
         }
     }
@@ -67,25 +122,23 @@ void render_pickups() {
 void collect_pickup(int pickup_index) {
     if(!pickup_active[pickup_index]) return;
     
-    // Procesar el pickup según su tipo
     switch(pickup_type[pickup_index]) {
-        case PickupWeapon:
-            give_weapon(pickup_value[pickup_index]);
+        case PickupShotgun:
+            give_weapon(WeaponTypeShotgun);
             break;
             
-        case PickupAmmo:
-            weapon_current_ammo[current_weapon] += pickup_value[pickup_index];
-            if(weapon_current_ammo[current_weapon] > weapon_max_ammo[current_weapon])
-                weapon_current_ammo[current_weapon] = weapon_max_ammo[current_weapon];
+        case PickupSubmachine:
+            give_weapon(WeaponTypeSubmachine);
             break;
             
         case PickupArmor:
-            soldier_armor += pickup_value[pickup_index];
-            if(soldier_armor > MaxArmor)
-                soldier_armor = MaxArmor;
+            soldier_armor = clamp(soldier_armor + 1, 0, MaxArmor);
+            break;
+            
+        case PickupHealth:
+            soldier_health = clamp(soldier_health + 25, 0, SoldierMaxHealth);
             break;
     }
     
-    // Desactivar el pickup una vez recogido
     pickup_active[pickup_index] = 0;
 }

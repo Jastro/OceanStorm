@@ -1,10 +1,6 @@
 #ifndef PICKUP_H
 #define PICKUP_H
 
-#define MaxPickups 20
-#define PickupWeapon 0
-#define PickupAmmo 1
-#define PickupArmor 2
 
 // Estado del pickup
 extern float[MaxPickups] pickup_x;

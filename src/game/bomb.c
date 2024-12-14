@@ -144,7 +144,7 @@ void check_bomb_explosions()
                     spawn_soldier_enemies(turret_x[t], turret_y[t], soldier_count);
 
                     turret_active[t] = 0;
-                    spawn_pickup(turret_x[t], turret_y[t], PickupWeapon, WeaponTypeShotgun);
+                    spawn_random_pickup(turret_x[t], turret_y[t]);
                 }
             }
             bomb_active[b] = 0;
