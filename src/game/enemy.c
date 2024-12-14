@@ -63,6 +63,9 @@ int check_enemy_collision(float x, float y, int current_enemy)
 
 void initialize_enemies()
 {
+    select_texture(TextureEnemySoldier);
+    select_region(RegionSoldier);
+    define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
     num_active_enemies = 0;
     phase = 0;
 
@@ -492,7 +495,7 @@ void render_enemies()
         // Seleccionar textura según tipo
         if (enemy_type[i] == EnemyTypeSoldier)
         {
-            select_texture(TextureSoldier);
+            select_texture(TextureEnemySoldier);
             select_region(RegionSoldier);
             define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
         }

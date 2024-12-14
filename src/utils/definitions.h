@@ -28,7 +28,8 @@ enum Textures {
     TexturePortraits,
     TextureDialog,
     TextureMinimap,
-    TexturePickups
+    TexturePickups,
+    TextureEnemySoldier
 };
 
 // ---- REGIONES ----

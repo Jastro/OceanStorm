@@ -76,7 +76,7 @@ void update_pickups() {
         float distance = sqrt(dx*dx + dy*dy);
         
         // Si está suficientemente cerca, recoger automáticamente
-        if(distance < 10.0) {  // Radio de recolección menor que el radio de mostrar texto
+        if(distance < 15.0) {  // Radio de recolección menor que el radio de mostrar texto
             collect_pickup(i);
         }
     }

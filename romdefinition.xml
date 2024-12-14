@@ -18,6 +18,7 @@
         <texture path="obj/dialog.vtx" />
         <texture path="obj/miniMap.vtx" />
         <texture path="obj/pickups.vtx" />
+        <texture path="obj/enemySoldier.vtx" />
     </textures>
     <sounds>
     </sounds>
