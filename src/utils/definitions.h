@@ -29,7 +29,9 @@ enum Textures {
     TextureDialog,
     TextureMinimap,
     TexturePickups,
-    TextureEnemySoldier
+    TextureEnemySoldier,
+    TextureEnemySoldierDeath,
+    TextureEnemySoldierBlood
 };
 
 // ---- REGIONES ----
@@ -192,6 +194,16 @@ enum RegionsMinimap {
 #define SoldierSpawnRadius 100
 #define SoldierBulletSpeed 2.0
 #define EnemyCollisionRadius 40
+
+// ---- CONFIGURACIÓN DE CADAVERES ENEMIGOS ----
+#define MaxCorpses 20
+#define CorpseFrames 4
+#define CorpseFrameTime 0.2  // Tiempo por frame de animación 
+
+// Estados del cadáver
+#define CorpseStateAnimating 0  // Reproduciendo animación de muerte
+#define CorpseStateStatic 1     // Cadáver en el suelo con charco
+#define CorpseStateHidden 2     // Fuera de pantalla (pero guardamos posición)
 
 // ---- CONFIGURACIÓN DEL JEFE ----
 #define BossPhase1Health 400

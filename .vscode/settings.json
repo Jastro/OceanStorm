@@ -9,6 +9,7 @@
         "definitions.h": "c",
         "airplane.h": "c",
         "soldier.h": "c",
-        "turret.h": "c"
+        "turret.h": "c",
+        "corpse.h": "c"
     }
 }

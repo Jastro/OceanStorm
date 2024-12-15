@@ -19,6 +19,8 @@
         <texture path="obj/miniMap.vtx" />
         <texture path="obj/pickups.vtx" />
         <texture path="obj/enemySoldier.vtx" />
+        <texture path="obj/soldierDeath.vtx" />
+        <texture path="obj/soldierBlood.vtx" />
     </textures>
     <sounds>
     </sounds>

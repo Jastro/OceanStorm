@@ -166,7 +166,7 @@ void update_enemy(int index)
         select_texture(-1);
         set_multiply_color(RedColor);
         tilemap_print(
-            &world_map, 
+            &world_map,
             enemy_x[index] - 30,
             enemy_y[index] - ReloadTextOffset,
             "RECARGANDO");
@@ -467,7 +467,7 @@ void update_enemy(int index)
 void update_enemies()
 {
     // Incrementar el tiempo de fase una vez por frame
-    phase_time += 1.0/60.0;
+    phase_time += 1.0 / 60.0;
 
     for (int i = 0; i < MaxEnemies; i++)
     {
@@ -614,6 +614,10 @@ void damage_enemy(int index, int damage)
 
     if (enemy_health[index] <= 0)
     {
+        if (enemy_type[index] == EnemyTypeSoldier)
+        {
+            spawn_corpse(enemy_x[index], enemy_y[index]);
+        }
         spawn_random_pickup(enemy_x[index], enemy_y[index]);
         enemy_active[index] = 0; // Aquí estaba el error, usaba 'i' en vez de 'index'
         num_active_enemies--;
@@ -623,7 +627,7 @@ void damage_enemy(int index, int damage)
 void spawn_wave_of_enemies()
 {
     // spawn_boss();
-    //spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
+    // spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
     //  spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
     //  spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorBomber, SpreadTypeCross);
 }
@@ -633,10 +637,10 @@ void check_phase_progress()
     switch (phase)
     {
     case 0: // Fase inicial
-        //if (num_active_turrets() <= MaxTurrets / 2)
+        // if (num_active_turrets() <= MaxTurrets / 2)
         if (num_active_turrets() == 9)
         {
-            //spawn_wave_of_enemies();
+            // spawn_wave_of_enemies();
             phase = 1;
             phase_time = 0;
         }
