@@ -266,6 +266,7 @@ enum RegionsMinimap {
 #define SpawnFlyingEnemies 2
 #define SpawnBoss 3
 #define LowFuel 4
+#define GameOver 5
 
 #define StateMenu 0
 #define StateGame 1

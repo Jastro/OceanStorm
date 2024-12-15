@@ -98,6 +98,13 @@ void check_bullet_collisions()
                     health_flash_timer = HealthFlashTime;
                     if (heli_health <= 0)
                     {
+                        if (!has_event_happened(GameOver))
+                        {
+                            queue_dialog(DT_GameOver, RegionPortraitCommander);
+                            start_dialog_sequence();
+
+                            mark_event_as_happened(GameOver);
+                        }
                         game_state = StateGameOver;
                     }
                     continue;
@@ -184,23 +191,23 @@ void create_bullet(float x, float y, float angle, float spread, int type)
                 {
                     if (enemy_active[e] &&
                         enemy_x[e] == x &&
-                        enemy_y[e] == y) 
+                        enemy_y[e] == y)
                     {
                         is_turret_bullet = 0;
                         switch (enemy_type[e])
                         {
-                            case EnemyTypeSoldier:
-                                bullet_speed[i] = SoldierBulletSpeed;
-                                break;
-                            case EnemyTypeKamikaze:
-                                bullet_speed[i] = KamikazeBulletSpeed;
-                                break;
-                            case EnemyTypeBoss:
-                                bullet_speed[i] = BossBulletSpeed;
-                                break;
-                            default:
-                                bullet_speed[i] = NormalEnemyBulletSpeed;
-                                break;
+                        case EnemyTypeSoldier:
+                            bullet_speed[i] = SoldierBulletSpeed;
+                            break;
+                        case EnemyTypeKamikaze:
+                            bullet_speed[i] = KamikazeBulletSpeed;
+                            break;
+                        case EnemyTypeBoss:
+                            bullet_speed[i] = BossBulletSpeed;
+                            break;
+                        default:
+                            bullet_speed[i] = NormalEnemyBulletSpeed;
+                            break;
                         }
                         break;
                     }
@@ -211,7 +218,7 @@ void create_bullet(float x, float y, float angle, float spread, int type)
                 {
                     bullet_speed[i] = TurretBulletSpeed;
                 }
-                
+
                 bullet_damage[i] = TurretDamagePerBullet;
             }
 

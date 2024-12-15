@@ -10,7 +10,6 @@
 #include "string.h"
 #include "soldier.h"
 #include "events.h"
-#include "dialogTexts.h"
 #include "weapon.h"
 
 // Variables globales para el estado del avión
@@ -75,10 +74,10 @@ void render_fuel_gauge()
     if (fuel <= (MaxFuel / 2))
     {
         if (!has_event_happened(LowFuel))
-            {
-                queue_dialog(DT_FuelHalf, RegionPortraitCommander);
-                queue_dialog(DT_FuelHalfReply, RegionPortraitPlayer);
-                start_dialog_sequence();
+        {
+            queue_dialog(DT_FuelHalf, RegionPortraitCommander);
+            queue_dialog(DT_FuelHalfReply, RegionPortraitPlayer);
+            start_dialog_sequence();
 
             mark_event_as_happened(LowFuel);
         }
@@ -114,8 +113,8 @@ void initialize_heli()
         0,               // y inicial (mismo para ambos)
         HeliFrameWidth,  // anchura del frame
         HeliFrameHeight, // altura completa
-        47,                  // punto central x (mitad del frame individual)
-        39                   // punto central y
+        47,              // punto central x (mitad del frame individual)
+        39               // punto central y
     );
 
     // Frame 2
@@ -126,9 +125,9 @@ void initialize_heli()
         HeliFrameWidth * 2,  // ancho total para el segundo frame
         HeliFrameHeight,     // altura completa
         47 + HeliFrameWidth, // punto central x (mitad del frame individual)
-        39                       // punto central y
+        39                   // punto central y
     );
-    
+
     heli_frame = 0;
     anim_timer = 0;
     reset_heli();
@@ -270,7 +269,13 @@ void update_heli()
         }
         else if (heli_scale <= MinScale)
         {
-            // Si no estamos sobre ninguna superficie y bajamos demasiado -> Game Over
+            if (!has_event_happened(GameOver))
+            {
+                queue_dialog(DT_GameOver, RegionPortraitCommander);
+                start_dialog_sequence();
+
+                mark_event_as_happened(GameOver);
+            }
             game_state = StateGameOver;
         }
     }
@@ -278,6 +283,13 @@ void update_heli()
     // Game over si nos quedamos sin combustible y sin altura
     if (fuel <= 0 && heli_scale <= MinScale && !is_over_carrier(heli_x, heli_y) && !is_over_island(heli_x, heli_y))
     {
+        if (!has_event_happened(GameOver))
+        {
+            queue_dialog(DT_GameOver, RegionPortraitCommander);
+            start_dialog_sequence();
+
+            mark_event_as_happened(GameOver);
+        }
         game_state = StateGameOver;
     }
 
@@ -312,7 +324,7 @@ void render_ui()
     // Barra de vida
     set_multiply_color(RedColor);
     print_at(10, 35, "HP:");
-    
+
     set_multiply_color(ShadowColor);
     select_texture(-1);
     select_region(256);
@@ -324,7 +336,7 @@ void render_ui()
         set_multiply_color(RedColor);
     else
         set_multiply_color(GreenColor);
-    
+
     set_drawing_scale(health_width, bar_height);
     draw_region_zoomed_at(60, 30);
 
@@ -336,7 +348,7 @@ void render_heli()
 {
     float height_factor = (heli_scale - LandingScale) / (MaxScale - LandingScale);
     float max_shadow_distance = HeliShadowOffset;
-    
+
     // Evitar que la sombra vaya al lado contrario
     // cuando estamos por debajo de las islas
     float shadow_offset = 2 + max(0, height_factor * max_shadow_distance);
@@ -346,10 +358,10 @@ void render_heli()
     float shadow_x = heli_x + shadow_offset;
     float shadow_y = heli_y + shadow_offset;
     float shadow_scale = heli_scale;
-    
-    if(is_over_ocean(shadow_x, shadow_y))
+
+    if (is_over_ocean(shadow_x, shadow_y))
         shadow_scale *= 0.7;
-    
+
     // 1. Dibujar la sombra primero
     select_texture(TextureHeli);
     select_region(RegionHeli + heli_frame);
@@ -367,7 +379,7 @@ void render_heli()
 
     // Restaurar el color
     set_multiply_color(color_white);
-    
+
     // 3. Dibujar la interfaz
     if (is_player_in_vehicle)
     {

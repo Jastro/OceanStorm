@@ -408,6 +408,13 @@ void update_enemy(int index)
                         health_flash_timer = HealthFlashTime;
                         if (heli_health <= 0)
                         {
+                            if (!has_event_happened(GameOver))
+                            {
+                                queue_dialog(DT_GameOver, RegionPortraitCommander);
+                                start_dialog_sequence();
+
+                                mark_event_as_happened(GameOver);
+                            }
                             game_state = StateGameOver;
                         }
                     }
@@ -627,9 +634,9 @@ void damage_enemy(int index, int damage)
 void spawn_wave_of_enemies()
 {
     // spawn_boss();
-    // spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
-    //  spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
-    //  spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorBomber, SpreadTypeCross);
+    spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
+    spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
+    spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorBomber, SpreadTypeCross);
 }
 
 void check_phase_progress()
@@ -638,9 +645,9 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() == 9)
+        if (num_active_turrets() <= 4)
         {
-            // spawn_wave_of_enemies();
+            spawn_wave_of_enemies();
             phase = 1;
             phase_time = 0;
         }

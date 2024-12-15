@@ -10,6 +10,8 @@
         "airplane.h": "c",
         "soldier.h": "c",
         "turret.h": "c",
-        "corpse.h": "c"
+        "corpse.h": "c",
+        "bullet.h": "c",
+        "dialogtexts.h": "c"
     }
 }

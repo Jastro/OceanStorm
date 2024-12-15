@@ -23,6 +23,7 @@ extern DialogText DT_DarkPhoenix;
 extern DialogText DT_DarkPhoenix_Reply;
 extern DialogText DT_FuelHalf;
 extern DialogText DT_FuelHalfReply;
+extern DialogText DT_GameOver;
 
 // para facilitar los caracteres en español
 #define a_      "\xE1"   // á

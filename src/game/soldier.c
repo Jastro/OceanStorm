@@ -134,6 +134,13 @@ void update_soldier()
         if (soldier_stamina <= 0)
         {
             // Ahogándose
+            if (!has_event_happened(GameOver))
+            {
+                queue_dialog(DT_GameOver, RegionPortraitCommander);
+                start_dialog_sequence();
+
+                mark_event_as_happened(GameOver);
+            }
             soldier_scale = SoldierDrownScale;
             game_state = StateGameOver;
         }
@@ -159,7 +166,9 @@ void update_soldier()
         if (is_over_carrier(new_x, soldier_y) || is_over_island(new_x, soldier_y))
         {
             soldier_x = new_x;
-        }else {
+        }
+        else
+        {
             soldier_x = new_x;
         }
 
@@ -168,8 +177,10 @@ void update_soldier()
         if (is_over_carrier(soldier_x, new_y) || is_over_island(soldier_x, new_y))
         {
             soldier_y = new_y;
-        }else {
-             soldier_y = new_y;
+        }
+        else
+        {
+            soldier_y = new_y;
         }
     }
 
@@ -360,7 +371,7 @@ void render_soldier()
         set_drawing_scale(stamina_width, SoldierBarHeight);
         tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
     }
-    
+
     // Restaurar color
     set_multiply_color(color_white);
 }
@@ -411,6 +422,13 @@ void soldier_take_damage()
 
     if (soldier_health <= 0)
     {
+        if (!has_event_happened(GameOver))
+        {
+            queue_dialog(DT_GameOver, RegionPortraitCommander);
+            start_dialog_sequence();
+
+            mark_event_as_happened(GameOver);
+        }
         game_state = StateGameOver;
     }
     else

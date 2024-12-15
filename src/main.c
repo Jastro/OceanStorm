@@ -44,19 +44,20 @@ float target_zoom = 1.0;
 void main()
 {
     // Inicializar sistemas en orden
-    initialize_world();    // Crear nuestro tileset y tilemap
-    initialize_carrier();  // Inicializar el carrier primero
-    
+    initialize_world();   // Crear nuestro tileset y tilemap
+    initialize_carrier(); // Inicializar el carrier primero
+
     // La generacion de islas puede no encontrar
     // solucion y atascarse; si es asi la reiniciamos
     // para que pruebe distintas soluciones
-    while( !initialize_islands() )
-    { /* bucle vacio */ };
-    
-    initialize_heli(); // El avión
-    initialize_soldier();  // El soldado
-    initialize_weapons();  // Las armas
-    initialize_pickups();  // Los pickups
+    while (!initialize_islands())
+    { /* bucle vacio */
+    };
+
+    initialize_heli();    // El avión
+    initialize_soldier(); // El soldado
+    initialize_weapons(); // Las armas
+    initialize_pickups(); // Los pickups
     initialize_events();
     initialize_turrets();
     initialize_bombs();
@@ -106,9 +107,9 @@ void main()
             render_world();
             render_turrets();
             render_bullets();
-            render_pickups();
             render_enemies();
             render_corpses();
+            render_pickups();
             render_bombs();
             render_heli();
             update_dialog();
@@ -127,8 +128,18 @@ void main()
             break;
 
         case StateGameOver:
+            update_dialog();
+            starting_dialog();
             update_gameover();
-            render_gameover();
+            if (dialog_active)
+            {
+                render_dialog();
+            }
+            else
+            {
+                render_gameover();
+            }
+
             break;
         }
 

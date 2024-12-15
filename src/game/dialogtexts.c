@@ -88,3 +88,8 @@ DialogText DT_FuelHalfReply =
     "parada en cuanto lo necesite. Pero a" u_ "n \n"
     "tengo suficiente para causar algo de \n"
     "caos antes de volver.";
+
+DialogText DT_GameOver =
+    "Rykov... " interr "Rykov, me copias? " interr "\n"
+    "..." interr "Rykov!" exclam "\n"
+    "..." interr exclam "Nooooo!" exclam;

@@ -46,9 +46,9 @@ void initialize_weapons()
     weapon_fire_rate[1] = 1.0;
     weapon_reload_time[1] = 3.0;
     weapon_damage[1] = ShotgunDamage;
-    weapon_range[1] = 100;
+    weapon_range[1] = 150;
     weapon_spread[1] = 30;
-    weapon_bullet_count[1] = 8;
+    weapon_bullet_count[1] = 5; // Reducido para ser más balanceado
     weapon_is_reloading[1] = 0;
     weapon_last_shot[1] = 0;
 
@@ -59,10 +59,10 @@ void initialize_weapons()
     weapon_max_ammo[2] = 30;
     weapon_current_ammo[2] = 30;
     weapon_fire_rate[2] = 0.1;
-    weapon_reload_time[2] = 2.5;
+    weapon_reload_time[2] = 3.5;
     weapon_damage[2] = SubmachineGunDamage;
     weapon_range[2] = 150;
-    weapon_spread[2] = 10;
+    weapon_spread[2] = 0;
     weapon_bullet_count[2] = 1;
     weapon_is_reloading[2] = 0;
     weapon_last_shot[2] = 0;
@@ -73,6 +73,9 @@ void initialize_weapons()
 void fire_weapon(float x, float y, float angle)
 {
     float current_time = get_frame_counter() / 60.0;
+    float spread;
+    float bullet_angle;
+    int i;
 
     // Validar si podemos disparar
     if (weapon_current_ammo[current_weapon] <= 0 ||
@@ -86,14 +89,20 @@ void fire_weapon(float x, float y, float angle)
     switch (weapon_fire_mode[current_weapon])
     {
     case FireModeSingle:
+        create_bullet(x, y, angle, weapon_spread[current_weapon], BulletTypePlayer);
+        break;
+
     case FireModeAuto:
         create_bullet(x, y, angle, weapon_spread[current_weapon], BulletTypePlayer);
         break;
 
     case FireModeSpread:
-        for (int i = 0; i < weapon_bullet_count[current_weapon]; i++)
+        // Disparar en patrón de escopeta como las torretas
+        spread = pi / 6; // 30 grados totales
+        for (i = 0; i < weapon_bullet_count[current_weapon]; i++)
         {
-            create_bullet(x, y, angle, weapon_spread[current_weapon], BulletTypePlayer);
+            bullet_angle = angle - spread / 2 + (spread * i) / (weapon_bullet_count[current_weapon] - 1);
+            create_bullet(x, y, bullet_angle, 0, BulletTypePlayer);
         }
         break;
     }
