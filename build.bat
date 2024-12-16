@@ -11,6 +11,7 @@ set PNG2VIRCON=%DEVTOOLS%\png2vircon.exe
 
 echo Convert PNG textures
 echo --------------------------
+%PNG2VIRCON% assets/menu.png -o obj/menu.vtx || goto :failed
 %PNG2VIRCON% assets/heli.png -o obj/heli.vtx || goto :failed
 %PNG2VIRCON% assets/carrier.png -o obj/carrier.vtx || goto :failed
 %PNG2VIRCON% assets/tileset.png -o obj/tileset.vtx || goto :failed

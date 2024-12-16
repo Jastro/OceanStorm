@@ -38,6 +38,7 @@
 
 // Variable global para el estado del juego
 int game_state;
+int game_language = LanguageEnglish;
 float camera_zoom = 1.0;
 float target_zoom = 1.0;
 
@@ -68,6 +69,7 @@ void main()
     initialize_minimap();
 
     // Establecer el estado inicial
+    initialize_menu();
     game_state = StateMenu;
 
     // Bucle principal del juego

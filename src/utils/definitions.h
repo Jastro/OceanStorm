@@ -14,6 +14,7 @@
 
 // ---- TEXTURAS ----
 enum Textures {
+    TextureMenu,
     TextureHeli,
     TextureCarrier,
     TextureIsland,
@@ -55,6 +56,28 @@ enum RegionsMinimap {
     RegionMapLargeIsland,
     RegionMapCarrier,
     RegionMapHeli
+};
+
+enum RegionsMenu {
+    RegionMenuBackground,
+    RegionMenuLogo,
+    RegionMenuCursor,
+    RegionMenuStartENG,
+    RegionMenuOptionsENG,
+    RegionMenuStartSPA,
+    RegionMenuOptionsSPA,
+    RegionMenuLanguageENG,
+    RegionMenuLanguageSPA,
+    RegionMenuEnglishENG,
+    RegionMenuSpanishENG,
+    RegionMenuEnglishSPA,
+    RegionMenuSpanishSPA,
+};
+
+// ---- IDIOMAS ----
+enum GameLanguages {
+    LanguageEnglish,
+    LanguageSpanish
 };
 
 // ---- SISTEMA DE TILES ----
