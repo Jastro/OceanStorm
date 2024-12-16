@@ -69,6 +69,39 @@ void initialize_enemies()
     num_active_enemies = 0;
     phase = 0;
 
+    for (int frame = 0; frame < 3; frame++)
+    {
+        select_texture(TextureEnemyKamikaze);
+        select_region(frame);
+        define_region(
+            frame * EnemyKamikazeFrameWidth,
+            0,
+            (frame + 1) * EnemyKamikazeFrameWidth,
+            EnemyKamikazeFrameHeight,
+            (EnemyKamikazeFrameWidth / 2) + (frame * EnemyKamikazeFrameWidth),
+            EnemyKamikazeFrameHeight / 2);
+
+        select_texture(TextureEnemyBoss);
+        select_region(frame);
+        define_region(
+            frame * EnemyBossFrameWidth,
+            0,
+            (frame + 1) * EnemyBossFrameWidth,
+            EnemyBossFrameHeight,
+            (EnemyBossFrameWidth / 2) + (frame * EnemyBossFrameWidth),
+            EnemyBossFrameHeight / 2);
+
+        select_texture(TextureEnemy);
+        select_region(frame);
+        define_region(
+            frame * EnemyHoverFrameWidth,
+            0,
+            (frame + 1) * EnemyHoverFrameWidth,
+            EnemyHoverFrameHeight,
+            (EnemyHoverFrameWidth / 2) + (frame * EnemyHoverFrameWidth),
+            EnemyHoverFrameHeight / 2);
+    }
+    
     for (int i = 0; i < MaxEnemies; i++)
     {
         enemy_active[i] = 0;
@@ -500,25 +533,23 @@ void render_enemies()
             continue;
 
         // Seleccionar textura según tipo
-        if (enemy_type[i] == EnemyTypeSoldier)
+        switch( enemy_type[i] )
         {
-            select_texture(TextureEnemySoldier);
-            select_region(RegionSoldier);
-            define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
+            case EnemyTypeSoldier:
+                select_texture(TextureEnemySoldier);
+                select_region(RegionSoldier);
+                break;
+            case EnemyTypeKamikaze:
+                select_texture(TextureEnemyKamikaze);
+                break;
+            case EnemyTypeBoss:
+                select_texture(TextureEnemyBoss);
+                break;
+            default:
+                select_texture(TextureEnemy);
+                break;
         }
-        else if (enemy_type[i] == EnemyTypeKamikaze)
-        {
-            select_texture(TextureEnemyKamikaze);
-        }
-        else if (enemy_type[i] == EnemyTypeBoss)
-        {
-            select_texture(TextureEnemyBoss);
-        }
-        else
-        {
-            select_texture(TextureEnemy);
-        }
-
+        
         // Determinar el frame a usar
         int frame;
         if (enemy_health[i] <= 0)
@@ -535,46 +566,13 @@ void render_enemies()
         }
         else
         {
+            set_drawing_scale(1, 1);
             frame = (get_frame_counter() / 10) % 2; // Alternar entre 0 y 1
         }
 
-        // Definir región según tipo (excepto para soldados que ya está definida)
+        // Elegir región según frame (excepto para soldados)
         if (enemy_type[i] != EnemyTypeSoldier)
-        {
-            if (enemy_type[i] == EnemyTypeKamikaze)
-            {
-                select_region(frame);
-                define_region(
-                    frame * EnemyKamikazeFrameWidth,
-                    0,
-                    (frame + 1) * EnemyKamikazeFrameWidth,
-                    EnemyKamikazeFrameHeight,
-                    (EnemyKamikazeFrameWidth / 2) + (frame * EnemyKamikazeFrameWidth),
-                    EnemyKamikazeFrameHeight / 2);
-            }
-            else if (enemy_type[i] == EnemyTypeBoss)
-            {
-                select_region(frame);
-                define_region(
-                    frame * EnemyBossFrameWidth,
-                    0,
-                    (frame + 1) * EnemyBossFrameWidth,
-                    EnemyBossFrameHeight,
-                    (EnemyBossFrameWidth / 2) + (frame * EnemyBossFrameWidth),
-                    EnemyBossFrameHeight / 2);
-            }
-            else
-            {
-                select_region(frame);
-                define_region(
-                    frame * EnemyHoverFrameWidth,
-                    0,
-                    (frame + 1) * EnemyHoverFrameWidth,
-                    EnemyHoverFrameHeight,
-                    (EnemyHoverFrameWidth / 2) + (frame * EnemyHoverFrameWidth),
-                    EnemyHoverFrameHeight / 2);
-            }
-        }
+            select_region(frame);
 
         // Color normal o rojo si está recibiendo daño
         if (enemy_blink_timer[i] > 0)
