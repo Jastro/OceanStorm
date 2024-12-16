@@ -3,6 +3,7 @@
     <rom type="cartridge" title="Ocean Storm" version="1.0" />
     <binary path="obj/main.vbin" />
     <textures>
+        <texture path="obj/menu.vtx" />
         <texture path="obj/heli.vtx" />
         <texture path="obj/carrier.vtx" />
         <texture path="obj/tileset.vtx" />
