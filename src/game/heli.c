@@ -26,6 +26,7 @@ int heli_current_ammo;
 float heli_last_shot_time;
 int heli_health;
 float health_flash_timer = 0;
+int active_cannon = 0;
 
 // Variable externa para el estado del juego
 extern int game_state;
@@ -91,9 +92,24 @@ void shoot_from_heli()
     if (heli_current_ammo > 0 &&
         current_time - heli_last_shot_time >= HeliFireRate)
     {
-        float shoot_angle = heli_angle - pi / 2;
-        float bullet_x = heli_x + cos(shoot_angle) * HeliFrameWidth * heli_scale * 0.5;
-        float bullet_y = heli_y + sin(shoot_angle) * HeliFrameWidth * heli_scale * 0.5;
+        float shoot_angle;
+        float offset_angle;
+
+        if (active_cannon == 0)
+        {
+            shoot_angle = heli_angle - pi / 2; // Disparo frontal
+            offset_angle = shoot_angle;        // Offset igual al ángulo de disparo
+        }
+        else
+        {
+            shoot_angle = heli_angle + pi / 2; // Disparo trasero
+            offset_angle = shoot_angle;        // Offset igual al ángulo de disparo
+        }
+
+        // Calcular punto de origen de la bala usando el offset correcto
+        float bullet_x = heli_x + cos(offset_angle) * HeliFrameWidth * heli_scale * 0.5;
+        float bullet_y = heli_y + sin(offset_angle) * HeliFrameWidth * heli_scale * 0.5;
+
         create_bullet(bullet_x, bullet_y, shoot_angle, 0, BulletTypePlayer);
 
         heli_current_ammo--;
@@ -198,6 +214,9 @@ void update_heli()
     // Obtener entrada del control
     int direction_x, direction_y;
     gamepad_direction(&direction_x, &direction_y);
+
+    if (gamepad_button_l() == 1)
+        active_cannon = 1 - active_cannon;
 
     // Rotar el avión
     if (gamepad_left() > 0)
@@ -317,6 +336,12 @@ void render_ui()
     print_at(10, 60, "AMMO: ");
     itoa(heli_current_ammo, ammo_text, 10);
     print_at(70, 60, ammo_text);
+
+    if (active_cannon == 0)
+        print_at(10, 110, "CANNON: FRONT [L to switch]");
+    else
+        print_at(10, 110, "CANNON: REAR  [L to switch]");
+
     int max_bar_width = 100;
     int bar_height = 10;
     int health_width = (int)((heli_health / (float)HeliMaxHealth) * max_bar_width);

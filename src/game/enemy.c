@@ -101,7 +101,7 @@ void initialize_enemies()
             (EnemyHoverFrameWidth / 2) + (frame * EnemyHoverFrameWidth),
             EnemyHoverFrameHeight / 2);
     }
-    
+
     for (int i = 0; i < MaxEnemies; i++)
     {
         enemy_active[i] = 0;
@@ -127,7 +127,7 @@ void spawn_boss()
             enemy_type[i] = EnemyTypeBoss;
             enemy_behavior[i] = AIBehaviorShootAndRun;
             enemy_spread_type[i] = SpreadTypeWall;
-            enemy_speed[i] = 2.0;
+            enemy_speed[i] = 1.5;
             enemy_health[i] = EnemyHealthBoss;
             enemy_active[i] = 1;
             enemy_blink_timer[i] = 0;
@@ -187,6 +187,10 @@ void update_enemy(int index)
     float dx, dy, dist;
     float target_x;
     float target_y;
+    float ideal_distance = 800;    // Era 200, ahora el doble
+    float separation_margin = 100; // Margen de separación más amplio (era 50)
+    float new_x, new_y;
+    float offset_angle;
 
     if (enemy_health[index] <= 0)
     {
@@ -214,6 +218,7 @@ void update_enemy(int index)
         return;
     }
 
+    // Determinar objetivo basado en tipo de enemigo
     if (enemy_type[index] == EnemyTypeSoldier)
     {
         // Los soldados enemigos solo atacan cuando el jugador está como soldado
@@ -233,14 +238,16 @@ void update_enemy(int index)
         target_y = heli_y;
     }
 
+    // Calcular distancia al objetivo
+    dx = target_x - enemy_x[index];
+    dy = target_y - enemy_y[index];
+    dist = sqrt(dx * dx + dy * dy);
+    enemy_angle[index] = atan2(dy, dx);
+
     switch (enemy_behavior[index])
     {
     case AIBehaviorChase:
-        dx = target_x - enemy_x[index];
-        dy = target_y - enemy_y[index];
-        enemy_angle[index] = atan2(dy, dx);
-
-        if (enemy_type[index] == EnemyTypeSoldier && !is_player_in_vehicle)
+        if (enemy_type[index] == EnemyTypeSoldier)
         {
             // Calcular nueva posición potencial
             float new_x = enemy_x[index] + cos(enemy_angle[index]) * enemy_speed[index];
@@ -265,240 +272,79 @@ void update_enemy(int index)
                     enemy_y[index] = new_y;
                 }
             }
-        }
-        else if (!enemy_type[index] == EnemyTypeSoldier && is_player_in_vehicle)
-        {
-            // Similar para enemigos voladores
-            float new_x = enemy_x[index] + cos(enemy_angle[index]) * enemy_speed[index];
-            float new_y = enemy_y[index] + sin(enemy_angle[index]) * enemy_speed[index];
 
-            if (!check_enemy_collision(new_x, new_y, index))
+            // Disparar si está lo suficientemente cerca
+            if (dist < SoldierEnemyRange && enemy_shoot_timer[index] <= 0)
             {
-                enemy_x[index] = new_x;
-                enemy_y[index] = new_y;
+                create_bullet(enemy_x[index], enemy_y[index], enemy_angle[index], 0, BulletTypeTurret);
+                enemy_shoot_timer[index] = SoldierEnemyFireRate;
             }
-            else
-            {
-                float offset_angle = enemy_angle[index] + (pi / 4);
-                new_x = enemy_x[index] + cos(offset_angle) * enemy_speed[index];
-                new_y = enemy_y[index] + sin(offset_angle) * enemy_speed[index];
+        }
+        else // Enemigos voladores
+        {
+            enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index];
+            enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index];
 
-                if (!check_enemy_collision(new_x, new_y, index))
-                {
-                    enemy_x[index] = new_x;
-                    enemy_y[index] = new_y;
-                }
+            // Disparar cada cierto tiempo
+            if (enemy_shoot_timer[index] <= 0)
+            {
+                create_spread_pattern(enemy_x[index], enemy_y[index],
+                                      enemy_angle[index], enemy_spread_type[index]);
+                enemy_shoot_timer[index] = 1.0;
             }
         }
         break;
 
     case AIBehaviorShootAndRun:
-        dx = target_x - enemy_x[index];
-        dy = target_y - enemy_y[index];
-        dist = sqrt(dx * dx + dy * dy);
-        enemy_angle[index] = atan2(dy, dx);
-
-        if (enemy_type[index] == EnemyTypeBoss)
+        if (dist < ideal_distance)
         {
-            // El boss siempre actúa independientemente del vehículo
-            // Fase 1: Perseguir y disparar desde los lados
-            if (enemy_health[index] > BossPhase1Health)
-            {
-                // Mantener distancia ideal
-                if (dist != 225)
-                {
-                    float direction;
-                    if (dist < 225)
-                    {
-                        direction = -1;
-                    }
-                    else
-                    {
-                        direction = 1;
-                    }
-                    enemy_x[index] += direction * cos(enemy_angle[index]) * enemy_speed[index];
-                    enemy_y[index] += direction * sin(enemy_angle[index]) * enemy_speed[index];
-                }
-
-                // Sistema de disparo rotativo
-                if (enemy_shoot_timer[index] <= 0)
-                {
-                    switch (enemy_pattern_index[index])
-                    {
-                    case 0: // Metralleta
-                        create_bullet(enemy_x[index], enemy_y[index], enemy_angle[index], 0, BulletTypeTurret);
-                        enemy_shoot_timer[index] = 0.1;
-                        break;
-
-                    case 1: // Cruz
-                        for (int i = 0; i < 4; i++)
-                        {
-                            float angle = enemy_angle[index] + (pi * i) / 2;
-                            create_bullet(enemy_x[index], enemy_y[index], angle, 0, BulletTypeTurret);
-                        }
-                        enemy_shoot_timer[index] = 0.5;
-                        break;
-
-                    case 2: // Muro
-                        for (int i = 0; i < 5; i++)
-                        {
-                            if (i % 2 == 0)
-                            {
-                                create_bullet(enemy_x[index] + (i * 30), enemy_y[index], enemy_angle[index], 0, BulletTypeTurret);
-                            }
-                        }
-                        enemy_shoot_timer[index] = 0.7;
-                        break;
-                    }
-
-                    // Contar disparos y cambiar patrón
-                    enemy_pattern_count[index]++;
-                    if (enemy_pattern_count[index] >= 10)
-                    {
-                        enemy_pattern_index[index] = (enemy_pattern_index[index] + 1) % 3;
-                        enemy_pattern_count[index] = 0;
-                    }
-                }
-            }
-            // Fase 2: Persecución agresiva con disparos de escopeta
-            else if (enemy_health[index] > BossPhase2Health)
-            {
-                enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 1.5;
-                enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 1.5;
-
-                if (enemy_shoot_timer[index] <= 0)
-                {
-                    // Disparo tipo escopeta
-                    float spread = pi / 6; // 30 grados
-                    for (int i = 0; i < 5; i++)
-                    {
-                        float angle = enemy_angle[index] - spread / 2 + (spread * i) / 4;
-                        create_bullet(enemy_x[index], enemy_y[index], angle, 0, BulletTypeTurret);
-                    }
-                    enemy_shoot_timer[index] = BossPhase2FireRate;
-                }
-            }
-            // Fase 3: Huir y lluvia de balas
-            else
-            {
-                // Invertir el ángulo para huir
-                enemy_x[index] -= cos(enemy_angle[index]) * enemy_speed[index] * 0.8;
-                enemy_y[index] -= sin(enemy_angle[index]) * enemy_speed[index] * 0.8;
-
-                if (enemy_shoot_timer[index] <= 0)
-                {
-                    // Lluvia de balas en patrón circular
-                    float angle_step = (2 * pi) / 16; // 16 balas en círculo
-                    for (int i = 0; i < 16; i++)
-                    {
-                        float angle = enemy_angle[index] + i * angle_step;
-                        create_bullet(enemy_x[index], enemy_y[index], angle, 10, BulletTypeTurret);
-                    }
-                    enemy_shoot_timer[index] = BossPhase3FireRate;
-                }
-            }
+            // Alejarse más rápido cuanto más cerca esté
+            float speed_multiplier = (ideal_distance - dist) / 200; // Factor de escala
+            if (speed_multiplier > 2.0)
+                speed_multiplier = 2.0; // Limitar el multiplicador
+            enemy_x[index] -= cos(enemy_angle[index]) * enemy_speed[index] * speed_multiplier;
+            enemy_y[index] -= sin(enemy_angle[index]) * enemy_speed[index] * speed_multiplier;
         }
-        else
+        else if (dist > ideal_distance + separation_margin)
         {
-            // Enemigos normales solo actúan si el jugador está en el helicóptero
-            if (is_player_in_vehicle)
-            {
-                enemy_x[index] -= dx * enemy_speed[index] / dist;
-                enemy_y[index] -= dy * enemy_speed[index] / dist;
-
-                // Disparar según el patrón
-                if (enemy_shoot_timer[index] <= 0)
-                {
-                    create_spread_pattern(enemy_x[index], enemy_y[index],
-                                          enemy_angle[index], enemy_spread_type[index]);
-                    enemy_shoot_timer[index] = 1.0;
-                }
-            }
+            // Acercarse muy lentamente cuando está lejos
+            enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 0.5;
+            enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 0.5;
         }
 
-        enemy_shoot_timer[index] -= 1.0 / 60.0;
+        // Solo disparar si está dentro del rango ideal ± margen
+        if (enemy_shoot_timer[index] <= 0 &&
+            dist > (ideal_distance - separation_margin) &&
+            dist < (ideal_distance + separation_margin))
+        {
+            create_spread_pattern(enemy_x[index], enemy_y[index],
+                                  enemy_angle[index], enemy_spread_type[index]);
+            enemy_shoot_timer[index] = 1.0;
+        }
         break;
 
     case AIBehaviorKamikaze:
-        if (is_player_in_vehicle)
-        { // Solo actúa si el jugador está en el helicóptero
-            if (enemy_health[index] > 0)
+        // Moverse directamente hacia el objetivo
+        enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 1.5;
+        enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 1.5;
+
+        // Comprobar colisión con el objetivo
+        if (dist < 50)
+        {
+            if (is_player_in_vehicle)
             {
-                // Comportamiento normal cuando está vivo
-                dx = target_x - enemy_x[index];
-                dy = target_y - enemy_y[index];
-                enemy_angle[index] = atan2(dy, dx);
-                enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 1.5;
-                enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 1.5;
-
-                // Comprobar colisión si está vivo
-                dist = sqrt(dx * dx + dy * dy);
-                if (dist < 50)
+                heli_health -= KamikazeDamage;
+                health_flash_timer = HealthFlashTime;
+                if (heli_health <= 0)
                 {
-                    if (is_player_in_vehicle)
-                    {
-                        heli_health -= KamikazeDamage;
-                        health_flash_timer = HealthFlashTime;
-                        if (heli_health <= 0)
-                        {
-                            if (!has_event_happened(GameOver))
-                            {
-                                queue_dialog(DT_GameOver, RegionPortraitCommander);
-                                start_dialog_sequence();
-
-                                mark_event_as_happened(GameOver);
-                            }
-                            game_state = StateGameOver;
-                        }
-                    }
-                    else
-                    {
-                        soldier_take_damage();
-                    }
-                    // Destruir el kamikaze
-                    enemy_health[index] = 0;
-                    enemy_shoot_timer[index] = 1.0; // Iniciar animación de caída
+                    game_state = StateGameOver;
                 }
             }
-        }
-        // Cuando está destruido, solo cae
-        break;
-
-    case AIBehaviorBomber:
-        if (is_player_in_vehicle)
-        { // Solo actúa si el jugador está en el helicóptero
-            dx = target_x - enemy_x[index];
-            dy = target_y - enemy_y[index];
-            dist = sqrt(dx * dx + dy * dy);
-
-            // Quitada la restricción de distancia
-            enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index];
-            enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index];
-
-            if (enemy_shoot_timer[index] <= 0)
-            {
-                create_bullet(enemy_x[index], enemy_y[index], pi / 2, 0, BulletTypeTurret);
-                enemy_shoot_timer[index] = 2.0;
-            }
+            // Destruir el kamikaze
+            enemy_health[index] = 0;
+            enemy_shoot_timer[index] = 1.0;
         }
         break;
-    }
-
-    // Disparar según el patrón
-    if (enemy_behavior[index] != AIBehaviorKamikaze &&
-        enemy_shoot_timer[index] <= 0)
-    {
-        create_spread_pattern(enemy_x[index], enemy_y[index],
-                              enemy_angle[index], enemy_spread_type[index]);
-        enemy_shoot_timer[index] = 1.0;
-    }
-
-    // Comprobar si necesita recargar
-    if (enemy_shoot_timer[index] >= 10.0)
-    { // Usar como indicador de munición gastada
-        enemy_is_reloading[index] = 1;
-        enemy_reload_start[index] = get_frame_counter() / 60.0;
-        return;
     }
 
     enemy_shoot_timer[index] -= 1.0 / 60.0;
@@ -533,23 +379,23 @@ void render_enemies()
             continue;
 
         // Seleccionar textura según tipo
-        switch( enemy_type[i] )
+        switch (enemy_type[i])
         {
-            case EnemyTypeSoldier:
-                select_texture(TextureEnemySoldier);
-                select_region(RegionSoldier);
-                break;
-            case EnemyTypeKamikaze:
-                select_texture(TextureEnemyKamikaze);
-                break;
-            case EnemyTypeBoss:
-                select_texture(TextureEnemyBoss);
-                break;
-            default:
-                select_texture(TextureEnemy);
-                break;
+        case EnemyTypeSoldier:
+            select_texture(TextureEnemySoldier);
+            select_region(RegionSoldier);
+            break;
+        case EnemyTypeKamikaze:
+            select_texture(TextureEnemyKamikaze);
+            break;
+        case EnemyTypeBoss:
+            select_texture(TextureEnemyBoss);
+            break;
+        default:
+            select_texture(TextureEnemy);
+            break;
         }
-        
+
         // Determinar el frame a usar
         int frame;
         if (enemy_health[i] <= 0)
@@ -632,9 +478,9 @@ void damage_enemy(int index, int damage)
 void spawn_wave_of_enemies()
 {
     // spawn_boss();
-    spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
-    spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
-    spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorBomber, SpreadTypeCross);
+    // spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
+    // spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
+    spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorChase, SpreadTypeCross);
 }
 
 void check_phase_progress()
@@ -643,7 +489,7 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 4)
+        if (num_active_turrets() <= 8)
         {
             spawn_wave_of_enemies();
             phase = 1;
