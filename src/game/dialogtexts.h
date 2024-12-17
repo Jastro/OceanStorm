@@ -5,25 +5,31 @@
 // 256 caracteres es mas de lo que cabe en la ventana
 typedef int[ 256 ] DialogText;
 
+struct DialogWindow
+{
+    int portrait_region;
+    DialogText[ 2 ] texts;
+};
+
 // todos los textos del juego
-extern DialogText DT_StartOperation;
-extern DialogText DT_StartOperationReply;
-extern DialogText DT_TurretDestroyed;
-extern DialogText DT_EnemyDetected;
-extern DialogText DT_EnemyPenetration;
-extern DialogText DT_EnemyFighters;
-extern DialogText DT_EnemyFightersReply;
-extern DialogText DT_AttackHeli;
-extern DialogText DT_GoHome;
-extern DialogText DT_TurretsRemain;
-extern DialogText DT_TurretsRemainReply;
-extern DialogText DT_MaxAlert;
-extern DialogText DT_MaxAlertReply;
-extern DialogText DT_DarkPhoenix;
-extern DialogText DT_DarkPhoenix_Reply;
-extern DialogText DT_FuelHalf;
-extern DialogText DT_FuelHalfReply;
-extern DialogText DT_GameOver;
+extern DialogWindow DW_StartOperation;
+extern DialogWindow DW_StartOperationReply;
+extern DialogWindow DW_TurretDestroyed;
+extern DialogWindow DW_EnemyDetected;
+extern DialogWindow DW_EnemyPenetration;
+extern DialogWindow DW_EnemyFighters;
+extern DialogWindow DW_EnemyFightersReply;
+extern DialogWindow DW_AttackHeli;
+extern DialogWindow DW_GoHome;
+extern DialogWindow DW_TurretsRemain;
+extern DialogWindow DW_TurretsRemainReply;
+extern DialogWindow DW_MaxAlert;
+extern DialogWindow DW_MaxAlertReply;
+extern DialogWindow DW_DarkPhoenix;
+extern DialogWindow DW_DarkPhoenix_Reply;
+extern DialogWindow DW_FuelHalf;
+extern DialogWindow DW_FuelHalfReply;
+extern DialogWindow DW_GameOver;
 
 // para facilitar los caracteres en español
 #define a_      "\xE1"   // á
