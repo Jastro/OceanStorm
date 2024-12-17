@@ -29,4 +29,5 @@ void render_gameover() {
         set_multiply_color(TextColor);
         print_at(ScreenCenterX - 90, ScreenCenterY + 20, "PRESS START TO CONTINUE");
     }
+    set_multiply_color(color_white);
 }
