@@ -55,7 +55,9 @@ enum RegionsMinimap {
     RegionMapSmallIsland,
     RegionMapLargeIsland,
     RegionMapCarrier,
-    RegionMapHeli
+    RegionMapHeli,
+    RegionMapSoldier,
+    RegionMapEnemyPlane
 };
 
 enum RegionsMenu {
