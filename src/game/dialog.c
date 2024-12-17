@@ -6,15 +6,14 @@ int[256] dialog_text;
 int dialog_region;
 
 int current_dialog = 0;
-int[MaxDialogs][256] dialog_sequence;
-int[MaxDialogs] dialog_portraits;
+DialogWindow*[MaxDialogs] dialog_sequence;
 int num_dialogs = 0;
 
+extern int game_language;
 
-void queue_dialog(int* text, int portrait) {
+void queue_dialog(DialogWindow* dialog) {
     if(num_dialogs < MaxDialogs) {
-        strcpy(dialog_sequence[num_dialogs], text);
-        dialog_portraits[num_dialogs] = portrait;
+        dialog_sequence[num_dialogs] = dialog;
         num_dialogs++;
     }
 }
@@ -22,14 +21,14 @@ void queue_dialog(int* text, int portrait) {
 void start_dialog_sequence() {
     if(num_dialogs > 0) {
         current_dialog = 0;
-        show_dialog(dialog_sequence[0], dialog_portraits[0]);
+        show_dialog(dialog_sequence[0]);
     }
 }
 
-void show_dialog(int* text, int region_id) {
+void show_dialog(DialogWindow* dialog) {
     dialog_active = 1;
-    strcpy(dialog_text, text);
-    dialog_region = region_id;
+    strcpy(dialog_text, dialog->texts[game_language]);
+    dialog_region = dialog->portrait_region;
 }
 
 void update_dialog() {
@@ -40,7 +39,7 @@ void update_dialog() {
        gamepad_button_start() == 1) {
         current_dialog++;
         if(current_dialog < num_dialogs) {
-            show_dialog(dialog_sequence[current_dialog], dialog_portraits[current_dialog]);
+            show_dialog(dialog_sequence[current_dialog]);
         } else {
             dialog_active = 0;
             num_dialogs = 0;

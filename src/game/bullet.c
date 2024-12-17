@@ -100,7 +100,7 @@ void check_bullet_collisions()
                     {
                         if (!has_event_happened(GameOver))
                         {
-                            queue_dialog(DT_GameOver, RegionPortraitCommander);
+                            queue_dialog(&DW_GameOver);
                             start_dialog_sequence();
 
                             mark_event_as_happened(GameOver);

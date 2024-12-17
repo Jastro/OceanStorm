@@ -76,8 +76,8 @@ void render_fuel_gauge()
     {
         if (!has_event_happened(LowFuel))
         {
-            queue_dialog(DT_FuelHalf, RegionPortraitCommander);
-            queue_dialog(DT_FuelHalfReply, RegionPortraitPlayer);
+            queue_dialog(&DW_FuelHalf);
+            queue_dialog(&DW_FuelHalfReply);
             start_dialog_sequence();
 
             mark_event_as_happened(LowFuel);
@@ -290,7 +290,7 @@ void update_heli()
         {
             if (!has_event_happened(GameOver))
             {
-                queue_dialog(DT_GameOver, RegionPortraitCommander);
+                queue_dialog(&DW_GameOver);
                 start_dialog_sequence();
 
                 mark_event_as_happened(GameOver);
@@ -304,7 +304,7 @@ void update_heli()
     {
         if (!has_event_happened(GameOver))
         {
-            queue_dialog(DT_GameOver, RegionPortraitCommander);
+            queue_dialog(&DW_GameOver);
             start_dialog_sequence();
 
             mark_event_as_happened(GameOver);

@@ -85,8 +85,8 @@ void starting_dialog()
 {
     if (!has_event_happened(StartGame))
     {
-        queue_dialog(DT_StartOperation, RegionPortraitCommander);
-        queue_dialog(DT_StartOperationReply, RegionPortraitPlayer);
+        queue_dialog(&DW_StartOperation);
+        queue_dialog(&DW_StartOperationReply);
         start_dialog_sequence();
 
         mark_event_as_happened(StartGame);
