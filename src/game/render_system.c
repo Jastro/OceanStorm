@@ -106,6 +106,10 @@ void initialize_minimap()
     define_region_center(107, 45, 112, 56);
     select_region(RegionMapHeli);
     define_region_center(117, 45, 123, 54);
+    select_region(RegionMapSoldier);
+    define_region_center(107, 61, 113, 67);
+    select_region(RegionMapEnemyPlane);
+    define_region_center(107, 72, 113, 81);
 }
 
 // funciones auxiliares para convertir coordenadas
@@ -146,10 +150,39 @@ void render_minimap()
         draw_region_at(minimap_x(island_x[i]), minimap_y(island_y[i]));
     }
 
+    // Dibujar todos los enemigos antes para que nunca nos tapen
+    select_region(RegionMapEnemyPlane);
+    
+    for (int i = 0; i < MaxEnemies; i++)
+    {
+        if(!enemy_active[i])
+            continue;
+        
+        // No dibujamos soldados, solo vehiculos
+        if(enemy_type[i] == EnemyTypeSoldier)
+            continue;
+        
+        // Los vehiculos los dibujamos mostrando a donde miran
+        set_drawing_angle(enemy_angle[i] + pi/2);
+        draw_region_rotated_at(minimap_x(enemy_x[i]), minimap_y(enemy_y[i]));
+    }
+    
+    // difuminar el heli si estamos fuera para que no nos estorbe
+    if(!is_player_in_vehicle)
+        set_multiply_color(0x80FFFFFF);
+    
     // Al dibujar el heli mostramos la direccion done mira
     select_region(RegionMapHeli);
     set_drawing_angle(heli_angle);
     draw_region_rotated_at(minimap_x(heli_x), minimap_y(heli_y));
+    set_multiply_color(color_white);
+    
+    // Dibujar nuestro soldado si vamos a pie
+    if(!is_player_in_vehicle)
+    {
+        select_region(RegionMapSoldier);
+        draw_region_at(minimap_x(soldier_x), minimap_y(soldier_y));
+    }
 }
 
 void render_world()
