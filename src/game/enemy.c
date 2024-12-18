@@ -194,6 +194,9 @@ void update_enemy(int index)
 
     if (enemy_health[index] <= 0)
     {
+        enemy_shoot_timer[index] -= 1.0 / 60.0; // Reducir la escala gradualmente
+        // Simular caída añadiendo movimiento hacia abajo
+        enemy_y[index] += 2.0; // Velocidad de caída
         return;
     }
 
@@ -386,7 +389,7 @@ void render_enemies()
 {
     for (int i = 0; i < MaxEnemies; i++)
     {
-        if (!enemy_active[i] || enemy_health[i] <= 0)
+        if (!enemy_active[i])
             continue;
 
         // Seleccionar textura según tipo
@@ -453,6 +456,7 @@ void render_enemies()
             tilemap_draw_region_rotozoomed(&world_map, enemy_x[i], enemy_y[i]);
         }
 
+        // Mostrar texto de recarga si está recargando
         if (enemy_active[i] && enemy_health[i] > 0 && enemy_is_reloading[i])
         {
             select_texture(-1);
@@ -461,7 +465,7 @@ void render_enemies()
                 &world_map,
                 enemy_x[i] - 30,
                 enemy_y[i] - ReloadTextOffset,
-                "RECARGANDO");
+                "RELOADING");
         }
     }
 }
@@ -480,9 +484,13 @@ void damage_enemy(int index, int damage)
         {
             spawn_corpse(enemy_x[index], enemy_y[index]);
             spawn_random_pickup(enemy_x[index], enemy_y[index]);
+            enemy_active[index] = 0;
         }
-        enemy_active[index] = 0; // Aquí estaba el error, usaba 'i' en vez de 'index'
-        num_active_enemies--;
+        else
+        {
+            // num_active_enemies--;
+            enemy_shoot_timer[index] = 1.0; // Usamos este timer para la escala
+        }
     }
 }
 
@@ -500,7 +508,7 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 4)
+        if (num_active_turrets() <= 9)
         {
             spawn_wave_of_enemies();
             phase = 1;
