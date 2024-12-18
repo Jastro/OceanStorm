@@ -59,8 +59,8 @@ void spawn_random_pickup(float x, float y) {
         available_types[num_types++] = PickupSubmachine;
     }
     
-    // 30% de probabilidad de generar pickup
-    if(rand() % 100 < 30) {
+    // 40% de probabilidad de generar pickup
+    if(rand() % 100 < 40) {
         int type = available_types[rand() % num_types];
         spawn_pickup(x, y, type, 1);  // El valor ya no es necesario realmente
     }

@@ -95,15 +95,24 @@ void shoot_from_heli()
         float shoot_angle;
         float offset_angle;
 
-        if (active_cannon == 0)
+        switch (active_cannon)
         {
-            shoot_angle = heli_angle - pi / 2; // Disparo frontal
-            offset_angle = shoot_angle;        // Offset igual al ángulo de disparo
-        }
-        else
-        {
-            shoot_angle = heli_angle + pi / 2; // Disparo trasero
-            offset_angle = shoot_angle;        // Offset igual al ángulo de disparo
+        case 0: // Frontal
+            shoot_angle = heli_angle - pi / 2;
+            offset_angle = shoot_angle;
+            break;
+        case 1: // Trasero
+            shoot_angle = heli_angle + pi / 2;
+            offset_angle = shoot_angle;
+            break;
+        case 2: // Lateral izquierdo
+            shoot_angle = heli_angle - pi;
+            offset_angle = shoot_angle;
+            break;
+        case 3: // Lateral derecho
+            shoot_angle = heli_angle;
+            offset_angle = shoot_angle;
+            break;
         }
 
         // Calcular punto de origen de la bala usando el offset correcto
@@ -216,7 +225,7 @@ void update_heli()
     gamepad_direction(&direction_x, &direction_y);
 
     if (gamepad_button_l() == 1)
-        active_cannon = 1 - active_cannon;
+        active_cannon = (active_cannon + 1) % 4;
 
     // Rotar el avión
     if (gamepad_left() > 0)
@@ -338,9 +347,13 @@ void render_ui()
     print_at(70, 60, ammo_text);
 
     if (active_cannon == 0)
-        print_at(10, 110, "CANNON: FRONT [L to switch]");
+        print_at(10, 110, "CANNON: FRONT     [L to switch]");
+    else if (active_cannon == 1)
+        print_at(10, 110, "CANNON: REAR      [L to switch]");
+    else if (active_cannon == 2)
+        print_at(10, 110, "CANNON: LEFT SIDE [L to switch]");
     else
-        print_at(10, 110, "CANNON: REAR  [L to switch]");
+        print_at(10, 110, "CANNON: RIGHT SIDE[L to switch]");
 
     int max_bar_width = 100;
     int bar_height = 10;

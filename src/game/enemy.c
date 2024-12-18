@@ -187,7 +187,7 @@ void update_enemy(int index)
     float dx, dy, dist;
     float target_x;
     float target_y;
-    float ideal_distance = 800;    // Era 200, ahora el doble
+    float ideal_distance = 300;    // Era 200, ahora el doble
     float separation_margin = 100; // Margen de separación más amplio (era 50)
     float new_x, new_y;
     float offset_angle;
@@ -276,8 +276,19 @@ void update_enemy(int index)
             // Disparar si está lo suficientemente cerca
             if (dist < SoldierEnemyRange && enemy_shoot_timer[index] <= 0)
             {
-                create_bullet(enemy_x[index], enemy_y[index], enemy_angle[index], 0, BulletTypeTurret);
-                enemy_shoot_timer[index] = SoldierEnemyFireRate;
+                switch (enemy_spread_type[index])
+                {
+                case SpreadTypeSingle:
+                    create_bullet(enemy_x[index], enemy_y[index], enemy_angle[index], 0, BulletTypeTurret);
+                    enemy_shoot_timer[index] = 1.0;
+                    break;
+
+                default:
+                    create_spread_pattern(enemy_x[index], enemy_y[index],
+                                          enemy_angle[index], enemy_spread_type[index]);
+                    enemy_shoot_timer[index] = 1.0;
+                    break;
+                }
             }
         }
         else // Enemigos voladores
@@ -468,8 +479,8 @@ void damage_enemy(int index, int damage)
         if (enemy_type[index] == EnemyTypeSoldier)
         {
             spawn_corpse(enemy_x[index], enemy_y[index]);
+            spawn_random_pickup(enemy_x[index], enemy_y[index]);
         }
-        spawn_random_pickup(enemy_x[index], enemy_y[index]);
         enemy_active[index] = 0; // Aquí estaba el error, usaba 'i' en vez de 'index'
         num_active_enemies--;
     }
@@ -478,9 +489,9 @@ void damage_enemy(int index, int damage)
 void spawn_wave_of_enemies()
 {
     // spawn_boss();
-    // spawn_enemy(WorldWidth / 2, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeShotgun);
-    // spawn_enemy(200, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
-    spawn_enemy(300, 100, EnemyTypeNormal, AIBehaviorChase, SpreadTypeCross);
+    spawn_enemy(100, 100, EnemyTypeNormal, AIBehaviorShootAndRun, SpreadTypeShotgun);
+    spawn_enemy(300, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
+    spawn_enemy(550, 100, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeCross);
 }
 
 void check_phase_progress()
@@ -489,7 +500,7 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 8)
+        if (num_active_turrets() <= 4)
         {
             spawn_wave_of_enemies();
             phase = 1;

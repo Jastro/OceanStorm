@@ -50,7 +50,7 @@ void spawn_soldier_enemies(float x, float y, int count)
             }
             else if (random_type < 90)
             {
-                spread_type = SpreadTypeWall;
+                spread_type = SpreadTypeSingle;
             }
             else
             {

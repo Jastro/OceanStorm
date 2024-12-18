@@ -108,10 +108,10 @@ void main()
 
             render_world();
             render_turrets();
-            render_bullets();
-            render_enemies();
             render_corpses();
+            render_bullets();
             render_pickups();
+            render_enemies();
             render_bombs();
             render_heli();
             update_dialog();

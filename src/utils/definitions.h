@@ -118,8 +118,8 @@ enum GameLanguages {
 #define MaxFuel 1500
 #define FuelConsumption 0.5
 #define RefuelRate 3.0
-#define InitialScale 0.4
-#define LandingScale 0.4
+#define InitialScale 0.5
+#define LandingScale 0.5
 #define HeliMaxAmmo 100
 #define HeliFireRate 0.1
 #define HeliReloadRate 2.0
@@ -166,9 +166,9 @@ enum GameLanguages {
 #define EnemyTypeSoldier 3
 
 // Puntos de vida
-#define EnemyHealthNormal 100
+#define EnemyHealthNormal 1000
 #define EnemyHealthKamikaze 50
-#define EnemyHealthBoss 500
+#define EnemyHealthBoss 50000
 
 // Características de enemigos
 #define EnemyBulletRange 300.0
@@ -177,7 +177,7 @@ enum GameLanguages {
 
 // Velocidades
 #define EnemySpeedNormal 3.0
-#define EnemySpeedKamikaze 2.0
+#define EnemySpeedKamikaze 4.0
 #define EnemySpeedBoss 1.0
 #define KamikazeBulletSpeed 4.0
 #define BossBulletSpeed 4.5
@@ -208,7 +208,7 @@ enum GameLanguages {
 
 // ---- CONFIGURACIÓN DE SOLDADOS ENEMIGOS ----
 #define MinSoldiersPerTurret 2
-#define MaxSoldiersPerTurret 4
+#define MaxSoldiersPerTurret 5
 #define SoldierEnemyHealth 10
 #define SoldierEnemyArmor 2
 #define SoldierEnemySpeed 0.4
