@@ -33,7 +33,8 @@ enum Textures {
     TextureEnemySoldier,
     TextureEnemySoldierDeath,
     TextureEnemySoldierBlood,
-    TextureEnemyHelicopter
+    TextureEnemyHelicopter,
+    TextureGui
 };
 
 // ---- REGIONES ----
@@ -75,6 +76,23 @@ enum RegionsMenu {
     RegionMenuSpanishENG,
     RegionMenuEnglishSPA,
     RegionMenuSpanishSPA,
+};
+
+enum RegionsGui
+{
+    RegionHeliFuel,
+    RegionHeliHealth,
+    RegionHeliAmmo,
+    RegionSoldierAmmo,
+    RegionSoldierBombs,
+    RegionSoldierArmor,
+    RegionObjectiveTurrets,
+    RegionObjectivePlanes,
+    RegionObjectiveBoss,
+    RegionEnterSign,
+    RegionExitSign,
+    RegionSoldierHealth,
+    RegionSoldierReloading
 };
 
 // ---- IDIOMAS ----

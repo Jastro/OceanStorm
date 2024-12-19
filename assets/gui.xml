@@ -1,0 +1,16 @@
+<texture-regions>
+    <texture name="TextureGui" path="gui.png"/>
+    <region name="HeliFuel" left="1" top="1" right="127" bottom="21" hotspot-x="1" hotspot-y="1"/>
+    <region name="HeliHealth" left="1" top="25" right="127" bottom="45" hotspot-x="1" hotspot-y="25"/>
+    <region name="HeliAmmo" left="1" top="49" right="127" bottom="88" hotspot-x="1" hotspot-y="49"/>
+    <region name="SoldierAmmo" left="1" top="92" right="107" bottom="131" hotspot-x="1" hotspot-y="92"/>
+    <region name="SoldierBombs" left="1" top="135" right="64" bottom="173" hotspot-x="1" hotspot-y="135"/>
+    <region name="SoldierArmor" left="1" top="177" right="64" bottom="215" hotspot-x="1" hotspot-y="177"/>
+    <region name="ObjectiveTurrets" left="131" top="1" right="247" bottom="42" hotspot-x="189" hotspot-y="1"/>
+    <region name="ObjectivePlanes" left="131" top="46" right="247" bottom="87" hotspot-x="189" hotspot-y="46"/>
+    <region name="ObjectiveBoss" left="131" top="91" right="247" bottom="132" hotspot-x="189" hotspot-y="91"/>
+    <region name="EnterSign" left="68" top="136" right="134" bottom="161" hotspot-x="102" hotspot-y="148"/>
+    <region name="ExitSign" left="68" top="165" right="134" bottom="190" hotspot-x="103" hotspot-y="177"/>
+    <region name="SoldierHealth" left="138" top="136" right="197" bottom="147" hotspot-x="138" hotspot-y="136"/>
+    <region name="SoldierReloading" left="138" top="151" right="197" bottom="162" hotspot-x="138" hotspot-y="151"/>
+</texture-regions>

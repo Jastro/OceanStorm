@@ -24,6 +24,7 @@ int[MaxEnemies] enemy_is_reloading;
 float[MaxEnemies] enemy_reload_start;
 
 int num_active_enemies;
+int num_total_enemies;
 int phase;
 float phase_time = 0;
 
@@ -69,6 +70,7 @@ void initialize_enemies()
     select_region(RegionSoldier);
     define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
     num_active_enemies = 0;
+    num_total_enemies = 0;
     phase = 0;
 
     for (int frame = 0; frame < 3; frame++)
@@ -510,6 +512,7 @@ void spawn_wave_of_enemies()
     spawn_enemy(100, 100, EnemyTypeNormal, AIBehaviorShootAndRun, SpreadTypeShotgun);
     spawn_enemy(300, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
     spawn_enemy(550, 100, EnemyTypeKamikaze, AIBehaviorChase, SpreadTypeCross);
+    num_total_enemies = num_active_enemies;
 }
 
 void check_phase_progress()

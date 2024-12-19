@@ -67,6 +67,7 @@ void main()
     initialize_portraits();
     initialize_dialog();
     initialize_minimap();
+    initialize_gui();
 
     // Establecer el estado inicial
     initialize_menu();

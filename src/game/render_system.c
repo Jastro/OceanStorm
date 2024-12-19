@@ -31,53 +31,69 @@ void initialize_portraits()
     );
 }
 
+void initialize_gui() 
+{
+    select_texture( TextureGui );
+    select_region( RegionHeliFuel );
+    define_region( 1,1,  127,21,  1,1 );
+    select_region( RegionHeliHealth );
+    define_region( 1,25,  127,45,  1,25 );
+    select_region( RegionHeliAmmo );
+    define_region( 1,49,  127,88,  1,49 );
+    select_region( RegionSoldierAmmo );
+    define_region( 1,92,  107,131,  1,92 );
+    select_region( RegionSoldierBombs );
+    define_region( 1,135,  64,173,  1,135 );
+    select_region( RegionSoldierArmor );
+    define_region( 1,177,  64,215,  1,177 );
+    select_region( RegionObjectiveTurrets );
+    define_region( 131,1,  247,42,  189,1 );
+    select_region( RegionObjectivePlanes );
+    define_region( 131,46,  247,87,  189,46 );
+    select_region( RegionObjectiveBoss );
+    define_region( 131,91,  247,132,  189,91 );
+    select_region( RegionEnterSign );
+    define_region( 68,136,  134,161,  102,148 );
+    select_region( RegionExitSign );
+    define_region( 68,165,  134,190,  103,177 );
+    select_region( RegionSoldierHealth );
+    define_region( 138,136,  197,147,  138,136 );
+    select_region( RegionSoldierReloading );
+    define_region( 138,151,  197,162,  138,151 );
+}
+
 void render_objectives()
 {
-    select_texture(-1);
-    set_multiply_color(TextColor);
-
-    // Buffer para números
-    int[12] number_buffer;
-
+    // Parpadeo inicial cada 0.25 segundos
+    if (phase_time < 2.0)
+        if ((int)(phase_time * 4) % 2 == 0)
+            return;
+    
+    select_texture(TextureGui);
+    
     // Mostrar objetivos según la fase
     switch (phase)
     {
-    case 0: // Fase inicial - Destruir torretas
-        print_at(10, ObjectiveY, "TORRETAS: ");
-        itoa(num_active_turrets(), number_buffer, 10);
-        print_at(100, ObjectiveY, number_buffer);
-        print_at(120, ObjectiveY, "/");
-        itoa(MaxTurrets, number_buffer, 10);
-        print_at(140, ObjectiveY, number_buffer);
-        break;
+        // Estos 2 casos se dibujan igual
+        case 0: // Fase inicial - Destruir torretas
+        case 2: // Fase final de torretas
+            select_region(RegionObjectiveTurrets);
+            draw_region_at(screen_width/2, 5);
+            print_1digit_at(319, 9, num_active_turrets());
+            print_1digit_at(352, 9, MaxTurrets);
+            break;
 
-    case 1: // Fase de enemigos aéreos
-        print_at(10, ObjectiveY, "ENEMIGOS: ");
-        itoa(num_active_enemies, number_buffer, 10);
-        print_at(100, ObjectiveY, number_buffer);
-        break;
+        case 1: // Fase de enemigos aéreos
+            select_region(RegionObjectivePlanes);
+            draw_region_at(screen_width/2, 5);
+            print_1digit_at(319, 9, num_active_enemies);
+            print_1digit_at(352, 9, num_total_enemies);
+            break;
 
-    case 2: // Fase final de torretas
-        print_at(10, ObjectiveY, "TORRETAS: ");
-        itoa(num_active_turrets(), number_buffer, 10);
-        print_at(100, ObjectiveY, number_buffer);
-        print_at(110, ObjectiveY, "/");
-        itoa(MaxTurrets, number_buffer, 10);
-        print_at(120, ObjectiveY, number_buffer);
-        break;
-
-    case 3:                           // Fase del boss
-        set_multiply_color(RedColor); // El objetivo del boss en rojo
-        print_at(10, ObjectiveY, "!DERROTA AL BOSS!");
-        break;
-    }
-
-    if (phase_time < 2.0)
-    {
-        if ((int)(phase_time * 4) % 2 == 0)
-        { // Parpadeo cada 0.25 segundos
-            set_multiply_color(RedColor);
-        }
+        case 3: // Fase del boss
+            select_region(RegionObjectiveBoss);
+            draw_region_at(screen_width/2, 5);
+            break;
     }
 }
 
