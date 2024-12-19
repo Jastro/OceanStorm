@@ -19,6 +19,7 @@ extern float[MaxEnemies] enemy_reload_start;
 extern float phase_time;
 
 extern int num_active_enemies;
+extern int num_total_enemies;
 extern int phase;
 
 // Funciones de enemigos

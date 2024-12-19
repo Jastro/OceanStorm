@@ -32,6 +32,7 @@ echo --------------------------
 %PNG2VIRCON% assets/soldierDeath.png -o obj/soldierDeath.vtx || goto :failed
 %PNG2VIRCON% assets/soldierBlood.png -o obj/soldierBlood.vtx || goto :failed
 %PNG2VIRCON% assets/enemyHelicopter.png -o obj/enemyHelicopter.vtx || goto :failed
+%PNG2VIRCON% assets/gui.png -o obj/gui.vtx || goto :failed
 
 echo.
 echo Convert the WAV sounds
