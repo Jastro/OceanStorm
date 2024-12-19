@@ -552,6 +552,7 @@ void render_enemies()
         {
             frame = 2; // Frame de destrucción
             float scale = enemy_shoot_timer[i];
+            play_sound(SoundFall);
             set_drawing_scale(scale, scale);
             if (scale <= 0.1)
             {

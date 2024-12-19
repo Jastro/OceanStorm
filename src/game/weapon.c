@@ -84,7 +84,7 @@ void fire_weapon(float x, float y, float angle)
     {
         return;
     }
-
+    play_sound(SoundShoot);
     // Disparar según el modo del arma
     switch (weapon_fire_mode[current_weapon])
     {

@@ -123,6 +123,7 @@ void shoot_from_heli()
 
         heli_current_ammo--;
         heli_last_shot_time = current_time;
+        play_sound(SoundShoot);
     }
 }
 
@@ -219,7 +220,7 @@ void update_heli()
 {
     if (!is_player_in_vehicle)
         return;
-
+    // play_sound(SoundHeli); (FALLA)
     // Obtener entrada del control
     int direction_x, direction_y;
     gamepad_direction(&direction_x, &direction_y);

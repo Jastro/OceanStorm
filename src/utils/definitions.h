@@ -175,6 +175,7 @@ enum EnemyTypes
     EnemyTypeSoldier
 };
 
+
 // Puntos de vida
 #define EnemyHealthNormal 1000
 #define EnemyHealthKamikaze 150
@@ -351,5 +352,20 @@ enum Events
 #define ShadowColor 0x80000000
 #define IslandColor 0xFF604020
 #define GreenColor 0xFF00FF00
+
+// ---- SOUND CHANNELS----
+
+#define ChannelOnOff  14
+#define ChannelMusic  15
+
+enum GameSounds
+{
+    SoundHurt,
+    SoundFall,
+    SoundPickup,
+    SoundShoot,
+    SoundHeli,
+    SoundBomb
+};
 
 #endif

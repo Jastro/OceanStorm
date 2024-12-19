@@ -38,6 +38,7 @@ void trigger_screen_shake()
 {
     screen_shake_time = ShakeTimeOnDamage;
     screen_shake_angle = 0;
+    play_sound(SoundHurt);
 }
 
 void initialize_world()
