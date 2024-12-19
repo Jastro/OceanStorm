@@ -5,6 +5,8 @@
 #include "turret.h"
 #include "math.h"
 
+int[MaxEnemies] enemy_state;
+float[MaxEnemies] enemy_spawn_timer;
 float[MaxEnemies] enemy_x;
 float[MaxEnemies] enemy_y;
 float[MaxEnemies] enemy_angle;
@@ -100,6 +102,16 @@ void initialize_enemies()
             EnemyHoverFrameHeight,
             (EnemyHoverFrameWidth / 2) + (frame * EnemyHoverFrameWidth),
             EnemyHoverFrameHeight / 2);
+
+        select_texture(TextureEnemyHelicopter);
+        select_region(frame);
+        define_region(
+            frame * EnemyHelicopterFrameWidth,
+            0,
+            (frame + 1) * EnemyHelicopterFrameWidth,
+            EnemyHelicopterFrameHeight,
+            (EnemyHelicopterFrameWidth / 2) + (frame * EnemyHelicopterFrameWidth),
+            EnemyHelicopterFrameHeight / 2);
     }
 
     for (int i = 0; i < MaxEnemies; i++)
@@ -152,7 +164,7 @@ void spawn_enemy(float x, float y, int type, int behavior, int spread_type)
             enemy_shoot_timer[i] = 0;
             enemy_blink_timer[i] = 0;
 
-            // Asignar velocidad y vida según tipo
+            enemy_blink_timer[i] = 0.5;
             switch (type)
             {
             case EnemyTypeSoldier:
@@ -192,11 +204,20 @@ void update_enemy(int index)
     float new_x, new_y;
     float offset_angle;
 
+    if (enemy_state[index] == EnemyStateSpawning)
+    {
+        enemy_spawn_timer[index] -= 1.0 / 60.0;
+        if (enemy_spawn_timer[index] <= 0)
+        {
+            enemy_state[index] = EnemyStateActive;
+        }
+        return;
+    }
+
     if (enemy_health[index] <= 0)
     {
-        enemy_shoot_timer[index] -= 1.0 / 60.0; // Reducir la escala gradualmente
-        // Simular caída añadiendo movimiento hacia abajo
-        enemy_y[index] += 2.0; // Velocidad de caída
+        enemy_shoot_timer[index] -= 1.0 / 60.0;
+        enemy_y[index] += 2.0;
         return;
     }
 
@@ -378,6 +399,7 @@ void update_enemies()
             // Actualizar timer de parpadeo
             if (enemy_blink_timer[i] > 0)
             {
+                set_multiply_color(RedColor);
                 enemy_blink_timer[i] -= 1.0 / 60.0;
             }
         }
@@ -403,10 +425,10 @@ void render_enemies()
             select_texture(TextureEnemyKamikaze);
             break;
         case EnemyTypeBoss:
-            select_texture(TextureEnemyBoss);
+            select_texture(TextureEnemy);
             break;
         default:
-            select_texture(TextureEnemy);
+            select_texture(TextureEnemyHelicopter);
             break;
         }
 
@@ -434,8 +456,12 @@ void render_enemies()
         if (enemy_type[i] != EnemyTypeSoldier)
             select_region(frame);
 
-        // Color normal o rojo si está recibiendo daño
-        if (enemy_blink_timer[i] > 0)
+        // Determinar el color según el estado
+        if (enemy_state[i] == EnemyStateSpawning)
+        {
+            set_multiply_color(0xFFFFFFFF);
+        }
+        else if (enemy_blink_timer[i] > 0)
         {
             set_multiply_color(RedColor);
         }
@@ -456,7 +482,7 @@ void render_enemies()
             tilemap_draw_region_rotozoomed(&world_map, enemy_x[i], enemy_y[i]);
         }
 
-        // Mostrar texto de recarga si está recargando
+        // Mostrar texto de recarga
         if (enemy_active[i] && enemy_health[i] > 0 && enemy_is_reloading[i])
         {
             select_texture(-1);
@@ -472,6 +498,10 @@ void render_enemies()
 
 void damage_enemy(int index, int damage)
 {
+
+    if (enemy_state[index] == EnemyStateSpawning)
+        return;
+
     if (enemy_health[index] <= 0)
         return;
 
@@ -508,8 +538,18 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 9)
+        if (num_active_turrets() <= 4)
         {
+            if (!has_event_happened(SpawnFlyingEnemies))
+            {
+                queue_dialog(&DW_EnemyFighters);
+                queue_dialog(&DW_EnemyFightersReply);
+                queue_dialog(&DW_AttackHeli);
+                start_dialog_sequence();
+
+                mark_event_as_happened(SpawnFlyingEnemies);
+            }
+
             spawn_wave_of_enemies();
             phase = 1;
             phase_time = 0;
@@ -519,6 +559,15 @@ void check_phase_progress()
     case 1: // Fase de enemigos
         if (num_active_enemies == 0)
         {
+            if (!has_event_happened(FlyingEnemiesDestroyed))
+            {
+                queue_dialog(&DW_GoHome);
+                queue_dialog(&DW_TurretsRemain);
+                queue_dialog(&DW_TurretsRemainReply);
+                start_dialog_sequence();
+
+                mark_event_as_happened(FlyingEnemiesDestroyed);
+            }
             phase = 2;
         }
         break;

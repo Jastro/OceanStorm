@@ -30,6 +30,7 @@ echo --------------------------
 %PNG2VIRCON% assets/enemySoldier.png -o obj/enemySoldier.vtx || goto :failed
 %PNG2VIRCON% assets/soldierDeath.png -o obj/soldierDeath.vtx || goto :failed
 %PNG2VIRCON% assets/soldierBlood.png -o obj/soldierBlood.vtx || goto :failed
+%PNG2VIRCON% assets/enemyHelicopter.png -o obj/enemyHelicopter.vtx || goto :failed
 
 echo Compile the C code
 echo --------------------------

@@ -1,6 +1,10 @@
 #ifndef ENEMY_H
 #define ENEMY_H
+#define EnemyStateSpawning 0
+#define EnemyStateActive 1
 
+extern int[MaxEnemies] enemy_state;
+extern float[MaxEnemies] enemy_spawn_timer;
 extern float[MaxEnemies] enemy_x;
 extern float[MaxEnemies] enemy_y;
 extern float[MaxEnemies] enemy_angle;
