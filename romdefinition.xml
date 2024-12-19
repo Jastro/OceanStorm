@@ -25,5 +25,11 @@
         <texture path="obj/enemyHelicopter.vtx" />
     </textures>
     <sounds>
+    <sound path="obj/hurt.vsnd" />
+    <sound path="obj/fall.vsnd" />
+    <sound path="obj/pickup.vsnd" />
+    <sound path="obj/shoot.vsnd" />
+    <sound path="obj/heli.vsnd" />
+    <sound path="obj/beep.vsnd" />
     </sounds>
 </rom-definition>

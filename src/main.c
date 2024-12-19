@@ -1,4 +1,5 @@
-// Incluir las cabeceras
+#include "audio.h"
+
 #include "utils/definitions.h"
 #include "game/worldmap.h"
 #include "game/heli.h"
@@ -44,6 +45,16 @@ float target_zoom = 1.0;
 
 void main()
 {
+
+    for (int i = 0; i < 15; i++)
+    {
+        select_channel(i);
+        set_channel_volume(0.3);
+    }
+
+    select_channel(ChannelMusic);
+    set_channel_volume(0.4);
+
     // Inicializar sistemas en orden
     initialize_world();   // Crear nuestro tileset y tilemap
     initialize_carrier(); // Inicializar el carrier primero

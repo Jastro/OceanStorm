@@ -122,6 +122,8 @@ void render_pickups() {
 void collect_pickup(int pickup_index) {
     if(!pickup_active[pickup_index]) return;
     
+    play_sound(SoundPickup);
+
     switch(pickup_type[pickup_index]) {
         case PickupShotgun:
             give_weapon(WeaponTypeShotgun);

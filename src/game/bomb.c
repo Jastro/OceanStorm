@@ -162,7 +162,7 @@ void update_bombs()
             continue;
 
         bomb_timer[i] -= delta_time;
-
+        play_sound(SoundBomb);
         if (bomb_timer[i] <= 0)
         {
             if (!has_event_happened(TurretDestroyed))
