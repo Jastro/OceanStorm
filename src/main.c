@@ -67,6 +67,7 @@ void main()
     initialize_portraits();
     initialize_dialog();
     initialize_minimap();
+    initialize_gui();
 
     // Establecer el estado inicial
     initialize_menu();
@@ -115,13 +116,13 @@ void main()
             render_enemies();
             render_bombs();
             render_heli();
+            render_gui();
             update_dialog();
             starting_dialog();
 
             if (!is_player_in_vehicle)
             {
                 render_soldier();
-                render_soldier_ui();
             }
 
             if (dialog_active)

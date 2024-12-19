@@ -279,63 +279,69 @@ void render_soldier()
     set_drawing_scale(soldier_scale, soldier_scale);
     tilemap_draw_region_rotozoomed(&world_map, soldier_x, soldier_y);
 
-    // Indicador de poder subir al avión
+    // Restaurar color
+    set_multiply_color(color_white);
+    
+    // Indicador de poder subir al heli
     float dx = soldier_x - heli_x;
     float dy = soldier_y - heli_y;
     float distance = sqrt(dx * dx + dy * dy);
 
     if (distance < 50.0)
     {
-        set_multiply_color(0xFF00FF00); // Verde
-        tilemap_print(
-            &world_map,
-            soldier_x,
-            soldier_y - 30,
-            "Press B to enter");
+        // Dibujar con parpadeo para que se vea mejor
+        if(get_frame_counter() % 40 > 8)
+        {
+            select_texture(TextureGui);
+            select_region(RegionEnterSign);
+            tilemap_draw_region(
+                &world_map,
+                heli_x,
+                heli_y - 30);
+        }
     }
 
     // Mostrar texto de recarga si está recargando
     if (weapon_is_reloading[current_weapon])
     {
-        set_multiply_color(RedColor);
-        tilemap_print(
+        select_texture(TextureGui);
+        select_region(RegionSoldierReloading);
+        
+        tilemap_draw_region(
             &world_map,
-            soldier_x - 30,
-            soldier_y - ReloadTextOffset,
-            "RECARGANDO");
+            soldier_x - SoldierBarWidth / 2,
+            soldier_y - ReloadTextOffset);
     }
 
     // Solo mostrar barra de vida cuando no hay armadura
     if (soldier_armor == 0)
     {
+        // convertir a coordenadas de pantalla para dibujar
         float bar_x = soldier_x - SoldierBarWidth / 2;
         float bar_y = soldier_y - SoldierBarOffsetY;
-
-        // Usar textura de BIOS para dibujar punto
-        select_texture(-1);
-        select_region(256);
-
-        // Fondo de la barra (negro semi-transparente)
-        set_multiply_color(ShadowColor);
-        set_drawing_scale(SoldierBarWidth, SoldierBarHeight);
-        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
-
-        // Dibujar barra de vida
+        tilemap_convert_position_to_screen(&world_map, &bar_x, &bar_y);
+        
+        // dibujar marco vacio
+        select_texture(TextureGui);
+        select_region(RegionSoldierHealth);
+        draw_region_at(bar_x, bar_y);
+        
+        // Calcular ancho proporcional de la barra
+        int bar_height = 6;
         float health_percent = soldier_health / (float)SoldierMaxHealth;
-        int current_width = SoldierBarWidth * health_percent;
+        int health_width = SoldierBarWidth * health_percent;
 
-        // Verde cuando está llena, roja cuando está baja
-        if (health_percent > 0.5)
-        {
-            set_multiply_color(GreenColor);
-        }
-        else
-        {
-            set_multiply_color(RedColor);
-        }
-
-        set_drawing_scale(current_width, SoldierBarHeight);
-        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
+        // Vida verde cuando está llena, roja cuando está baja
+        int health_color = GreenColor;
+        
+        if (health_percent <= 0.5)
+            health_color = RedColor;
+        
+        // Dibujar barra de vida
+        draw_rectangle(bar_x+5, bar_y+3, health_width, bar_height, health_color);
+        
+        // Restaurar el color
+        set_multiply_color(color_white);
     }
 
     // Dibujar indicadores de armadura si hay
@@ -355,55 +361,50 @@ void render_soldier()
     // Dibujar barra de estamina si está nadando
     if (is_swimming)
     {
+        // convertir a coordenadas de pantalla para dibujar
         float bar_x = soldier_x - SoldierBarWidth / 2;
-        float bar_y = soldier_y - SoldierBarOffsetY - 10; // Encima de la barra de vida
-
-        // Fondo de la barra
-        select_texture(-1);
-        select_region(256);
-        set_multiply_color(ShadowColor); // Negro semi-transparente
-        set_drawing_scale(SoldierBarWidth, SoldierBarHeight);
-        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
-
-        // Barra de estamina
+        float bar_y = soldier_y - SoldierBarOffsetY - 13; // Encima de la barra de vida
+        tilemap_convert_position_to_screen(&world_map, &bar_x, &bar_y);
+        
+        // dibujar marco vacio
+        select_texture(TextureGui);
+        select_region(RegionSoldierHealth);
+        draw_region_at(bar_x, bar_y);
+        
+        // Calcular ancho proporcional de la barra
+        int bar_height = 6;
         int stamina_width = (soldier_stamina / MaxStamina) * SoldierBarWidth;
-        set_multiply_color(0xFFFF0000); // Azul para la estamina
-        set_drawing_scale(stamina_width, SoldierBarHeight);
-        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
+        
+        // Dibujar barra de estamina
+        draw_rectangle(bar_x+5, bar_y+3, stamina_width, bar_height, 0xFFFFFF00);
     }
 
     // Restaurar color
     set_multiply_color(color_white);
 }
 
-void render_soldier_ui()
+void render_soldier_gui()
 {
     if (soldier_state == SoldierStateNone)
         return;
 
-    select_texture(-1);
-    set_multiply_color(TextColor);
-
-    // Buffer temporal para convertir números
-    int[12] number_buffer; // Suficientemente grande para cualquier número
+    select_texture(TextureGui);
 
     // Mostrar munición
-    print_at(10, 10, "AMMO: ");
-    itoa(weapon_current_ammo[current_weapon], number_buffer, 10);
-    print_at(70, 10, number_buffer);
-    print_at(100, 10, "/");
-    itoa(weapon_max_ammo[current_weapon], number_buffer, 10);
-    print_at(120, 10, number_buffer);
+    select_region(RegionSoldierAmmo);
+    draw_region_at(5,5);
+    print_2digits_at(46, 9, weapon_current_ammo[current_weapon]);
+    print_2digits_at(81, 9, weapon_max_ammo[current_weapon]);
 
     // Mostrar bombas
-    print_at(10, 30, "BOMBS: ");
-    itoa(soldier_bombs, number_buffer, 10);
-    print_at(70, 30, number_buffer);
+    select_region(RegionSoldierBombs);
+    draw_region_at(5,47);
+    print_1digit_at(46, 51, soldier_bombs);
 
     // Mostrar armadura
-    print_at(10, 50, "ARMOR: ");
-    itoa(soldier_armor, number_buffer, 10);
-    print_at(70, 50, number_buffer);
+    select_region(RegionSoldierArmor);
+    draw_region_at(5,88);
+    print_1digit_at(46, 92, soldier_armor);
 }
 
 void soldier_take_damage()

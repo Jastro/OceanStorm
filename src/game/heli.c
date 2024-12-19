@@ -39,52 +39,6 @@ void reload_heli()
         HeliMaxAmmo);
 }
 
-void render_fuel_gauge()
-{
-    // Fondo de la barra de combustible (barra vacía)
-    select_texture(-1); // Usar textura de la BIOS
-    set_multiply_color(RedColor);
-
-    // Dibujar texto
-    print_at(10, 15, "FUEL:");
-
-    // Calcular ancho de la barra basado en el combustible
-    int max_bar_width = 100;
-    int bar_height = 10;
-    int current_width = (int)((fuel / MaxFuel) * max_bar_width);
-
-    // Dibujar barra de fondo (roja)
-    for (int x = 0; x < max_bar_width; x++)
-    {
-        for (int y = 0; y < bar_height; y++)
-        {
-            draw_region_at(60 + x, 10 + y);
-        }
-    }
-
-    // Dibujar barra de combustible actual (blanca)
-    set_multiply_color(TextColor);
-    for (int x = 0; x < current_width; x++)
-    {
-        for (int y = 0; y < bar_height; y++)
-        {
-            draw_region_at(60 + x, 10 + y);
-        }
-    }
-
-    if (fuel <= (MaxFuel / 2))
-    {
-        if (!has_event_happened(LowFuel))
-        {
-            queue_dialog(&DW_FuelHalf);
-            queue_dialog(&DW_FuelHalfReply);
-            start_dialog_sequence();
-
-            mark_event_as_happened(LowFuel);
-        }
-    }
-}
-
 void shoot_from_heli()
 {
     float current_time = get_frame_counter() / 60.0;
@@ -101,16 +55,16 @@ void shoot_from_heli()
             shoot_angle = heli_angle - pi / 2;
             offset_angle = shoot_angle;
             break;
-        case 1: // Trasero
+        case 1: // Lateral derecho
+            shoot_angle = heli_angle;
+            offset_angle = shoot_angle;
+            break;
+        case 2: // Trasero
             shoot_angle = heli_angle + pi / 2;
             offset_angle = shoot_angle;
             break;
-        case 2: // Lateral izquierdo
+        case 3: // Lateral izquierdo
             shoot_angle = heli_angle - pi;
-            offset_angle = shoot_angle;
-            break;
-        case 3: // Lateral derecho
-            shoot_angle = heli_angle;
             offset_angle = shoot_angle;
             break;
         }
@@ -225,8 +179,11 @@ void update_heli()
     gamepad_direction(&direction_x, &direction_y);
 
     if (gamepad_button_l() == 1)
+        active_cannon = (active_cannon + (4-1)) % 4;
+    
+    if (gamepad_button_r() == 1)
         active_cannon = (active_cannon + 1) % 4;
-
+    
     // Rotar el avión
     if (gamepad_left() > 0)
         heli_angle -= RotationSpeed;
@@ -331,55 +288,93 @@ void update_heli()
         world_map.camera_position.y = heli_y;
     }
 
-    if ((is_over_carrier(heli_x, heli_y) || is_over_island(heli_x, heli_y)) && gamepad_button_b() == 1)
+    if (!is_over_ocean(heli_x, heli_y) && gamepad_button_b() == 1)
     {
         exit_vehicle();
         return;
     }
 }
-void render_ui()
+
+void render_heli_fuel()
 {
-    render_fuel_gauge();
-    set_multiply_color(TextColor);
-    int[8] ammo_text;
-    print_at(10, 60, "AMMO: ");
-    itoa(heli_current_ammo, ammo_text, 10);
-    print_at(70, 60, ammo_text);
+    // dibujar marco vacio
+    select_texture(TextureGui);
+    select_region(RegionHeliFuel);
+    draw_region_at(5, 5);
+    
+    // Calcular ancho proporcional de la barra
+    int max_bar_width = 75;
+    int bar_height = 11;
+    int fuel_width = (int)((fuel / MaxFuel) * max_bar_width);
 
-    if (active_cannon == 0)
-        print_at(10, 110, "CANNON: FRONT     [L to switch]");
-    else if (active_cannon == 1)
-        print_at(10, 110, "CANNON: REAR      [L to switch]");
-    else if (active_cannon == 2)
-        print_at(10, 110, "CANNON: LEFT SIDE [L to switch]");
-    else
-        print_at(10, 110, "CANNON: RIGHT SIDE[L to switch]");
+    // Dibujar barra de combustible
+    draw_rectangle(48, 10, fuel_width, bar_height, color_white);
+    
+    // Avisar de combustible bajo
+    if (fuel <= (MaxFuel / 2))
+    {
+        if (!has_event_happened(LowFuel))
+        {
+            queue_dialog(&DW_FuelHalf);
+            queue_dialog(&DW_FuelHalfReply);
+            start_dialog_sequence();
 
-    int max_bar_width = 100;
-    int bar_height = 10;
-    int health_width = (int)((heli_health / (float)HeliMaxHealth) * max_bar_width);
-
-    // Barra de vida
-    set_multiply_color(RedColor);
-    print_at(10, 35, "HP:");
-
-    set_multiply_color(ShadowColor);
-    select_texture(-1);
-    select_region(256);
-    set_drawing_scale(max_bar_width, bar_height);
-    draw_region_zoomed_at(60, 30);
-
-    // Verde normal, rojo cuando recibe daño
-    if (health_flash_timer > 0)
-        set_multiply_color(RedColor);
-    else
-        set_multiply_color(GreenColor);
-
-    set_drawing_scale(health_width, bar_height);
-    draw_region_zoomed_at(60, 30);
-
+            mark_event_as_happened(LowFuel);
+        }
+    }
+    
     // Restaurar el color
     set_multiply_color(color_white);
+}
+
+void render_heli_health()
+{
+    // dibujar marco vacio
+    select_texture(TextureGui);
+    select_region(RegionHeliHealth);
+    draw_region_at(5, 28);
+    
+    // Calcular ancho proporcional de la barra
+    int max_bar_width = 75;
+    int bar_height = 11;
+    int health_width = (int)((heli_health / (float)HeliMaxHealth) * max_bar_width);
+    int health_color = GreenColor;
+    
+    // Vida roja cuando recibe daño
+    if (health_flash_timer > 0)
+        health_color = RedColor;
+    
+    // Dibujar barra de vida
+    draw_rectangle(48, 33, health_width, bar_height, health_color);
+    
+    // Restaurar el color
+    set_multiply_color(color_white);
+}
+
+void render_heli_gui()
+{
+    // Dibujar las barras
+    render_heli_fuel();
+    render_heli_health();
+    
+    // Mostrar munición
+    select_texture(TextureGui);
+    select_region(RegionHeliAmmo);
+    draw_region_at(5,51);
+    print_3digits_at(46, 55, heli_current_ammo);
+    print_3digits_at(91, 55, HeliMaxAmmo);
+    
+    // Informar de estado del cañón
+    if (active_cannon == 0)
+        print_at(5, 99, "CANNON: FRONT");
+    else if (active_cannon == 1)
+        print_at(5, 99, "CANNON: RIGHT");
+    else if (active_cannon == 2)
+        print_at(5, 99, "CANNON: REAR");
+    else
+        print_at(5, 99, "CANNON: LEFT");
+
+    print_at(5,119,"[L/R to rotate]");
 }
 
 void render_heli()
@@ -418,12 +413,8 @@ void render_heli()
     // Restaurar el color
     set_multiply_color(color_white);
 
-    // 3. Dibujar la interfaz
-    if (is_player_in_vehicle)
-    {
-        render_ui();
-    }
-    else
+    // 3. Actualizar la interfaz
+    if (!is_player_in_vehicle)
     {
         if (heli_scale > LandingScale)
         {
@@ -434,6 +425,25 @@ void render_heli()
     if (health_flash_timer > 0)
     {
         health_flash_timer -= 1.0 / 60.0;
+    }
+
+    // 4. Cuando estemos sobre islas o el carrier:
+    if (is_player_in_vehicle && !is_over_ocean(heli_x, heli_y))
+    {
+        // si estamos en tierra avisamos de que podemos salir
+        if(heli_scale == LandingScale)
+        {
+            // Dibujar con parpadeo para que se vea mejor
+            if(get_frame_counter() % 40 > 8)
+            {
+                select_texture(TextureGui);
+                select_region(RegionExitSign);
+                tilemap_draw_region(
+                    &world_map,
+                    heli_x,
+                    heli_y - 30);
+            }
+        }
     }
 }
 

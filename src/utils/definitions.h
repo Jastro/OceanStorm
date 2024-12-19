@@ -33,7 +33,8 @@ enum Textures {
     TextureEnemySoldier,
     TextureEnemySoldierDeath,
     TextureEnemySoldierBlood,
-    TextureEnemyHelicopter
+    TextureEnemyHelicopter,
+    TextureGui
 };
 
 // ---- REGIONES ----
@@ -75,6 +76,23 @@ enum RegionsMenu {
     RegionMenuSpanishENG,
     RegionMenuEnglishSPA,
     RegionMenuSpanishSPA,
+};
+
+enum RegionsGui
+{
+    RegionHeliFuel,
+    RegionHeliHealth,
+    RegionHeliAmmo,
+    RegionSoldierAmmo,
+    RegionSoldierBombs,
+    RegionSoldierArmor,
+    RegionObjectiveTurrets,
+    RegionObjectivePlanes,
+    RegionObjectiveBoss,
+    RegionEnterSign,
+    RegionExitSign,
+    RegionSoldierHealth,
+    RegionSoldierReloading
 };
 
 // ---- IDIOMAS ----
@@ -313,9 +331,9 @@ enum Events {
 #define BlinkRate 30
 #define HealthFlashTime 0.5
 #define ReloadTime 2.0
-#define ReloadTextOffset 30
-#define ShakeTimeOnDamage 0.5  // Duración del temblor en segundos
-#define ShakeIntensity 25.0    // Amplitud máxima del temblor en píxeles
+#define ReloadTextOffset 27
+#define ShakeTimeOnDamage 0.25  // Duración del temblor en segundos
+#define ShakeIntensity 15.0    // Amplitud máxima del temblor en píxeles
 
 // ---- CÁMARA ----
 #define CameraZoomAir 1.0
