@@ -644,7 +644,7 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 9)
+        if (num_active_turrets() <= 4)
         {
             if (!has_event_happened(SpawnFlyingEnemies))
             {
