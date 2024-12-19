@@ -15,7 +15,7 @@ void update_screen_shake()
         screen_shake_time -= 1.0 / 60.0;
 
         // Calcular offset basado en seno
-        screen_shake_angle += pi / 8; // Velocidad de oscilación
+        screen_shake_angle += pi / 4; // Velocidad de oscilación
 
         // La intensidad se reduce conforme pasa el tiempo
         float current_intensity = ShakeIntensity * (screen_shake_time / ShakeTimeOnDamage);

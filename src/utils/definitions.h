@@ -13,7 +13,8 @@
 #include "../libraries/tilemap.h"
 
 // ---- TEXTURAS ----
-enum Textures {
+enum Textures
+{
     TextureMenu,
     TextureHeli,
     TextureCarrier,
@@ -44,14 +45,16 @@ enum Textures {
 #define RegionTurretBase 0
 #define RegionTurretGun 1
 
-enum RegionsPortraits {
+enum RegionsPortraits
+{
     RegionPortraitPlayer,
     RegionPortraitCommander,
     RegionPortraitSoldier,
     RegionPortraitBoss
 };
 
-enum RegionsMinimap {
+enum RegionsMinimap
+{
     RegionMapFrame,
     RegionMapSmallIsland,
     RegionMapLargeIsland,
@@ -61,7 +64,8 @@ enum RegionsMinimap {
     RegionMapEnemyPlane
 };
 
-enum RegionsMenu {
+enum RegionsMenu
+{
     RegionMenuBackground,
     RegionMenuLogo,
     RegionMenuCursor,
@@ -78,7 +82,8 @@ enum RegionsMenu {
 };
 
 // ---- IDIOMAS ----
-enum GameLanguages {
+enum GameLanguages
+{
     LanguageEnglish,
     LanguageSpanish
 };
@@ -107,7 +112,7 @@ enum GameLanguages {
 #define HeliFramesPerRow 1
 #define NumHeliFrames 2
 #define HeliAnimSpeed 10
-#define HeliMaxHealth 100
+#define HeliMaxHealth 200
 #define RotationSpeed 0.05
 #define MovementSpeed 3.0
 #define AscendSpeed 0.005
@@ -161,28 +166,35 @@ enum GameLanguages {
 #define MaxEnemies 20
 
 // Tipos de enemigos
-#define EnemyTypeNormal 0
-#define EnemyTypeKamikaze 1
-#define EnemyTypeBoss 2
-#define EnemyTypeSoldier 3
+enum EnemyTypes
+{
+    EnemyTypeNormal,
+    EnemyTypeKamikaze,
+    EnemyTypePlane,
+    EnemyTypeBoss,
+    EnemyTypeSoldier
+};
 
 // Puntos de vida
 #define EnemyHealthNormal 1000
-#define EnemyHealthKamikaze 50
-#define EnemyHealthBoss 50000
+#define EnemyHealthKamikaze 150
+#define EnemyHealthPlane 500
+#define EnemyHealthBoss 10000
 
 // Características de enemigos
 #define EnemyBulletRange 300.0
 #define EnemyBlinkTime 0.1
-#define KamikazeDamage 5
+#define KamikazeDamage 25
 
 // Velocidades
 #define EnemySpeedNormal 3.0
 #define EnemySpeedKamikaze 4.0
-#define EnemySpeedBoss 1.0
+#define EnemySpeedBoss 3.0
+#define EnemySpeedPlane 2.0
 #define KamikazeBulletSpeed 4.0
+#define PlaneBulletSpeed 3.0
 #define BossBulletSpeed 4.5
-#define NormalEnemyBulletSpeed 4.0
+#define NormalEnemyBulletSpeed 2.5
 
 // Comportamientos IA
 #define AIBehaviorChase 0
@@ -226,32 +238,40 @@ enum GameLanguages {
 // ---- CONFIGURACIÓN DE CADAVERES ENEMIGOS ----
 #define MaxCorpses 20
 #define CorpseFrames 4
-#define CorpseFrameTime 0.2  // Tiempo por frame de animación 
+#define CorpseFrameTime 0.2 // Tiempo por frame de animación
 
 // Estados del cadáver
-#define CorpseStateAnimating 0  // Reproduciendo animación de muerte
-#define CorpseStateStatic 1     // Cadáver en el suelo con charco
-#define CorpseStateHidden 2     // Fuera de pantalla (pero guardamos posición)
+#define CorpseStateAnimating 0 // Reproduciendo animación de muerte
+#define CorpseStateStatic 1    // Cadáver en el suelo con charco
+#define CorpseStateHidden 2    // Fuera de pantalla (pero guardamos posición)
 
 // ---- CONFIGURACIÓN DEL JEFE ----
-#define BossPhase1Health 400
-#define BossPhase2Health 200
-#define BossPhase1FireRate 0.2
-#define BossPhase2FireRate 0.5
-#define BossPhase3FireRate 0.1
+enum BossPhases
+{
+    BossPhaseOne,
+    BossPhaseTwo,
+    BossPhaseThree
+};
 
+#define BossHealth1 2000
+#define BossHealth2 1500
+#define BossHealth3 1000
+
+#define BossSpeed1 1.0   // Fase 1: más lento pero metódico
+#define BossSpeed2 1.5   // Fase 2: velocidad media
+#define BossSpeed3 2.0   // Fase 3: muy rápido y agresivo
 
 // ---- SISTEMA DE PICKUPS ----
-#define MaxPickups 20             // Máximo número de pickups activos
-#define PickupShotgun 0          // Frame 0 - Escopeta
-#define PickupSubmachine 1       // Frame 1 - Metralleta  
-#define PickupArmor 2           // Frame 2 - Armadura
-#define PickupHealth 3          // Frame 3 - Vida
+#define MaxPickups 20      // Máximo número de pickups activos
+#define PickupShotgun 0    // Frame 0 - Escopeta
+#define PickupSubmachine 1 // Frame 1 - Metralleta
+#define PickupArmor 2      // Frame 2 - Armadura
+#define PickupHealth 3     // Frame 3 - Vida
 
 // ---- DIMENSIONES DEL MUNDO Y PANTALLA ----
 #define WorldTilesX 48
 #define WorldTilesY 48
-#define WorldWidth  (WorldTilesX * TileSize) // 3072
+#define WorldWidth (WorldTilesX * TileSize)  // 3072
 #define WorldHeight (WorldTilesY * TileSize) // 3072
 #define ScreenWidth 640
 #define ScreenHeight 360
@@ -289,7 +309,8 @@ enum GameLanguages {
 #define EventFirstTurret 1
 #define EventFirstPickup 2
 
-enum Events {
+enum Events
+{
     StartGame,
     TurretDestroyed,
     SpawnFlyingEnemies,
@@ -314,8 +335,8 @@ enum Events {
 #define HealthFlashTime 0.5
 #define ReloadTime 2.0
 #define ReloadTextOffset 30
-#define ShakeTimeOnDamage 0.5  // Duración del temblor en segundos
-#define ShakeIntensity 25.0    // Amplitud máxima del temblor en píxeles
+#define ShakeTimeOnDamage 0.25 // Duración del temblor en segundos
+#define ShakeIntensity 15.0    // Amplitud máxima del temblor en píxeles
 
 // ---- CÁMARA ----
 #define CameraZoomAir 1.0

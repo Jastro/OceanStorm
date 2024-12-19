@@ -203,6 +203,9 @@ void create_bullet(float x, float y, float angle, float spread, int type)
                         case EnemyTypeKamikaze:
                             bullet_speed[i] = KamikazeBulletSpeed;
                             break;
+                        case EnemyTypePlane:
+                            bullet_speed[i] = PlaneBulletSpeed;
+                            break;
                         case EnemyTypeBoss:
                             bullet_speed[i] = BossBulletSpeed;
                             break;

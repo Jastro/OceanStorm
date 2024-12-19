@@ -101,16 +101,16 @@ void shoot_from_heli()
             shoot_angle = heli_angle - pi / 2;
             offset_angle = shoot_angle;
             break;
-        case 1: // Trasero
+        case 1: // Lateral derecho
+            shoot_angle = heli_angle;
+            offset_angle = shoot_angle;
+            break;
+        case 2: // Trasero
             shoot_angle = heli_angle + pi / 2;
             offset_angle = shoot_angle;
             break;
-        case 2: // Lateral izquierdo
+        case 3: // Lateral izquierdo
             shoot_angle = heli_angle - pi;
-            offset_angle = shoot_angle;
-            break;
-        case 3: // Lateral derecho
-            shoot_angle = heli_angle;
             offset_angle = shoot_angle;
             break;
         }
