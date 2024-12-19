@@ -279,19 +279,26 @@ void render_soldier()
     set_drawing_scale(soldier_scale, soldier_scale);
     tilemap_draw_region_rotozoomed(&world_map, soldier_x, soldier_y);
 
-    // Indicador de poder subir al avión
+    // Restaurar color
+    set_multiply_color(color_white);
+    
+    // Indicador de poder subir al heli
     float dx = soldier_x - heli_x;
     float dy = soldier_y - heli_y;
     float distance = sqrt(dx * dx + dy * dy);
 
     if (distance < 50.0)
     {
-        set_multiply_color(0xFF00FF00); // Verde
-        tilemap_print(
-            &world_map,
-            soldier_x,
-            soldier_y - 30,
-            "Press B to enter");
+        // Dibujar con parpadeo para que se vea mejor
+        if(get_frame_counter() % 40 > 8)
+        {
+            select_texture(TextureGui);
+            select_region(RegionEnterSign);
+            tilemap_draw_region(
+                &world_map,
+                heli_x,
+                heli_y - 30);
+        }
     }
 
     // Mostrar texto de recarga si está recargando
@@ -381,29 +388,23 @@ void render_soldier_gui()
     if (soldier_state == SoldierStateNone)
         return;
 
-    select_texture(-1);
-    set_multiply_color(TextColor);
-
-    // Buffer temporal para convertir números
-    int[12] number_buffer; // Suficientemente grande para cualquier número
+    select_texture(TextureGui);
 
     // Mostrar munición
-    print_at(10, 10, "AMMO: ");
-    itoa(weapon_current_ammo[current_weapon], number_buffer, 10);
-    print_at(70, 10, number_buffer);
-    print_at(100, 10, "/");
-    itoa(weapon_max_ammo[current_weapon], number_buffer, 10);
-    print_at(120, 10, number_buffer);
+    select_region(RegionSoldierAmmo);
+    draw_region_at(5,5);
+    print_2digits_at(46, 9, weapon_current_ammo[current_weapon]);
+    print_2digits_at(81, 9, weapon_max_ammo[current_weapon]);
 
     // Mostrar bombas
-    print_at(10, 30, "BOMBS: ");
-    itoa(soldier_bombs, number_buffer, 10);
-    print_at(70, 30, number_buffer);
+    select_region(RegionSoldierBombs);
+    draw_region_at(5,47);
+    print_1digit_at(46, 51, soldier_bombs);
 
     // Mostrar armadura
-    print_at(10, 50, "ARMOR: ");
-    itoa(soldier_armor, number_buffer, 10);
-    print_at(70, 50, number_buffer);
+    select_region(RegionSoldierArmor);
+    draw_region_at(5,88);
+    print_1digit_at(46, 92, soldier_armor);
 }
 
 void soldier_take_damage()

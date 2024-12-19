@@ -57,3 +57,12 @@ void print_3digits_at(int x, int y, int number)
     text[3] = 0;
     print_at(x, y, text);
 }
+
+void draw_rectangle(int minx, int miny, int width, int height, int color)
+{
+    set_multiply_color(color);
+    select_texture(-1);
+    select_region(256);
+    set_drawing_scale(width, height);
+    draw_region_zoomed_at(minx, miny);
+}

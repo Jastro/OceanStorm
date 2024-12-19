@@ -21,10 +21,10 @@ void initialize_heli();
 void reset_heli();
 void update_heli();
 void render_heli();
-void render_fuel_gauge();
+void render_heli_gui();
 void exit_vehicle();
 void shoot_from_heli();
 void reload_heli();
-void render_heli_gui();
+
 
 #endif

@@ -11,4 +11,6 @@ void print_1digit_at(int x, int y, int number);
 void print_2digits_at(int x, int y, int number);
 void print_3digits_at(int x, int y, int number);
 
+void draw_rectangle(int minx, int miny, int width, int height, int color);
+
 #endif
