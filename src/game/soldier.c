@@ -414,10 +414,12 @@ void soldier_take_damage()
     if (soldier_armor > 0)
     {
         soldier_armor--;
+        trigger_screen_shake();
     }
     else if (soldier_health > 0)
     {
         soldier_health -= 25;
+        trigger_screen_shake();
     }
 
     if (soldier_health <= 0)

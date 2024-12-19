@@ -32,7 +32,8 @@ enum Textures {
     TexturePickups,
     TextureEnemySoldier,
     TextureEnemySoldierDeath,
-    TextureEnemySoldierBlood
+    TextureEnemySoldierBlood,
+    TextureEnemyHelicopter
 };
 
 // ---- REGIONES ----
@@ -199,12 +200,14 @@ enum GameLanguages {
 #define SpreadTypeSingle 6
 
 // ---- DIMENSIONES DE SPRITES ENEMIGOS ----
-#define EnemyHoverFrameWidth 114
-#define EnemyHoverFrameHeight 80
+#define EnemyHoverFrameWidth 228
+#define EnemyHoverFrameHeight 160
 #define EnemyBossFrameWidth 320
 #define EnemyBossFrameHeight 240
 #define EnemyKamikazeFrameWidth 96
 #define EnemyKamikazeFrameHeight 144
+#define EnemyHelicopterFrameWidth 96
+#define EnemyHelicopterFrameHeight 96
 
 // ---- CONFIGURACIÓN DE SOLDADOS ENEMIGOS ----
 #define MinSoldiersPerTurret 2
@@ -286,12 +289,15 @@ enum GameLanguages {
 #define EventFirstTurret 1
 #define EventFirstPickup 2
 
-#define StartGame 0
-#define TurretDestroyed 1
-#define SpawnFlyingEnemies 2
-#define SpawnBoss 3
-#define LowFuel 4
-#define GameOver 5
+enum Events {
+    StartGame,
+    TurretDestroyed,
+    SpawnFlyingEnemies,
+    FlyingEnemiesDestroyed,
+    SpawnBoss,
+    LowFuel,
+    GameOver
+};
 
 #define StateMenu 0
 #define StateGame 1
@@ -308,6 +314,8 @@ enum GameLanguages {
 #define HealthFlashTime 0.5
 #define ReloadTime 2.0
 #define ReloadTextOffset 30
+#define ShakeTimeOnDamage 0.5  // Duración del temblor en segundos
+#define ShakeIntensity 25.0    // Amplitud máxima del temblor en píxeles
 
 // ---- CÁMARA ----
 #define CameraZoomAir 1.0

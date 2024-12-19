@@ -22,6 +22,7 @@
         <texture path="obj/enemySoldier.vtx" />
         <texture path="obj/soldierDeath.vtx" />
         <texture path="obj/soldierBlood.vtx" />
+        <texture path="obj/enemyHelicopter.vtx" />
     </textures>
     <sounds>
     </sounds>

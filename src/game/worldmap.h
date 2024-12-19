@@ -7,6 +7,8 @@
 extern int[ WorldTilesY ][ WorldTilesX ] world_grid;
 extern tileset world_tiles;
 extern tilemap world_map;
+extern float screen_shake_time;
+extern float screen_shake_angle;
 
 void initialize_world();
 
