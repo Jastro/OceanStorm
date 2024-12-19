@@ -97,6 +97,7 @@ void main()
                     update_heli();
                 }
 
+                update_screen_shake();
                 update_turrets();
                 update_pickups();
                 update_camera_zoom();

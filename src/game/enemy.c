@@ -164,7 +164,6 @@ void spawn_enemy(float x, float y, int type, int behavior, int spread_type)
             enemy_shoot_timer[i] = 0;
             enemy_blink_timer[i] = 0;
 
-            enemy_blink_timer[i] = 0.5;
             switch (type)
             {
             case EnemyTypeSoldier:
@@ -203,16 +202,6 @@ void update_enemy(int index)
     float separation_margin = 100; // Margen de separación más amplio (era 50)
     float new_x, new_y;
     float offset_angle;
-
-    if (enemy_state[index] == EnemyStateSpawning)
-    {
-        enemy_spawn_timer[index] -= 1.0 / 60.0;
-        if (enemy_spawn_timer[index] <= 0)
-        {
-            enemy_state[index] = EnemyStateActive;
-        }
-        return;
-    }
 
     if (enemy_health[index] <= 0)
     {
@@ -370,6 +359,7 @@ void update_enemy(int index)
             {
                 heli_health -= KamikazeDamage;
                 health_flash_timer = HealthFlashTime;
+                trigger_screen_shake(); 
                 if (heli_health <= 0)
                 {
                     game_state = StateGameOver;
@@ -399,7 +389,6 @@ void update_enemies()
             // Actualizar timer de parpadeo
             if (enemy_blink_timer[i] > 0)
             {
-                set_multiply_color(RedColor);
                 enemy_blink_timer[i] -= 1.0 / 60.0;
             }
         }
@@ -456,12 +445,7 @@ void render_enemies()
         if (enemy_type[i] != EnemyTypeSoldier)
             select_region(frame);
 
-        // Determinar el color según el estado
-        if (enemy_state[i] == EnemyStateSpawning)
-        {
-            set_multiply_color(0xFFFFFFFF);
-        }
-        else if (enemy_blink_timer[i] > 0)
+        if (enemy_blink_timer[i] > 0)
         {
             set_multiply_color(RedColor);
         }
@@ -498,10 +482,6 @@ void render_enemies()
 
 void damage_enemy(int index, int damage)
 {
-
-    if (enemy_state[index] == EnemyStateSpawning)
-        return;
-
     if (enemy_health[index] <= 0)
         return;
 

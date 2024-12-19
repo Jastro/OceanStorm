@@ -314,6 +314,8 @@ enum Events {
 #define HealthFlashTime 0.5
 #define ReloadTime 2.0
 #define ReloadTextOffset 30
+#define ShakeTimeOnDamage 0.5  // Duración del temblor en segundos
+#define ShakeIntensity 25.0    // Amplitud máxima del temblor en píxeles
 
 // ---- CÁMARA ----
 #define CameraZoomAir 1.0

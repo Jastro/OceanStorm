@@ -95,6 +95,7 @@ void check_bullet_collisions()
                 {
                     bullet_active[i] = 0;
                     heli_health -= TurretDamagePerBullet;
+                    trigger_screen_shake(); 
                     health_flash_timer = HealthFlashTime;
                     if (heli_health <= 0)
                     {
