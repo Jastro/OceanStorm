@@ -10,5 +10,6 @@ void render_objectives();
 void initialize_minimap();
 void render_minimap();
 void render_world();
+void render_gui();
 
 #endif

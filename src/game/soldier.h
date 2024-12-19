@@ -41,6 +41,7 @@ void initialize_soldier();
 void reset_soldier();
 void update_soldier();
 void render_soldier();
+void render_soldier_gui();
 void soldier_take_damage();
 void place_bomb();
 void collect_supplies();

@@ -25,6 +25,6 @@ void render_fuel_gauge();
 void exit_vehicle();
 void shoot_from_heli();
 void reload_heli();
-void render_ui();
+void render_heli_gui();
 
 #endif

@@ -337,7 +337,7 @@ void update_heli()
         return;
     }
 }
-void render_ui()
+void render_heli_gui()
 {
     render_fuel_gauge();
     set_multiply_color(TextColor);
@@ -419,11 +419,7 @@ void render_heli()
     set_multiply_color(color_white);
 
     // 3. Dibujar la interfaz
-    if (is_player_in_vehicle)
-    {
-        render_ui();
-    }
-    else
+    if (!is_player_in_vehicle)
     {
         if (heli_scale > LandingScale)
         {

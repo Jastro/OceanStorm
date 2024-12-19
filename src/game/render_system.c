@@ -215,10 +215,21 @@ void render_world()
     select_texture(TextureCarrier);
     select_region(RegionCarrier);
     tilemap_draw_region(&world_map, StartingX, StartingY);
+}
 
-    // 3. Dibujar el minimapa
+// El GUI tiene que dibujarse por separado para
+// asegurar que está encima de los demás elementos
+void render_gui()
+{
+    // 1. Dibujar el minimapa
     render_minimap();
 
-    // 4. Dibujar objetivos actuales
+    // 2. Dibujar objetivos actuales
     render_objectives();
+    
+    // 3. Dibujar estado del soldado o heli según proceda
+    if (is_player_in_vehicle)
+        render_heli_gui();
+    else
+        render_soldier_gui();
 }

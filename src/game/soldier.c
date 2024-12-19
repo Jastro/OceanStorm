@@ -376,7 +376,7 @@ void render_soldier()
     set_multiply_color(color_white);
 }
 
-void render_soldier_ui()
+void render_soldier_gui()
 {
     if (soldier_state == SoldierStateNone)
         return;
