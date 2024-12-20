@@ -75,6 +75,17 @@ void create_spread_pattern(float x, float y, float base_angle, int spread_type)
     }
 }
 
+void initialize_bullets()
+{
+    select_texture(TextureBullet);
+    select_region(0);
+    define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
+    
+    select_texture(TextureEnemyBullet);
+    select_region(0);
+    define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
+}
+
 void check_bullet_collisions()
 {
     for (int i = 0; i < MaxBullets; i++)
@@ -133,11 +144,17 @@ void check_bullet_collisions()
             {
                 if (!enemy_active[e] || enemy_health[e] <= 0)
                     continue;
-
+                
+                // Elegir radio (distinto para soldados que para aviones)
+                float HitRadius = EnemyHoverFrameWidth * 0.3;
+                
+                if(enemy_type[i] == EnemyTypeSoldier)
+                  HitRadius = SoldierWidth * 0.4;
+                
                 if (check_circle_collision(
                         bullet_x[i], bullet_y[i],
                         enemy_x[e], enemy_y[e],
-                        EnemyHoverFrameWidth * 0.3)) // Radio más pequeño que el sprite
+                        HitRadius))
                 {
                     bullet_active[i] = 0;
                     damage_enemy(e, bullet_damage[i]);
@@ -263,17 +280,9 @@ void render_bullets()
         if (bullet_active[i])
         {
             if (bullet_type[i] == BulletTypePlayer)
-            {
                 select_texture(TextureBullet);
-                select_region(0);
-                define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
-            }
             else
-            {
                 select_texture(TextureEnemyBullet);
-                select_region(0);
-                define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
-            }
 
             select_region(0);
             float render_x = bullet_x[i], render_y = bullet_y[i];

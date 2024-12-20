@@ -61,6 +61,37 @@ void render_turrets()
         select_region(RegionTurretGun);
         set_drawing_angle(turret_angle[i]);
         tilemap_draw_region_rotated(&world_map, turret_x[i], turret_y[i]);
+        
+        // Dibujar indicacion de poner bomba si
+        // el jugador lo puede hacer en este momento
+        if(is_player_in_vehicle || soldier_bombs <= 0)
+            continue;
+        
+        // No indicar si ya hay alguna bomba puesta
+        bool there_are_bombs = false;
+        
+        for(int j = 0; j < MaxActiveBombs; j++)
+           if(bomb_active[j])
+               there_are_bombs = true;
+        
+        if(there_are_bombs)
+            continue;
+        
+        float dx = soldier_x - turret_x[i];
+        float dy = soldier_y - turret_y[i];
+        float distance = sqrt(dx*dx + dy*dy);
+        
+        // Indicar solo cuando estamos cerca
+        if(distance < (2*TurretBaseWidth))
+        {
+            // Dibujar con parpadeo para que se vea mejor
+            if(get_frame_counter() % 40 > 8)
+            {
+                select_texture(TextureGui);
+                select_region(RegionBombSign);
+                tilemap_draw_region(&world_map, turret_x[i]-5, turret_y[i]+35);
+            }
+        }
     }
 }
 

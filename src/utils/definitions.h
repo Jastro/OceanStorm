@@ -96,7 +96,9 @@ enum RegionsGui
     RegionEnterSign,
     RegionExitSign,
     RegionSoldierHealth,
-    RegionSoldierReloading
+    RegionSoldierReloading,
+    RegionBombSign,
+    RegionBomb
 };
 
 // ---- IDIOMAS ----
@@ -373,6 +375,7 @@ enum Events
 
 // ---- SOUND CHANNELS----
 
+#define ChannelHeli   13
 #define ChannelOnOff  14
 #define ChannelMusic  15
 
@@ -383,7 +386,8 @@ enum GameSounds
     SoundPickup,
     SoundShoot,
     SoundHeli,
-    SoundBomb
+    SoundBomb,
+    SoundExplosion
 };
 
 #endif

@@ -161,10 +161,21 @@ void update_bombs()
         if (!bomb_active[i])
             continue;
 
+        // Reproducir 1 tick de bomba cada segundo (salvo al llegar a 0)
+        if((int)(bomb_timer[i]*60) % 60 == 0)
+        {
+            if(bomb_timer[i] >= 1.0)
+                play_sound(SoundBomb);
+        }
+        
+        // Cuenta atrás para explotar
         bomb_timer[i] -= delta_time;
-        play_sound(SoundBomb);
+        
         if (bomb_timer[i] <= 0)
         {
+            // sonido de explosion
+            play_sound(SoundExplosion);
+            
             if (!has_event_happened(TurretDestroyed))
             {
                 queue_dialog(&DW_TurretDestroyed);
@@ -187,16 +198,21 @@ void render_bombs()
     {
         if (!bomb_active[i])
             continue;
-
+        
+        // convertir posicion del mundo a la pantalla
+        float draw_x = bomb_x[i];
+        float draw_y = bomb_y[i];
+        tilemap_convert_position_to_screen(&world_map, &draw_x, &draw_y);
+        
         // Dibujar la bomba
-        set_multiply_color(RedColor);
-        tilemap_draw_region(&world_map, bomb_x[i], bomb_y[i]);
+        set_multiply_color(color_white);
+        select_texture(TextureGui);
+        select_region(RegionBomb);
+        draw_region_at(draw_x, draw_y);
 
         // Mostrar el temporizador
         set_multiply_color(RedColor);
-        int[8] timer_text;
-        itoa((int)bomb_timer[i] + 1, timer_text, 10);
-        tilemap_print(&world_map, bomb_x[i] - 5, bomb_y[i] - 20, timer_text);
+        print_1digit_at(draw_x + 4, draw_y + 3, (int)bomb_timer[i] + 1);
     }
     
     // Restaurar el color

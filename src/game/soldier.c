@@ -235,7 +235,13 @@ void update_soldier()
     // A para disparar (solo si no está recargando)
     if (gamepad_button_a() > 0 && !weapon_is_reloading[current_weapon])
     {
-        fire_weapon(soldier_x, soldier_y, soldier_angle);
+        // Crear la bala un poco por delante del soldado
+        // en vez de en su centro para evitar colisiones
+        // no deseadas con enemigos
+        float firing_x = soldier_x + 6 * cos(soldier_angle);
+        float firing_y = soldier_y + 6 * sin(soldier_angle);
+        
+        fire_weapon(firing_x, firing_y, soldier_angle);
     }
 
     // B para bombas

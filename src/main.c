@@ -68,6 +68,7 @@ void main()
 
     initialize_heli();    // El avión
     initialize_soldier(); // El soldado
+    initialize_bullets();
     initialize_weapons(); // Las armas
     initialize_pickups(); // Los pickups
     initialize_events();

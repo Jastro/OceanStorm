@@ -43,6 +43,7 @@ echo --------------------------
 %WAV2VIRCON% assets\sounds\shoot.wav    -o obj\shoot.vsnd    || goto :failed
 %WAV2VIRCON% assets\sounds\heli.wav    -o obj\heli.vsnd    || goto :failed
 %WAV2VIRCON% assets\sounds\beep.wav    -o obj\beep.vsnd    || goto :failed
+%WAV2VIRCON% assets\sounds\explosion.wav    -o obj\explosion.vsnd    || goto :failed
 
 echo Compile the C code
 echo --------------------------

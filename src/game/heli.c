@@ -111,6 +111,12 @@ void initialize_heli()
     heli_frame = 0;
     anim_timer = 0;
     reset_heli();
+    
+    // Configurar loop para el sonido
+    select_sound(SoundHeli);
+    set_sound_loop(true);
+    set_sound_loop_start(30126);
+    set_sound_loop_end(102642);
 }
 
 void reset_heli()
@@ -157,6 +163,11 @@ void exit_vehicle()
     is_player_in_vehicle = 0;
     soldier_state = SoldierStateActive;
     target_zoom = CameraZoomGround;
+    
+    // parar sonido del heli quitando
+    // el loop y dejando que termine
+    select_channel(ChannelHeli);
+    set_channel_loop(false);
 }
 
 void enter_vehicle()
@@ -168,13 +179,16 @@ void enter_vehicle()
     is_player_in_vehicle = 1;
     soldier_state = SoldierStateNone;
     target_zoom = CameraZoomAir;
+    
+    // iniciar sonido del heli
+    play_sound_in_channel(SoundHeli, ChannelHeli);
 }
 
 void update_heli()
 {
     if (!is_player_in_vehicle)
         return;
-    // play_sound(SoundHeli); (FALLA)
+    
     // Obtener entrada del control
     int direction_x, direction_y;
     gamepad_direction(&direction_x, &direction_y);
