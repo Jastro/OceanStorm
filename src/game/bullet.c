@@ -75,6 +75,17 @@ void create_spread_pattern(float x, float y, float base_angle, int spread_type)
     }
 }
 
+void initialize_bullets()
+{
+    select_texture(TextureBullet);
+    select_region(0);
+    define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
+    
+    select_texture(TextureEnemyBullet);
+    select_region(0);
+    define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
+}
+
 void check_bullet_collisions()
 {
     for (int i = 0; i < MaxBullets; i++)
@@ -269,17 +280,9 @@ void render_bullets()
         if (bullet_active[i])
         {
             if (bullet_type[i] == BulletTypePlayer)
-            {
                 select_texture(TextureBullet);
-                select_region(0);
-                define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
-            }
             else
-            {
                 select_texture(TextureEnemyBullet);
-                select_region(0);
-                define_region(0, 0, BulletSize, BulletSize, BulletSize / 2, BulletSize / 2);
-            }
 
             select_region(0);
             float render_x = bullet_x[i], render_y = bullet_y[i];
