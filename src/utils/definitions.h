@@ -383,7 +383,8 @@ enum GameSounds
     SoundPickup,
     SoundShoot,
     SoundHeli,
-    SoundBomb
+    SoundBomb,
+    SoundExplosion
 };
 
 #endif
