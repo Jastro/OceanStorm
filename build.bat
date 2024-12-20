@@ -8,6 +8,7 @@ set COMPILER=%DEVTOOLS%\compile.exe
 set ASSEMBLER=%DEVTOOLS%\assemble.exe
 set PACKER=%DEVTOOLS%\packrom.exe
 set PNG2VIRCON=%DEVTOOLS%\png2vircon.exe
+set WAV2VIRCON=%DEVTOOLS%\wav2vircon.exe
 
 echo Convert PNG textures
 echo --------------------------
@@ -32,6 +33,17 @@ echo --------------------------
 %PNG2VIRCON% assets/soldierBlood.png -o obj/soldierBlood.vtx || goto :failed
 %PNG2VIRCON% assets/enemyHelicopter.png -o obj/enemyHelicopter.vtx || goto :failed
 %PNG2VIRCON% assets/gui.png -o obj/gui.vtx || goto :failed
+
+echo.
+echo Convert the WAV sounds
+echo --------------------------
+%WAV2VIRCON% assets\sounds\hurt.wav    -o obj\hurt.vsnd    || goto :failed
+%WAV2VIRCON% assets\sounds\fall.wav    -o obj\fall.vsnd    || goto :failed
+%WAV2VIRCON% assets\sounds\pickup.wav    -o obj\pickup.vsnd    || goto :failed
+%WAV2VIRCON% assets\sounds\shoot.wav    -o obj\shoot.vsnd    || goto :failed
+%WAV2VIRCON% assets\sounds\heli.wav    -o obj\heli.vsnd    || goto :failed
+%WAV2VIRCON% assets\sounds\beep.wav    -o obj\beep.vsnd    || goto :failed
+%WAV2VIRCON% assets\sounds\explosion.wav    -o obj\explosion.vsnd    || goto :failed
 
 echo Compile the C code
 echo --------------------------

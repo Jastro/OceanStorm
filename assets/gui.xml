@@ -1,5 +1,5 @@
 <texture-regions>
-    <texture name="TextureGui" path="gui.png"/>
+    <texture name="gui" path="gui.png"/>
     <region name="HeliFuel" left="1" top="1" right="127" bottom="21" hotspot-x="1" hotspot-y="1"/>
     <region name="HeliHealth" left="1" top="25" right="127" bottom="45" hotspot-x="1" hotspot-y="25"/>
     <region name="HeliAmmo" left="1" top="49" right="127" bottom="88" hotspot-x="1" hotspot-y="49"/>
@@ -13,4 +13,6 @@
     <region name="ExitSign" left="68" top="165" right="134" bottom="190" hotspot-x="103" hotspot-y="177"/>
     <region name="SoldierHealth" left="138" top="136" right="197" bottom="147" hotspot-x="138" hotspot-y="136"/>
     <region name="SoldierReloading" left="138" top="151" right="197" bottom="162" hotspot-x="138" hotspot-y="151"/>
+    <region name="BombSign" left="138" top="166" right="224" bottom="191" hotspot-x="183" hotspot-y="178"/>
+    <region name="Bomb" left="201" top="136" right="243" bottom="160" hotspot-x="201" hotspot-y="136"/>
 </texture-regions>
