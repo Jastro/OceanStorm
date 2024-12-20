@@ -373,6 +373,7 @@ enum Events
 
 // ---- SOUND CHANNELS----
 
+#define ChannelHeli   13
 #define ChannelOnOff  14
 #define ChannelMusic  15
 
