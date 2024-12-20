@@ -149,7 +149,7 @@ void check_bullet_collisions()
                 float HitRadius = EnemyHoverFrameWidth * 0.3;
                 
                 if(enemy_type[i] == EnemyTypeSoldier)
-                  HitRadius = SoldierWidth * 0.3;
+                  HitRadius = SoldierWidth * 0.4;
                 
                 if (check_circle_collision(
                         bullet_x[i], bullet_y[i],

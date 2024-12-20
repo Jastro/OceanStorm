@@ -96,7 +96,9 @@ enum RegionsGui
     RegionEnterSign,
     RegionExitSign,
     RegionSoldierHealth,
-    RegionSoldierReloading
+    RegionSoldierReloading,
+    RegionBombSign,
+    RegionBomb
 };
 
 // ---- IDIOMAS ----

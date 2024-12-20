@@ -60,6 +60,10 @@ void initialize_gui()
     define_region( 138,136,  197,147,  138,136 );
     select_region( RegionSoldierReloading );
     define_region( 138,151,  197,162,  138,151 );
+    select_region( RegionBombSign );
+    define_region( 138,166,  224,191,  183,178 );
+    select_region( RegionBomb );
+    define_region( 201,136,  243,160,  201,136 );
 }
 
 void render_objectives()
