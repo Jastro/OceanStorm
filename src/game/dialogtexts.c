@@ -49,9 +49,9 @@ DialogWindow DW_EnemyDetected =
 {
     RegionPortraitCommander,
     {
-        "Good job, Rykov. But be cereful, we just \n"
-        "detected enemy activity. Get ready to meet \n"
-        "some resistance",
+        "Good job, Rykov. But be careful, we just \n"
+        "detected enemy activity. Get ready to \n"
+        "meet some resistance",
         
         "Buen trabajo, Rykov. Pero cuidado, hemos \n"
         "detectado actividad enemiga. Prep" a_ "rese \n"
@@ -76,8 +76,8 @@ DialogWindow DW_EnemyFighters =
     RegionPortraitCommander,
     {
         "Attention, Rykov. We have enemy fighters \n"
-        "coming out of the air base. \n"
-        "Prepare for intense combat!",
+        "coming out of the air base. Prepare \n"
+        "for intense combat!",
         
         "Atenci" o_ "n, Rykov. Tenemos cazas enemigos \n"
         "saliendo de la base a" e_ "rea. \n"
@@ -89,8 +89,8 @@ DialogWindow DW_EnemyFightersReply =
 {
     RegionPortraitPlayer,
     {
-        "I knew it, they couldn't stay still for too \n"
-        "long. Come and test my accuracy",
+        "I knew it, they couldn't stay still for \n"
+        "too long. Come and test my accuracy",
         
         "Lo sab" i_ "a, no pod" i_ "an quedarse quietos por \n"
         "mucho tiempo. Vamos, pongan a prueba mi \n"
@@ -102,8 +102,8 @@ DialogWindow DW_AttackHeli =
 {
     RegionPortraitSoldier,
     {
-        "Fighter Alpha 1 in position! Objective within \n"
-        "sight, all fighters: \n"
+        "Fighter Alpha 1 in position! Objective is \n"
+        "within sight, all fighters: \n"
         "attack the helicopter!",
         
         exclam "Caza Alpha 1 en posici" o_ "n! Objetivo \n"
@@ -156,8 +156,9 @@ DialogWindow DW_MaxAlert =
 {
     RegionPortraitCommander,
     {
-        "High alert, Rykov! The prototype is airborne. \n"
-        "I repeat: the prototype has just taken off!",
+        "Maximum alert, Rykov! The prototype is \n"
+        "airborne. I repeat: the prototype has \n"
+        "just taken off!",
         
         exclam "Alerta m" a_ "xima, Rykov! El prototipo est" a_ " \n"
         "en el aire. Repito: " exclam "el prototipo ha \n"
@@ -169,8 +170,9 @@ DialogWindow DW_MaxAlertReply =
 {
     RegionPortraitPlayer,
     {
-        "So here it is... the great monster everyone \n"
-        "was afraid of. I hope you are worth it.\n",
+        "So here it is... the great monster that \n"
+        "everyone was afraid of. I hope you are \n"
+        "worth it. \n",
         
         "As" i_ " que aqu" i_ " est" a_ "s... el gran monstruo \n"
         "que todos tem" i_ "an. Espero que valgas la \n"
@@ -196,8 +198,9 @@ DialogWindow DW_DarkPhoenix_Reply =
 {
     RegionPortraitPlayer,
     {
-        "We'll se about that, Kross. Only one pilot \n"
-        "will survive this, and it won't be you",
+        "We'll see about that, Kross. Only one \n"
+        "pilot will survive this, and it won't \n"
+        "be you",
         
         "Eso ya lo veremos, Kross. S" o_ "lo un piloto \n"
         "saldr" a_ " vivo de esto, y no ser" a_ "s t" u_
