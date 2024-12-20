@@ -133,11 +133,17 @@ void check_bullet_collisions()
             {
                 if (!enemy_active[e] || enemy_health[e] <= 0)
                     continue;
-
+                
+                // Elegir radio (distinto para soldados que para aviones)
+                float HitRadius = EnemyHoverFrameWidth * 0.3;
+                
+                if(enemy_type[i] == EnemyTypeSoldier)
+                  HitRadius = SoldierWidth * 0.3;
+                
                 if (check_circle_collision(
                         bullet_x[i], bullet_y[i],
                         enemy_x[e], enemy_y[e],
-                        EnemyHoverFrameWidth * 0.3)) // Radio más pequeño que el sprite
+                        HitRadius))
                 {
                     bullet_active[i] = 0;
                     damage_enemy(e, bullet_damage[i]);
