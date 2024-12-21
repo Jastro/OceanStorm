@@ -206,6 +206,9 @@ enum EnemyTypes
 #define EnemyBulletRange 300.0
 #define EnemyBlinkTime 0.1
 #define KamikazeDamage 25
+#define SoldierStateSpawning 4
+#define SpawnAnimationTime 0.5
+#define SpawnBlinkRate 4
 
 // Velocidades
 #define EnemySpeedNormal 3.0

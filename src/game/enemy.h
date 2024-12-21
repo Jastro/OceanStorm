@@ -16,11 +16,12 @@ extern int[MaxEnemies] enemy_pattern_index;
 extern int[MaxEnemies] enemy_pattern_count;
 extern int[MaxEnemies] enemy_is_reloading;
 extern float[MaxEnemies] enemy_reload_start;
-extern float phase_time;
+extern float[MaxEnemies] enemy_spawn_animation_timer;
 
 extern int num_active_enemies;
 extern int num_total_enemies;
 extern int phase;
+extern float phase_time;
 
 // Funciones de enemigos
 void initialize_enemies();
@@ -32,6 +33,7 @@ void damage_enemy(int index, int damage);
 void spawn_wave_of_enemies();
 void check_phase_progress();
 int num_active_turrets();
+int get_current_phase();
 void spawn_boss();
 
 #endif

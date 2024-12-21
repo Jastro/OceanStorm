@@ -24,6 +24,7 @@ int[MaxEnemies] enemy_pattern_index; // Para controlar el patrón actual
 int[MaxEnemies] enemy_pattern_count;
 int[MaxEnemies] enemy_is_reloading;
 float[MaxEnemies] enemy_reload_start;
+float[MaxEnemies] enemy_spawn_animation_timer;
 
 int num_active_enemies;
 int num_total_enemies;
@@ -67,6 +68,11 @@ int check_enemy_collision(float x, float y, int current_enemy)
     }
 
     return 0;
+}
+
+int get_current_phase()
+{
+    return phase;
 }
 
 void initialize_enemies()
@@ -160,6 +166,64 @@ void spawn_boss()
             float health_phase2 = BossHealth1 * 0.66; // A 66% de vida cambia a fase 2
             float health_phase3 = BossHealth1 * 0.33; // A 33% de vida cambia a fase 3
 
+            num_active_enemies++;
+            break;
+        }
+    }
+}
+
+void spawn_enemy(float x, float y, int type, int behavior, int spread_type)
+{
+    for (int i = 0; i < MaxEnemies; i++)
+    {
+        if (!enemy_active[i])
+        {
+            // Configuración básica igual que antes
+            enemy_x[i] = x;
+            enemy_y[i] = y;
+            enemy_angle[i] = 0;
+            enemy_type[i] = type;
+            enemy_behavior[i] = behavior;
+            enemy_spread_type[i] = spread_type;
+            enemy_shoot_timer[i] = 0;
+            enemy_blink_timer[i] = 0;
+
+            switch (type)
+            {
+            case EnemyTypeSoldier:
+                enemy_speed[i] = SoldierEnemySpeed;
+                enemy_health[i] = SoldierEnemyHealth;
+                // Añadir inicialización del estado de spawn
+                enemy_state[i] = SoldierStateSpawning;
+                enemy_spawn_animation_timer[i] = SpawnAnimationTime;
+                break;
+
+            case EnemyTypeNormal:
+                enemy_speed[i] = EnemySpeedNormal;
+                enemy_health[i] = EnemyHealthNormal;
+                enemy_state[i] = SoldierStateActive;
+                break;
+
+            case EnemyTypeKamikaze:
+                enemy_speed[i] = EnemySpeedKamikaze;
+                enemy_health[i] = EnemyHealthKamikaze;
+                enemy_state[i] = SoldierStateActive;
+                break;
+
+            case EnemyTypePlane:
+                enemy_speed[i] = EnemySpeedPlane;
+                enemy_health[i] = EnemyHealthPlane;
+                enemy_state[i] = SoldierStateActive;
+                break;
+
+            case EnemyTypeBoss:
+                enemy_speed[i] = EnemySpeedBoss;
+                enemy_health[i] = EnemyHealthBoss;
+                enemy_state[i] = SoldierStateActive;
+                break;
+            }
+
+            enemy_active[i] = 1;
             num_active_enemies++;
             break;
         }
@@ -262,55 +326,6 @@ void update_boss(int index)
     enemy_shoot_timer[index] -= 1.0 / 60.0;
 }
 
-void spawn_enemy(float x, float y, int type, int behavior, int spread_type)
-{
-    for (int i = 0; i < MaxEnemies; i++)
-    {
-        if (!enemy_active[i])
-        {
-            enemy_x[i] = x;
-            enemy_y[i] = y;
-            enemy_angle[i] = 0;
-            enemy_type[i] = type;
-            enemy_behavior[i] = behavior;
-            enemy_spread_type[i] = spread_type;
-            enemy_shoot_timer[i] = 0;
-            enemy_blink_timer[i] = 0;
-
-            switch (type)
-            {
-            case EnemyTypeSoldier:
-                enemy_speed[i] = SoldierEnemySpeed;
-                enemy_health[i] = SoldierEnemyHealth;
-                break;
-            case EnemyTypeNormal:
-                enemy_speed[i] = EnemySpeedNormal;
-                enemy_health[i] = EnemyHealthNormal;
-                break;
-
-            case EnemyTypeKamikaze:
-                enemy_speed[i] = EnemySpeedKamikaze;
-                enemy_health[i] = EnemyHealthKamikaze;
-                break;
-
-            case EnemyTypePlane:
-                enemy_speed[i] = EnemySpeedPlane;
-                enemy_health[i] = EnemyHealthPlane;
-                break;
-
-            case EnemyTypeBoss:
-                enemy_speed[i] = EnemySpeedBoss;
-                enemy_health[i] = EnemyHealthBoss;
-                break;
-            }
-
-            enemy_active[i] = 1;
-            num_active_enemies++;
-            break;
-        }
-    }
-}
-
 void update_enemy(int index)
 {
     float dx, dy, dist;
@@ -320,6 +335,18 @@ void update_enemy(int index)
     float separation_margin = 100; // Margen de separación más amplio (era 50)
     float new_x, new_y;
     float offset_angle;
+
+    if (enemy_state[index] == SoldierStateSpawning)
+    {
+        enemy_spawn_animation_timer[index] -= 1.0 / 60.0;
+
+        // Cuando termina la animación, cambiar a estado normal
+        if (enemy_spawn_animation_timer[index] <= 0)
+        {
+            enemy_state[index] = SoldierStateActive;
+        }
+        return; // No procesar nada más mientras está spawning
+    }
 
     if (enemy_type[index] == EnemyTypeBoss)
     {
@@ -527,6 +554,23 @@ void render_enemies()
         if (!enemy_active[i])
             continue;
 
+        if (enemy_type[i] == EnemyTypeSoldier)
+        {
+            // Si está spawning, aplicar efecto visual
+            if (enemy_state[i] == SoldierStateSpawning)
+            {
+                // Hacer que parpadee
+                if ((get_frame_counter() / SpawnBlinkRate) % 2 == 0)
+                {
+                    set_multiply_color(0x80FFFFFF); // Semi-transparente
+                }
+                else
+                {
+                    continue; // No dibujar en frames alternos
+                }
+            }
+        }
+
         // Seleccionar textura según tipo
         switch (enemy_type[i])
         {
@@ -610,6 +654,10 @@ void render_enemies()
 
 void damage_enemy(int index, int damage)
 {
+
+    if (enemy_state[index] == SoldierStateSpawning)
+        return;
+
     if (enemy_health[index] <= 0)
         return;
 
@@ -634,7 +682,7 @@ void damage_enemy(int index, int damage)
 
 void spawn_wave_of_enemies()
 {
-    //spawn_boss();
+    // spawn_boss();
     spawn_enemy(100, 100, EnemyTypeNormal, AIBehaviorShootAndRun, SpreadTypeCircle);
     spawn_enemy(300, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
     spawn_enemy(550, 100, EnemyTypePlane, AIBehaviorChase, SpreadTypeCross);
