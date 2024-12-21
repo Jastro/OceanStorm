@@ -148,7 +148,7 @@ void check_bullet_collisions()
                 // Elegir radio (distinto para soldados que para aviones)
                 float HitRadius = EnemyHoverFrameWidth * 0.3;
                 
-                if(enemy_type[i] == EnemyTypeSoldier)
+                if(enemy_type[e] == EnemyTypeSoldier)
                   HitRadius = SoldierWidth * 0.4;
                 
                 if (check_circle_collision(
