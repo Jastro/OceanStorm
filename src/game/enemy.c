@@ -396,7 +396,37 @@ void update_enemy(int index)
     {
         // El resto de enemigos solo atacan al avión
         if (!is_player_in_vehicle)
+        {
+            // Comportamiento de patrulla cuando el jugador está a pie
+            float patrol_time = get_frame_counter() * 0.005; // Reducido para movimiento más lento
+            float patrol_radius = 150.0;                     // Radio más pequeño
+
+            // Offset individual para cada enemigo
+            float individual_offset = index * (2 * pi / 3);
+            float target_angle = patrol_time + individual_offset;
+
+            // Calcular punto objetivo del patrullaje
+            float target_patrol_x = enemy_x[index] + cos(target_angle) * patrol_radius;
+            float target_patrol_y = enemy_y[index] + sin(target_angle) * patrol_radius;
+
+            // Mantener dentro de los límites del mundo
+            target_patrol_x = clamp(target_patrol_x, patrol_radius, WorldWidth - patrol_radius);
+            target_patrol_y = clamp(target_patrol_y, patrol_radius, WorldHeight - patrol_radius);
+
+            // Calcular dirección hacia el punto objetivo
+            float dx = target_patrol_x - enemy_x[index];
+            float dy = target_patrol_y - enemy_y[index];
+            float patrol_angle = atan2(dy, dx);
+
+            // Mover suavemente hacia el punto usando la velocidad normal del enemigo
+            enemy_x[index] += cos(patrol_angle) * enemy_speed[index] * 0.5; // Velocidad reducida
+            enemy_y[index] += sin(patrol_angle) * enemy_speed[index] * 0.5;
+
+            // Actualizar el ángulo para que mire hacia donde va
+            enemy_angle[index] = patrol_angle;
+
             return;
+        }
 
         target_x = heli_x;
         target_y = heli_y;
@@ -457,10 +487,19 @@ void update_enemy(int index)
         }
         else // Enemigos voladores
         {
-            enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index];
-            enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index];
+            float minimum_distance = 70.0;
+            if (dist < minimum_distance)
+            {
+                enemy_x[index] -= cos(enemy_angle[index]) * enemy_speed[index];
+                enemy_y[index] -= sin(enemy_angle[index]) * enemy_speed[index];
+            }
+            else if (dist > minimum_distance * 1.5) // Un poco más lejos para evitar zigzag
+            {
+                enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index];
+                enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index];
+            }
 
-            // Disparar cada cierto tiempo
+            // Disparar cada cierto tiempo (mantenemos esta parte igual)
             if (enemy_shoot_timer[index] <= 0)
             {
                 create_spread_pattern(enemy_x[index], enemy_y[index],
@@ -671,21 +710,21 @@ void damage_enemy(int index, int damage)
             spawn_corpse(enemy_x[index], enemy_y[index]);
             spawn_random_pickup(enemy_x[index], enemy_y[index]);
             enemy_active[index] = 0;
+            num_active_enemies--;
         }
         else
         {
             enemy_shoot_timer[index] = 1.0; // Usamos este timer para la escala
         }
-        num_active_enemies--;
     }
 }
 
 void spawn_wave_of_enemies()
 {
     // spawn_boss();
-    spawn_enemy(100, 100, EnemyTypeNormal, AIBehaviorShootAndRun, SpreadTypeCircle);
-    spawn_enemy(300, 100, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
-    spawn_enemy(550, 100, EnemyTypePlane, AIBehaviorChase, SpreadTypeCross);
+    spawn_enemy(WorldHeight - 100, WorldWidth - 100, EnemyTypeNormal, AIBehaviorShootAndRun, SpreadTypeCircle);
+    spawn_enemy(WorldWidth, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
+    spawn_enemy(550, 640, EnemyTypePlane, AIBehaviorChase, SpreadTypeCross);
 }
 
 void check_phase_progress()

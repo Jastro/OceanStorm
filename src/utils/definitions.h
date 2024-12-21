@@ -198,7 +198,7 @@ enum EnemyTypes
 
 // Puntos de vida
 #define EnemyHealthNormal 1000
-#define EnemyHealthKamikaze 150
+#define EnemyHealthKamikaze 50
 #define EnemyHealthPlane 500
 #define EnemyHealthBoss 10000
 
@@ -214,7 +214,7 @@ enum EnemyTypes
 #define EnemySpeedNormal 3.0
 #define EnemySpeedKamikaze 4.0
 #define EnemySpeedBoss 3.0
-#define EnemySpeedPlane 2.0
+#define EnemySpeedPlane 3.0
 #define KamikazeBulletSpeed 4.0
 #define PlaneBulletSpeed 3.0
 #define BossBulletSpeed 4.5
@@ -260,7 +260,7 @@ enum EnemyTypes
 #define EnemyCollisionRadius 40
 
 // ---- CONFIGURACIÓN DE CADAVERES ENEMIGOS ----
-#define MaxCorpses 20
+#define MaxCorpses 40
 #define CorpseFrames 4
 #define CorpseFrameTime 0.2 // Tiempo por frame de animación
 

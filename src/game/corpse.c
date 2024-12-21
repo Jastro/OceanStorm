@@ -32,7 +32,7 @@ void initialize_corpses() {
     }
 }
 
-void spawn_corpse(float x, float y) {
+/*void spawn_corpse(float x, float y) {
     for(int i = 0; i < MaxCorpses; i++) {
         if(!corpse_active[i]) {
             corpse_x[i] = x;
@@ -47,6 +47,64 @@ void spawn_corpse(float x, float y) {
             break;
         }
     }
+}*/
+
+void spawn_corpse(float x, float y) {
+    int free_slot = -1;
+    int oldest_offscreen = -1;
+    int oldest_onscreen = -1;
+    float farthest_distance = 0;
+    
+    // Primero buscar un slot libre
+    for(int i = 0; i < MaxCorpses; i++) {
+        if(!corpse_active[i]) {
+            free_slot = i;
+            break;
+        }
+        
+        // Si está fuera de pantalla, considerar para reemplazar
+        float screen_x = corpse_x[i], screen_y = corpse_y[i];
+        tilemap_convert_position_to_screen(&world_map, &screen_x, &screen_y);
+        
+        if(screen_x < -64 || screen_x > ScreenWidth + 64 ||
+           screen_y < -64 || screen_y > ScreenHeight + 64) {
+            // Guardar el más antiguo (más tiempo en estado estático)
+            if(corpse_state[i] == CorpseStateStatic) {
+                if(oldest_offscreen == -1) oldest_offscreen = i;
+            }
+        } else {
+            // Guardar el más antiguo en pantalla por si lo necesitamos
+            if(corpse_state[i] == CorpseStateStatic) {
+                if(oldest_onscreen == -1) oldest_onscreen = i;
+            }
+        }
+    }
+    
+    // Decidir qué slot usar
+    int slot_to_use;
+    if(free_slot != -1) {
+        slot_to_use = free_slot;
+    }
+    else if(oldest_offscreen != -1) {
+        slot_to_use = oldest_offscreen;
+    }
+    else if(oldest_onscreen != -1) {
+        slot_to_use = oldest_onscreen;
+    }
+    else {
+        // No deberíamos llegar aquí, pero por si acaso
+        slot_to_use = 0;
+    }
+    
+    // Crear el nuevo cadáver en el slot elegido
+    corpse_x[slot_to_use] = x;
+    corpse_y[slot_to_use] = y;
+    corpse_frame[slot_to_use] = 0;
+    corpse_anim_timer[slot_to_use] = CorpseFrameTime;
+    corpse_blood_scale[slot_to_use] = 0.1;
+    final_blood_scale[slot_to_use] = 0.4 + (rand() % 400) / 1000.0;
+    corpse_state[slot_to_use] = CorpseStateAnimating;
+    corpse_active[slot_to_use] = 1;
 }
 
 void update_corpses() {

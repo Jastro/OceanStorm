@@ -48,17 +48,17 @@ void spawn_soldier_enemies(float x, float y, int count)
             {
                 spread_type = SpreadTypeSingle;
             }
-            else if (random_type < 70)
+            else if (current_phase >= 1 && random_type < 70)
             {
                 spread_type = SpreadTypeShotgun;
             }
-            else if (random_type < 90)
+            else if (current_phase > 1 && random_type < 90)
             {
-                spread_type = SpreadTypeSingle;
+                spread_type = SpreadTypeCircle;
             }
             else
             {
-                spread_type = SpreadTypeCircle;
+                spread_type = SpreadTypeSingle;
             }
 
             spawn_enemy(spawn_x, spawn_y, EnemyTypeSoldier, AIBehaviorChase, spread_type);
@@ -136,15 +136,15 @@ void set_soldiers_related_to_current_phase()
     switch (current_phase)
     {
     case 0:
-        phase_min_soldiers = 1;
-        phase_max_soldiers = 3;
-        break;
-    case 1:
         phase_min_soldiers = 2;
         phase_max_soldiers = 4;
         break;
-    case 2:
+    case 1:
         phase_min_soldiers = 3;
+        phase_max_soldiers = 6;
+        break;
+    case 2:
+        phase_min_soldiers = 4;
         phase_max_soldiers = 8;
         break;
     }
