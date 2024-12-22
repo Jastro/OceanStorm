@@ -15,4 +15,5 @@
     <region name="SoldierReloading" left="138" top="151" right="197" bottom="162" hotspot-x="138" hotspot-y="151"/>
     <region name="BombSign" left="138" top="166" right="224" bottom="191" hotspot-x="183" hotspot-y="178"/>
     <region name="Bomb" left="201" top="136" right="243" bottom="160" hotspot-x="201" hotspot-y="136"/>
+    <region name="CannonArrow" left="229" top="166" right="247" bottom="183" hotspot-x="193" hotspot-y="174"/>
 </texture-regions>

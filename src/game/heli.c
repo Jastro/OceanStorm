@@ -460,6 +460,21 @@ void render_heli()
             }
         }
     }
+    
+    // 5. Cuando estemos volando indicar la direccion del cañon
+    if (is_player_in_vehicle && heli_scale > LandingScale)
+    {
+        // Dibujar con parpadeo para que se vea mejor
+        if(get_frame_counter() % 40 > 8)
+        {
+            select_texture(TextureGui);
+            select_region(RegionCannonArrow);
+            
+            float cannon_angle = heli_angle + pi/2 * (active_cannon - 1);
+            set_drawing_angle(cannon_angle);
+            tilemap_draw_region_rotated(&world_map, heli_x, heli_y);
+        }
+    }
 }
 
 void update_camera_zoom()

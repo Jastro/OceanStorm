@@ -98,7 +98,8 @@ enum RegionsGui
     RegionSoldierHealth,
     RegionSoldierReloading,
     RegionBombSign,
-    RegionBomb
+    RegionBomb,
+    RegionCannonArrow
 };
 
 // ---- IDIOMAS ----

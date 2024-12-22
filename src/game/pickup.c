@@ -15,8 +15,8 @@ void initialize_pickups() {
     define_region_matrix(
         0,                  // ID primera región
         0, 0,              // Punto inicial
-        31, 31,            // Punto final (32x32 - 1)
-        16, 16,            // Punto de referencia (centro)
+        36, 45,            // Punto final
+        18, 16,            // Punto de referencia (centro)
         4, 1,              // Matriz de 4x1 frames
         0                  // Sin separación
     );
@@ -93,29 +93,6 @@ void render_pickups() {
         
         // Dibujar el pickup
         tilemap_draw_region(&world_map, pickup_x[i], pickup_y[i]);
-        
-        // Mostrar un texto flotante si el jugador está cerca
-        float dx = pickup_x[i] - soldier_x;
-        float dy = pickup_y[i] - soldier_y;
-        float distance = sqrt(dx*dx + dy*dy);
-        
-        if(distance < 50.0) {  // Radio de 50 pixels para mostrar el texto
-            set_multiply_color(TextColor);
-            switch(pickup_type[i]) {
-                case PickupShotgun:
-                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "SHOTGUN");
-                    break;
-                case PickupSubmachine:
-                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "SUBMACHINE");
-                    break;
-                case PickupArmor:
-                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "ARMOR");
-                    break;
-                case PickupHealth:
-                    tilemap_print(&world_map, pickup_x[i] - 30, pickup_y[i] - 20, "HEALTH");
-                    break;
-            }
-        }
     }
 }
 

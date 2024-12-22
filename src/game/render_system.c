@@ -64,6 +64,8 @@ void initialize_gui()
     define_region( 138,166,  224,191,  183,178 );
     select_region( RegionBomb );
     define_region( 201,136,  243,160,  201,136 );
+    select_region( RegionCannonArrow );
+    define_region( 229,166,  247,183,  193,174 );
 }
 
 void render_objectives()
