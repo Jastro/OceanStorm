@@ -266,9 +266,12 @@ enum EnemyTypes
 #define CorpseFrameTime 0.2 // Tiempo por frame de animación
 
 // Estados del cadáver
-#define CorpseStateAnimating 0 // Reproduciendo animación de muerte
-#define CorpseStateStatic 1    // Cadáver en el suelo con charco
-#define CorpseStateHidden 2    // Fuera de pantalla (pero guardamos posición)
+enum CorpseStates
+{
+    CorpseStateAnimating,  // Reproduciendo animación de muerte
+    CorpseStateStatic,     // Cadáver en el suelo con charco
+    CorpseStateHidden      // Fuera de pantalla (pero guardamos posición)
+};
 
 // ---- CONFIGURACIÓN DEL JEFE ----
 enum BossPhases
@@ -342,12 +345,16 @@ enum Events
     FlyingEnemiesDestroyed,
     SpawnBoss,
     LowFuel,
-    GameOver
+    GameOver,
+    GameRestart
 };
 
-#define StateMenu 0
-#define StateGame 1
-#define StateGameOver 2
+enum GameStates
+{
+    StateMenu,
+    StateGame,
+    StateGameOver
+};
 
 // ---- INTERFAZ Y UI ----
 #define UIDialogFrameWidth 552

@@ -254,3 +254,30 @@ DialogWindow DW_GameOver =
         "..." interr exclam "Nooooo!" exclam
     }
 };
+
+DialogWindow DW_GameRestart =
+{
+    RegionPortraitPlayer,
+    {
+        "Commander, Rykov here. Somehow I was able \n"
+        "to recover and come back. But the enemy \n"
+        "was able to fix the turrets in that time. ",
+        
+        "Comandante, aqu" i_ " Rykov. De alg" u_ "n modo he \n"
+        "podido recuperar y volver. Pero el ene- \n"
+        "migo ha podido arreglar las torretas en \n"
+        "ese tiempo."
+    }
+};
+
+DialogWindow DW_GameRestartReply =
+{
+    RegionPortraitCommander,
+    {
+        "Rykov! Glad to see you are still there. \n"
+        "Understood, let's try again from scratch.",
+        
+        exclam "Rykov! Me alegra saber que sigue ah" i_ ". \n"
+        "Entendido, empecemos de nuevo desde cero."
+    }
+};

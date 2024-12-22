@@ -9,7 +9,16 @@ void update_gameover() {
     if(gamepad_button_start() == 1) {
         reset_heli();  // Reiniciar el estado del avión
         reset_soldier();
-        game_state = StateMenu;
+        game_state = StateGame;
+        
+        if (!has_event_happened(GameRestart))
+        {
+            queue_dialog(&DW_GameRestart);
+            queue_dialog(&DW_GameRestartReply);
+            start_dialog_sequence();
+
+            mark_event_as_happened(GameRestart);
+        }
     }
 }
 
@@ -27,7 +36,7 @@ void render_gameover() {
     // Hacer parpadear el texto usando el contador de frames
     if((get_frame_counter() / BlinkRate) % 2 == 0) {
         set_multiply_color(TextColor);
-        print_at(ScreenCenterX - 90, ScreenCenterY + 20, "PRESS START TO CONTINUE");
+        print_at(ScreenCenterX - 115, ScreenCenterY + 20, "PRESS START TO CONTINUE");
     }
     set_multiply_color(color_white);
 }
