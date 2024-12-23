@@ -2,7 +2,7 @@
 #include "../utils/definitions.h"
 
 // Variables externas para el estado del juego
-extern int game_state;
+extern int game_scene;
 extern int game_language;
 
 // Estado de este menu
@@ -67,7 +67,7 @@ void update_menu() {
         if(gamepad_button_start() == 1)
         {
             if( current_option == 0 )
-                game_state = StateGame;
+                game_scene = SceneGame;
             else
             {
                 // por defecto elegir idioma actual

@@ -66,7 +66,7 @@ void spawn_soldier_enemies(float x, float y, int count)
     }
 }
 
-void initialize_bombs()
+void reset_bombs()
 {
     for (int i = 0; i < MaxActiveBombs; i++)
     {

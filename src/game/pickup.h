@@ -10,6 +10,7 @@ extern int[MaxPickups] pickup_active; // 1 si está activo, 0 si no
 extern int[MaxPickups] pickup_value;  // ID del arma, cantidad de munición, etc
 
 void initialize_pickups();
+void reset_pickups();
 void spawn_pickup(float x, float y, int type, int value);
 void update_pickups();
 void render_pickups();

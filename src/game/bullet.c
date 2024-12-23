@@ -75,6 +75,12 @@ void create_spread_pattern(float x, float y, float base_angle, int spread_type)
     }
 }
 
+void reset_bullets()
+{
+    for(int i = 0; i < MaxBullets; i++)
+        bullet_active[i] = false;
+}
+
 void initialize_bullets()
 {
     select_texture(TextureBullet);
@@ -110,14 +116,7 @@ void check_bullet_collisions()
                     health_flash_timer = HealthFlashTime;
                     if (heli_health <= 0)
                     {
-                        if (!has_event_happened(GameOver))
-                        {
-                            queue_dialog(&DW_GameOver);
-                            start_dialog_sequence();
-
-                            mark_event_as_happened(GameOver);
-                        }
-                        game_state = StateGameOver;
+                        kill_player();
                     }
                     continue;
                 }

@@ -25,29 +25,15 @@ void initialize_corpses() {
     select_texture(TextureEnemySoldierBlood);
     select_region(0);
     define_region(0, 0, 79, 79, 40, 40);  // Centro de la sangre
+}
 
+void reset_corpses()
+{
     // Inicializar arrays
     for(int i = 0; i < MaxCorpses; i++) {
         corpse_active[i] = 0;
     }
 }
-
-/*void spawn_corpse(float x, float y) {
-    for(int i = 0; i < MaxCorpses; i++) {
-        if(!corpse_active[i]) {
-            corpse_x[i] = x;
-            corpse_y[i] = y;
-            corpse_frame[i] = 0;
-            corpse_anim_timer[i] = CorpseFrameTime;
-            corpse_blood_scale[i] = 0.1;
-            // Generar un tamaño final aleatorio entre 0.4 y 0.8
-            final_blood_scale[i] = 0.4 + (rand() % 400) / 1000.0;  // Genera entre 0.4 y 0.8
-            corpse_state[i] = CorpseStateAnimating;
-            corpse_active[i] = 1;
-            break;
-        }
-    }
-}*/
 
 void spawn_corpse(float x, float y) {
     int free_slot = -1;

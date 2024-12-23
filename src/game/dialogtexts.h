@@ -30,6 +30,8 @@ extern DialogWindow DW_DarkPhoenix_Reply;
 extern DialogWindow DW_FuelHalf;
 extern DialogWindow DW_FuelHalfReply;
 extern DialogWindow DW_GameOver;
+extern DialogWindow DW_GameRestart;
+extern DialogWindow DW_GameRestartReply;
 
 // para facilitar los caracteres en español
 #define a_      "\xE1"   // á

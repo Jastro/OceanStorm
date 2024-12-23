@@ -11,5 +11,7 @@ extern float screen_shake_time;
 extern float screen_shake_angle;
 
 void initialize_world();
+void reset_screen_shake();
+void update_screen_shake();
 
 #endif

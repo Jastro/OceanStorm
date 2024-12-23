@@ -7,6 +7,12 @@ tilemap world_map;
 float screen_shake_time = 0;
 float screen_shake_angle = 0;
 
+void reset_screen_shake()
+{
+    screen_shake_time = 0;
+    screen_shake_angle = 0;
+}
+
 void update_screen_shake()
 {
     if (screen_shake_time > 0)

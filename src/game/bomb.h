@@ -10,7 +10,7 @@ extern float[MaxActiveBombs] bomb_timer;
 extern int[MaxActiveBombs] bomb_active;
 
 // Prototipos de las funciones
-void initialize_bombs();
+void reset_bombs();
 void update_bombs();
 void render_bombs();
 int can_plant_bomb(float x, float y);

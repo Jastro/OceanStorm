@@ -20,7 +20,10 @@ void initialize_pickups() {
         4, 1,              // Matriz de 4x1 frames
         0                  // Sin separación
     );
+}
 
+void reset_pickups()
+{
     // Inicializar arrays
     for(int i = 0; i < MaxPickups; i++) {
         pickup_active[i] = 0;

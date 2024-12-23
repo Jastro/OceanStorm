@@ -30,7 +30,6 @@ int num_active_enemies;
 int num_total_enemies;
 int phase;
 float phase_time = 0;
-int boss_current_phase = BossPhaseOne;
 float boss_center_x = 0;
 float boss_center_y = 0;
 
@@ -80,9 +79,6 @@ void initialize_enemies()
     select_texture(TextureEnemySoldier);
     select_region(RegionSoldier);
     define_region(0, 0, SoldierWidth, SoldierHeight, SoldierWidth / 2, SoldierHeight / 2);
-    num_active_enemies = 0;
-    num_total_enemies = 0;
-    phase = 0;
 
     for (int frame = 0; frame < 3; frame++)
     {
@@ -126,7 +122,14 @@ void initialize_enemies()
             (EnemyHelicopterFrameWidth / 2) + (frame * EnemyHelicopterFrameWidth),
             EnemyHelicopterFrameHeight / 2);
     }
+}
 
+void reset_enemies()
+{
+    num_active_enemies = 0;
+    num_total_enemies = 0;
+    phase = 0;
+    
     for (int i = 0; i < MaxEnemies; i++)
     {
         enemy_active[i] = 0;
@@ -552,7 +555,7 @@ void update_enemy(int index)
                 trigger_screen_shake();
                 if (heli_health <= 0)
                 {
-                    game_state = StateGameOver;
+                    kill_player();
                 }
             }
             // Destruir el kamikaze

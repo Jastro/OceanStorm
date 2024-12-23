@@ -22,7 +22,7 @@ float soldier_scale = 1.0;
 int is_swimming = 0;
 
 // Variable externa que necesitamos
-extern int game_state;
+extern int game_scene;
 extern float[MaxBullets] bullet_x;
 extern float[MaxBullets] bullet_y;
 extern float[MaxBullets] bullet_angle;
@@ -134,15 +134,8 @@ void update_soldier()
         if (soldier_stamina <= 0)
         {
             // Ahogándose
-            if (!has_event_happened(GameOver))
-            {
-                queue_dialog(&DW_GameOver);
-                start_dialog_sequence();
-
-                mark_event_as_happened(GameOver);
-            }
             soldier_scale = SoldierDrownScale;
-            game_state = StateGameOver;
+            kill_player();
         }
         else
         {
@@ -431,14 +424,7 @@ void soldier_take_damage()
 
     if (soldier_health <= 0)
     {
-        if (!has_event_happened(GameOver))
-        {
-            queue_dialog(&DW_GameOver);
-            start_dialog_sequence();
-
-            mark_event_as_happened(GameOver);
-        }
-        game_state = StateGameOver;
+        kill_player();
     }
     else
     {

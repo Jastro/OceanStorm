@@ -16,6 +16,7 @@ extern DialogWindow*[MaxDialogs] dialog_sequence;
 extern int num_dialogs;
 
 void show_dialog(DialogWindow* dialog);
+void reset_dialog();
 void update_dialog();
 void render_dialog();
 void queue_dialog(DialogWindow* dialog);
