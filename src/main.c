@@ -13,6 +13,7 @@
 #include "game/dialogtexts.h"
 #include "game/bomb.h"
 #include "game/enemy.h"
+#include "game/fx.h"
 #include "scenes/menu.h"
 #include "scenes/gameover.h"
 #include "scenes/ending.h"
@@ -31,6 +32,7 @@
 #include "game/turret.c"
 #include "game/bomb.c"
 #include "game/enemy.c"
+#include "game/fx.c"
 #include "game/dialog.c"
 #include "game/dialogtexts.c"
 #include "game/events.c"
@@ -100,6 +102,7 @@ void main()
                 update_enemies();
                 update_corpses();
                 update_bombs();
+                update_fx();
             }
 
             render_world();
@@ -109,10 +112,11 @@ void main()
             render_pickups();
             render_enemies();
             render_bombs();
+            render_fx();
             render_heli();
             render_gui();
             update_dialog();
-            //starting_dialog();
+            starting_dialog();
 
             if (!is_player_in_vehicle)
             {
@@ -127,7 +131,7 @@ void main()
 
         case SceneGameOver:
             update_dialog();
-            //starting_dialog();
+            starting_dialog();
             update_gameover();
             if (dialog_active)
             {

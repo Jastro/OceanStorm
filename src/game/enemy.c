@@ -638,12 +638,14 @@ void render_enemies()
         int frame;
         if (enemy_health[i] <= 0)
         {
+            spawn_fx(enemy_x[i], enemy_y[i], Explosion);
             frame = 2; // Frame de destrucción
             float scale = enemy_shoot_timer[i];
             play_sound(SoundFall);
             set_drawing_scale(scale, scale);
             if (scale <= 0.1)
             {
+                spawn_fx(enemy_x[i], enemy_y[i], Splash);
                 enemy_active[i] = 0;
                 num_active_enemies--;
                 continue;
@@ -738,8 +740,7 @@ void check_phase_progress()
         // if (num_active_turrets() <= MaxTurrets / 2)
         if (num_active_turrets() <= 9)
         {
-            phase = 3;
-            /*if (!has_event_happened(SpawnFlyingEnemies))
+            if (!has_event_happened(SpawnFlyingEnemies))
             {
                 queue_dialog(&DW_EnemyFighters);
                 queue_dialog(&DW_EnemyFightersReply);
@@ -751,7 +752,7 @@ void check_phase_progress()
 
             spawn_wave_of_enemies();
             phase = 1;
-            phase_time = 0;*/
+            phase_time = 0;
         }
         break;
 

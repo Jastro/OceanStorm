@@ -37,6 +37,8 @@ enum Textures
     TextureEnemyHelicopter,
     TextureGui,
     TextureEnding,
+    TextureExplosionFX,
+    TextureSplashFX,
 };
 
 // ---- REGIONES ----
@@ -316,7 +318,7 @@ enum BossPhases
 
 // ---- SISTEMA DE BOMBAS ----
 #define MaxActiveBombs 5
-#define BombTimerSeconds 4.0
+#define BombTimerSeconds 3.0
 #define BombExplosionRadius 50.0
 
 // ---- PORTAAVIONES ----
@@ -327,6 +329,9 @@ enum BossPhases
 #define LandingDistance 80
 #define LandingAreaWidth 77
 #define LandingAreaHeight 255
+
+#define MaxFX 20
+#define FXFrameTime 0.05
 
 // ---- ISLAS ----
 #define MaxIslands 9
@@ -339,6 +344,11 @@ enum BossPhases
 #define EventFirstExit 0
 #define EventFirstTurret 1
 #define EventFirstPickup 2
+
+enum TYPE_FX {
+    Explosion,
+    Splash
+};
 
 enum Events
 {

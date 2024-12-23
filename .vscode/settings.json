@@ -13,6 +13,8 @@
         "corpse.h": "c",
         "bullet.h": "c",
         "dialogtexts.h": "c",
-        "game_control.h": "c"
+        "game_control.h": "c",
+        "ending.h": "c",
+        "fx.h": "c"
     }
 }

@@ -27,6 +27,7 @@ void initialize_game()
     initialize_dialog();
     initialize_minimap();
     initialize_gui();
+    initialize_fx();
     // Inicializar escenas concretas
     initialize_menu();
     initialize_ending();

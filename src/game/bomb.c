@@ -170,7 +170,7 @@ void check_bomb_explosions()
 
                 if (distance <= BombExplosionRadius)
                 {
-
+                    spawn_fx(bomb_x[b], bomb_y[b], Explosion);
                     set_soldiers_related_to_current_phase();
                     int soldier_count = phase_min_soldiers +
                                         (rand() % (phase_max_soldiers - phase_min_soldiers + 1));
