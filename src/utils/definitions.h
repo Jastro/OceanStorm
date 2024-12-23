@@ -80,6 +80,8 @@ enum RegionsMenu
     RegionMenuSpanishENG,
     RegionMenuEnglishSPA,
     RegionMenuSpanishSPA,
+    RegionMenuNoBloodENG,
+    RegionMenuNoBloodSPA
 };
 
 enum RegionsGui

@@ -9,6 +9,8 @@ int[MaxCorpses] corpse_state;
 int[MaxCorpses] corpse_active;
 float[MaxCorpses] final_blood_scale;  // Declaración de la nueva variable
 
+extern bool blood_enabled;
+
 void initialize_corpses() {
     // Configurar los sprites de muerte
     select_texture(TextureEnemySoldierDeath);
@@ -138,11 +140,15 @@ void render_corpses() {
         if(!corpse_active[i] || corpse_state[i] == CorpseStateHidden) 
             continue;
 
-        // Dibujar siempre el charco de sangre primero
-        select_texture(TextureEnemySoldierBlood);
-        select_region(0);
-        set_drawing_scale(corpse_blood_scale[i], corpse_blood_scale[i]);
-        tilemap_draw_region_zoomed(&world_map, corpse_x[i], corpse_y[i]);
+        // Dibujar el charco de sangre primero,
+        // pero sólo si la sangre está activada
+        if(blood_enabled)
+        {
+            select_texture(TextureEnemySoldierBlood);
+            select_region(0);
+            set_drawing_scale(corpse_blood_scale[i], corpse_blood_scale[i]);
+            tilemap_draw_region_zoomed(&world_map, corpse_x[i], corpse_y[i]);
+        }
 
         // Dibujar el cadáver encima
         select_texture(TextureEnemySoldierDeath);
