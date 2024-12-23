@@ -44,6 +44,7 @@
 // Variable global para el estado del juego
 int game_scene;
 int game_language = LanguageEnglish;
+bool blood_enabled = true;
 float camera_zoom = 1.0;
 float target_zoom = 1.0;
 
