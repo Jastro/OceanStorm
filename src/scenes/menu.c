@@ -4,6 +4,7 @@
 // Variables externas para el estado del juego
 extern int game_scene;
 extern int game_language;
+extern bool blood_enabled;
 
 // Estado de este menu
 bool inside_options = false;
@@ -50,6 +51,16 @@ void initialize_menu() {
         1,2,
         1
     );
+    
+    define_region_matrix
+    (
+        RegionMenuNoBloodENG,
+        165,499,
+        244,509,
+        203,499,
+        1,2,
+        1
+    );
 }
 
 void update_menu() {
@@ -74,6 +85,13 @@ void update_menu() {
                 inside_options = true;
                 current_option = game_language;
             }
+        }
+        
+        // Pulsacion para activar/desactivar la sangre
+        else if(gamepad_left() == 1)
+        {
+            if(gamepad_button_l() > 0 && gamepad_button_r() > 0)
+                blood_enabled = !blood_enabled;
         }
     }
     
@@ -102,6 +120,13 @@ void render_menu() {
         // logo
         select_region(RegionMenuLogo);
         draw_region_at(screen_width/2,100);
+        
+        // indicacion si la sangre se ha desactivado
+        if(!blood_enabled)
+        {
+            select_region(RegionMenuNoBloodENG + game_language);
+            draw_region_at(screen_width/2, 189);
+        }
         
         // opciones
         select_region(RegionMenuStartENG + 2*game_language);
