@@ -49,6 +49,8 @@ void spawn_fx(float x, float y, int type)
             fx_y[i] = y;
             fx_type[i] = type;
             fx_active[i] = 1;
+            fx_frame[i] = 0;
+            fx_anim_timer[i] = FXFrameTime;
             break;
         }
     }
@@ -78,7 +80,7 @@ void update_fx()
                     fx_anim_timer[i] = FXFrameTime;
                 }
             }
-            if (fx_type[i] == Splash)
+            else if (fx_type[i] == Splash)
             {
                 if (fx_frame[i] >= 4)
                 {
@@ -88,15 +90,6 @@ void update_fx()
                 {
                     fx_anim_timer[i] = FXFrameTime;
                 }
-            }
-
-            if (fx_frame[i] >= 7)
-            {
-                fx_active[i] = 0;
-            }
-            else
-            {
-                fx_anim_timer[i] = FXFrameTime;
             }
         }
     }
