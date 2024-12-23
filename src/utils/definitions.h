@@ -35,7 +35,8 @@ enum Textures
     TextureEnemySoldierDeath,
     TextureEnemySoldierBlood,
     TextureEnemyHelicopter,
-    TextureGui
+    TextureGui,
+    TextureEnding,
 };
 
 // ---- REGIONES ----

@@ -24,6 +24,7 @@
         <texture path="obj/soldierBlood.vtx" />
         <texture path="obj/enemyHelicopter.vtx" />
         <texture path="obj/gui.vtx" />
+        <texture path="obj/ending.vtx" />
     </textures>
     <sounds>
     <sound path="obj/hurt.vsnd" />

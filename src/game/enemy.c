@@ -129,7 +129,7 @@ void reset_enemies()
     num_active_enemies = 0;
     num_total_enemies = 0;
     phase = 0;
-    
+
     for (int i = 0; i < MaxEnemies; i++)
     {
         enemy_active[i] = 0;
@@ -736,9 +736,10 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 4)
+        if (num_active_turrets() <= 9)
         {
-            if (!has_event_happened(SpawnFlyingEnemies))
+            phase = 3;
+            /*if (!has_event_happened(SpawnFlyingEnemies))
             {
                 queue_dialog(&DW_EnemyFighters);
                 queue_dialog(&DW_EnemyFightersReply);
@@ -750,7 +751,7 @@ void check_phase_progress()
 
             spawn_wave_of_enemies();
             phase = 1;
-            phase_time = 0;
+            phase_time = 0;*/
         }
         break;
 
@@ -786,6 +787,9 @@ void check_phase_progress()
             spawn_boss();
             phase = 3;
         }
+        break;
+    case 3:
+        show_ending();
         break;
     }
 }

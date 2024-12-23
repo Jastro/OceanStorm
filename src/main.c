@@ -15,6 +15,7 @@
 #include "game/enemy.h"
 #include "scenes/menu.h"
 #include "scenes/gameover.h"
+#include "scenes/ending.h"
 #include "game/game_control.h"
 
 // Incluir las implementaciones
@@ -36,6 +37,7 @@
 #include "scenes/menu.c"
 #include "utils/utilities.c"
 #include "scenes/gameover.c"
+#include "scenes/ending.c"
 #include "game/bullet.c"
 #include "game/game_control.c"
 
@@ -109,7 +111,7 @@ void main()
             render_heli();
             render_gui();
             update_dialog();
-            starting_dialog();
+            //starting_dialog();
 
             if (!is_player_in_vehicle)
             {
@@ -124,7 +126,7 @@ void main()
 
         case SceneGameOver:
             update_dialog();
-            starting_dialog();
+            //starting_dialog();
             update_gameover();
             if (dialog_active)
             {
@@ -135,6 +137,11 @@ void main()
                 render_gameover();
             }
 
+            break;
+
+        case SceneEnding:
+            update_ending();
+            render_ending();
             break;
         }
 

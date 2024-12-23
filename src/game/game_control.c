@@ -27,9 +27,9 @@ void initialize_game()
     initialize_dialog();
     initialize_minimap();
     initialize_gui();
-
     // Inicializar escenas concretas
     initialize_menu();
+    initialize_ending();
 }
 
 // Se llama al inicio y tras cada reinicio del juego
@@ -37,13 +37,13 @@ void reset_game()
 {
     // Detener cualquier sonido previo
     stop_all_channels();
-    
+
     // reiniciar las variables globales
     num_active_enemies = 0;
     num_total_enemies = 0;
     phase = 0;
     phase_time = 0;
-    
+
     // reiniciar cada elemento del juego
     reset_soldier();
     reset_heli();
@@ -56,7 +56,7 @@ void reset_game()
     reset_weapons();
     reset_pickups();
     reset_screen_shake();
-    
+
     // NO reiniciamos los eventos (para no
     // volver a mostrar los mismos diálogos)
 }
@@ -65,7 +65,7 @@ void kill_player()
 {
     // Detener cualquier sonido previo
     stop_all_channels();
-    
+
     // Dialogo tras la primera muerte
     if (!has_event_happened(GameOver))
     {
@@ -74,7 +74,7 @@ void kill_player()
 
         mark_event_as_happened(GameOver);
     }
-    
+
     // Ir a escena game over
     game_scene = SceneGameOver;
 }
@@ -83,7 +83,7 @@ void show_ending()
 {
     // Detener cualquier sonido previo
     stop_all_channels();
-    
+
     // Ir a escena ending
     game_scene = SceneEnding;
 }
