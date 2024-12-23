@@ -13,8 +13,10 @@
 #include "game/dialogtexts.h"
 #include "game/bomb.h"
 #include "game/enemy.h"
+#include "game/fx.h"
 #include "scenes/menu.h"
 #include "scenes/gameover.h"
+#include "scenes/ending.h"
 #include "game/game_control.h"
 
 // Incluir las implementaciones
@@ -30,12 +32,14 @@
 #include "game/turret.c"
 #include "game/bomb.c"
 #include "game/enemy.c"
+#include "game/fx.c"
 #include "game/dialog.c"
 #include "game/dialogtexts.c"
 #include "game/events.c"
 #include "scenes/menu.c"
 #include "utils/utilities.c"
 #include "scenes/gameover.c"
+#include "scenes/ending.c"
 #include "game/bullet.c"
 #include "game/game_control.c"
 
@@ -98,6 +102,7 @@ void main()
                 update_enemies();
                 update_corpses();
                 update_bombs();
+                update_fx();
             }
 
             render_world();
@@ -107,6 +112,7 @@ void main()
             render_pickups();
             render_enemies();
             render_bombs();
+            render_fx();
             render_heli();
             render_gui();
             update_dialog();
@@ -136,6 +142,11 @@ void main()
                 render_gameover();
             }
 
+            break;
+
+        case SceneEnding:
+            update_ending();
+            render_ending();
             break;
         }
 
