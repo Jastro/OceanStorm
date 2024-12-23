@@ -117,7 +117,7 @@ void check_bullet_collisions()
 
                             mark_event_as_happened(GameOver);
                         }
-                        game_state = StateGameOver;
+                        game_scene = SceneGameOver;
                     }
                     continue;
                 }

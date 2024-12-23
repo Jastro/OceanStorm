@@ -13,8 +13,8 @@
 #include "game/dialogtexts.h"
 #include "game/bomb.h"
 #include "game/enemy.h"
-#include "states/menu.h"
-#include "states/gameover.h"
+#include "scenes/menu.h"
+#include "scenes/gameover.h"
 
 // Incluir las implementaciones
 #include "game/worldmap.c"
@@ -32,13 +32,13 @@
 #include "game/dialog.c"
 #include "game/dialogtexts.c"
 #include "game/events.c"
-#include "states/menu.c"
+#include "scenes/menu.c"
 #include "utils/utilities.c"
-#include "states/gameover.c"
+#include "scenes/gameover.c"
 #include "game/bullet.c"
 
 // Variable global para el estado del juego
-int game_state;
+int game_scene;
 int game_language = LanguageEnglish;
 float camera_zoom = 1.0;
 float target_zoom = 1.0;
@@ -83,7 +83,7 @@ void main()
 
     // Establecer el estado inicial
     initialize_menu();
-    game_state = StateMenu;
+    game_scene = SceneMenu;
 
     // Bucle principal del juego
     while (true)
@@ -91,14 +91,14 @@ void main()
         clear_screen(BackgroundColor);
 
         // Actualizar y renderizar según el estado actual
-        switch (game_state)
+        switch (game_scene)
         {
-        case StateMenu:
+        case SceneMenu:
             update_menu();
             render_menu();
             break;
 
-        case StateGame:
+        case SceneGame:
             if (!dialog_active)
             {
                 if (!is_player_in_vehicle)
@@ -143,7 +143,7 @@ void main()
             }
             break;
 
-        case StateGameOver:
+        case SceneGameOver:
             update_dialog();
             starting_dialog();
             update_gameover();

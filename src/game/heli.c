@@ -29,7 +29,7 @@ float health_flash_timer = 0;
 int active_cannon = 0;
 
 // Variable externa para el estado del juego
-extern int game_state;
+extern int game_scene;
 
 void reload_heli()
 {
@@ -276,7 +276,7 @@ void update_heli()
 
                 mark_event_as_happened(GameOver);
             }
-            game_state = StateGameOver;
+            game_scene = SceneGameOver;
         }
     }
 
@@ -290,7 +290,7 @@ void update_heli()
 
             mark_event_as_happened(GameOver);
         }
-        game_state = StateGameOver;
+        game_scene = SceneGameOver;
     }
 
     // Mantener el avión dentro del mundo

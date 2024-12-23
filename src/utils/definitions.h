@@ -349,11 +349,11 @@ enum Events
     GameRestart
 };
 
-enum GameStates
+enum GameScenes
 {
-    StateMenu,
-    StateGame,
-    StateGameOver
+    SceneMenu,
+    SceneGame,
+    SceneGameOver
 };
 
 // ---- INTERFAZ Y UI ----

@@ -552,7 +552,7 @@ void update_enemy(int index)
                 trigger_screen_shake();
                 if (heli_health <= 0)
                 {
-                    game_state = StateGameOver;
+                    game_scene = SceneGameOver;
                 }
             }
             // Destruir el kamikaze
