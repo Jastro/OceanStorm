@@ -150,16 +150,12 @@ int minimap_y(float world_y)
 
 void render_minimap()
 {
+    // Dibujar marco del mapa
     select_texture(TextureMinimap);
     select_region(RegionMapFrame);
     draw_region_at(535, 3);
-
-    // Factor de escala para transformar las
-    // coordenadas del mundo en coordenadas de minimapa
-    float Scale = (float)MinimapTileSize / TileSize;
-    int MapMinX = 538;
-    int MapMinY = 6;
-
+    
+    // Dibujar el carrier
     select_region(RegionMapCarrier);
     draw_region_at(minimap_x(StartingX), minimap_y(StartingY));
 

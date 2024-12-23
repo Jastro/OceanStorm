@@ -313,7 +313,7 @@ enum BossPhases
 
 // ---- SISTEMA DE BOMBAS ----
 #define MaxActiveBombs 5
-#define BombTimerSeconds 5.0
+#define BombTimerSeconds 4.0
 #define BombExplosionRadius 50.0
 
 // ---- PORTAAVIONES ----
@@ -353,7 +353,8 @@ enum GameScenes
 {
     SceneMenu,
     SceneGame,
-    SceneGameOver
+    SceneGameOver,
+    SceneEnding
 };
 
 // ---- INTERFAZ Y UI ----

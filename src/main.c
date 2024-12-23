@@ -15,6 +15,7 @@
 #include "game/enemy.h"
 #include "scenes/menu.h"
 #include "scenes/gameover.h"
+#include "game/game_control.h"
 
 // Incluir las implementaciones
 #include "game/worldmap.c"
@@ -36,6 +37,7 @@
 #include "utils/utilities.c"
 #include "scenes/gameover.c"
 #include "game/bullet.c"
+#include "game/game_control.c"
 
 // Variable global para el estado del juego
 int game_scene;
@@ -55,34 +57,11 @@ void main()
     select_channel(ChannelMusic);
     set_channel_volume(0.4);
 
-    // Inicializar sistemas en orden
-    initialize_world();   // Crear nuestro tileset y tilemap
-    initialize_carrier(); // Inicializar el carrier primero
-
-    // La generacion de islas puede no encontrar
-    // solucion y atascarse; si es asi la reiniciamos
-    // para que pruebe distintas soluciones
-    while (!initialize_islands())
-    { /* bucle vacio */
-    };
-
-    initialize_heli();    // El avión
-    initialize_soldier(); // El soldado
-    initialize_bullets();
-    initialize_weapons(); // Las armas
-    initialize_pickups(); // Los pickups
-    initialize_events();
-    initialize_turrets();
-    initialize_bombs();
-    initialize_enemies();
-    initialize_corpses();
-    initialize_portraits();
-    initialize_dialog();
-    initialize_minimap();
-    initialize_gui();
+    // Inicializar sistemas del juego
+    initialize_game();
 
     // Establecer el estado inicial
-    initialize_menu();
+    reset_game();
     game_scene = SceneMenu;
 
     // Bucle principal del juego

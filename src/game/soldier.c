@@ -134,15 +134,8 @@ void update_soldier()
         if (soldier_stamina <= 0)
         {
             // Ahogándose
-            if (!has_event_happened(GameOver))
-            {
-                queue_dialog(&DW_GameOver);
-                start_dialog_sequence();
-
-                mark_event_as_happened(GameOver);
-            }
             soldier_scale = SoldierDrownScale;
-            game_scene = SceneGameOver;
+            kill_player();
         }
         else
         {
@@ -431,14 +424,7 @@ void soldier_take_damage()
 
     if (soldier_health <= 0)
     {
-        if (!has_event_happened(GameOver))
-        {
-            queue_dialog(&DW_GameOver);
-            start_dialog_sequence();
-
-            mark_event_as_happened(GameOver);
-        }
-        game_scene = SceneGameOver;
+        kill_player();
     }
     else
     {

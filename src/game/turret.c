@@ -24,12 +24,16 @@ void initialize_turrets()
     define_region(0, 0, TurretGunWidth, TurretGunHeight,
                   TurretGunWidth / 2, TurretGunHeight / 2);
 
+}
+
+void reset_turrets()
+{
     // Inicializar arrays
     for (int i = 0; i < MaxTurrets; i++)
     {
         turret_active[i] = 0;
     }
-
+    
     // Generar torretas en las islas
     for (int i = 0; i < num_islands; i++)
     {

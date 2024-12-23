@@ -7,10 +7,11 @@ extern int game_scene;
 void update_gameover() {
     // Volver al menú si se presiona START
     if(gamepad_button_start() == 1) {
-        reset_heli();  // Reiniciar el estado del avión
-        reset_soldier();
+        // Reiniciar todo el juego
+        reset_game();
         game_scene = SceneGame;
         
+        // Dialogo tras el primer reintento
         if (!has_event_happened(GameRestart))
         {
             queue_dialog(&DW_GameRestart);

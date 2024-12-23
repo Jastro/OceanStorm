@@ -131,6 +131,7 @@ void reset_heli()
     heli_health = HeliMaxHealth;
     heli_current_ammo = HeliMaxAmmo;
     heli_last_shot_time = 0;
+    active_cannon = 0;
 
     // Centrar la cámara en el avión
     world_map.camera_position.x = heli_x;
@@ -269,28 +270,14 @@ void update_heli()
         }
         else if (heli_scale <= MinScale)
         {
-            if (!has_event_happened(GameOver))
-            {
-                queue_dialog(&DW_GameOver);
-                start_dialog_sequence();
-
-                mark_event_as_happened(GameOver);
-            }
-            game_scene = SceneGameOver;
+            kill_player();
         }
     }
 
     // Game over si nos quedamos sin combustible y sin altura
     if (fuel <= 0 && heli_scale <= MinScale && !is_over_carrier(heli_x, heli_y) && !is_over_island(heli_x, heli_y))
     {
-        if (!has_event_happened(GameOver))
-        {
-            queue_dialog(&DW_GameOver);
-            start_dialog_sequence();
-
-            mark_event_as_happened(GameOver);
-        }
-        game_scene = SceneGameOver;
+        kill_player();
     }
 
     // Mantener el avión dentro del mundo

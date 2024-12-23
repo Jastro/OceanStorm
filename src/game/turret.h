@@ -10,6 +10,7 @@ extern float[MaxTurrets] turret_last_shot;
 extern int[MaxTurrets] turret_active;
 
 void initialize_turrets();
+void reset_turrets();
 void spawn_turret(float x, float y);
 void update_turrets();
 void render_turrets();

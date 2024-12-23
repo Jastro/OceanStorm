@@ -66,7 +66,10 @@ void initialize_weapons()
     weapon_bullet_count[2] = 1;
     weapon_is_reloading[2] = 0;
     weapon_last_shot[2] = 0;
+}
 
+void reset_weapons()
+{
     current_weapon = WeaponTypePistol;
 }
 

@@ -13,6 +13,7 @@ extern int[MaxCorpses] corpse_active;
 extern float[MaxCorpses] final_blood_scale;
 
 void initialize_corpses();
+void reset_corpses();
 void spawn_corpse(float x, float y);
 void update_corpses();
 void render_corpses();

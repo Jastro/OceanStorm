@@ -11,6 +11,13 @@ int num_dialogs = 0;
 
 extern int game_language;
 
+void reset_dialog() {
+    num_dialogs = 0;
+    current_dialog = 0;
+    dialog_active = false;
+    memset(dialog_sequence, NULL, sizeof(dialog_sequence));
+}
+
 void queue_dialog(DialogWindow* dialog) {
     if(num_dialogs < MaxDialogs) {
         dialog_sequence[num_dialogs] = dialog;
@@ -36,7 +43,13 @@ void update_dialog() {
     
     if(gamepad_button_a() == 1 || gamepad_button_b() == 1 || 
        gamepad_button_x() == 1 || gamepad_button_y() == 1 ||
-       gamepad_button_start() == 1) {
+       gamepad_button_start() == 1)
+    {
+        // primero esperar un frame para que no
+        // se junten pulsaciones por accidente
+        end_frame();
+        
+        // ahora actualizamos
         current_dialog++;
         if(current_dialog < num_dialogs) {
             show_dialog(dialog_sequence[current_dialog]);
@@ -49,10 +62,6 @@ void update_dialog() {
 
 void render_dialog() {
     if(!dialog_active) return;
-    
-    // Fondo semi-transparente
-    //set_multiply_color(0x80000000);
-    //clear_screen(0xFF000000);
     
     // Ventana de diálogo
     int dialog_x = 300;

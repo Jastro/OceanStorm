@@ -27,6 +27,7 @@ extern float phase_time;
 void initialize_enemies();
 void spawn_enemy(float x, float y, int type, int behavior, int spread_type);
 void update_enemy(int index);
+void reset_enemies();
 void update_enemies();
 void render_enemies();
 void damage_enemy(int index, int damage);
