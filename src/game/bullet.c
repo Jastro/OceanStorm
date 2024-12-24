@@ -9,6 +9,7 @@ float[MaxBullets] bullet_angle;
 float[MaxBullets] bullet_speed;
 float[MaxBullets] bullet_damage;
 float[MaxBullets] bullet_distance;
+float[MaxBullets] bullet_range;
 int[MaxBullets] bullet_active;
 int[MaxBullets] bullet_type;
 float spiral_pattern_angle = 0;
@@ -192,12 +193,13 @@ void create_bullet(float x, float y, float angle, float spread, int type)
                 {
                     bullet_speed[i] = HeliBulletSpeed;
                     bullet_damage[i] = HeliBulletDamage;
-                    weapon_range[current_weapon] = HeliBulletRange;
+                    bullet_range[i] = HeliBulletRange;
                 }
                 else
                 {
                     bullet_speed[i] = weapon_speed[current_weapon];
                     bullet_damage[i] = weapon_damage[current_weapon];
+                    bullet_range[i] = weapon_range[current_weapon];
                 }
             }
             else
@@ -237,9 +239,15 @@ void create_bullet(float x, float y, float angle, float spread, int type)
                 if (is_turret_bullet)
                 {
                     bullet_speed[i] = TurretBulletSpeed;
+                    bullet_range[i] = TurretBulletRange;
+                    bullet_damage[i] = TurretDamagePerBullet;
                 }
-
-                bullet_damage[i] = TurretDamagePerBullet;
+                
+                else
+                {
+                    bullet_range[i] = EnemyBulletRange;
+                    bullet_damage[i] = SoldierEnemyDamage;
+                }
             }
 
             bullet_distance[i] = 0;
@@ -262,7 +270,7 @@ void update_bullets()
             bullet_y[i] += dy;
             bullet_distance[i] += sqrt(dx * dx + dy * dy);
 
-            if (bullet_distance[i] > weapon_range[current_weapon])
+            if (bullet_distance[i] > bullet_range[i])
             {
                 bullet_active[i] = 0;
             }

@@ -658,7 +658,7 @@ void render_enemies()
         {
             if (enemy_type[i] == EnemyTypeKamikaze)
             {
-                set_drawing_scale(0.7, 0.7);
+                set_drawing_scale(0.6, 0.6);
             }
             else
             {
@@ -674,6 +674,11 @@ void render_enemies()
         if (enemy_blink_timer[i] > 0)
         {
             set_multiply_color(RedColor);
+        }
+        else if(enemy_type[i] == EnemyTypeKamikaze)
+        {
+            // Dibujar los kamikazes de otro color
+            set_multiply_color(0xFFFF40FF);
         }
         else
         {

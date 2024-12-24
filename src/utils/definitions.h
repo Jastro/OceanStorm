@@ -180,10 +180,10 @@ enum GameLanguages
 #define TurretBaseHeight 32
 #define TurretGunWidth 32
 #define TurretGunHeight 38
-#define TurretVisionRange 300.0
-#define TurretFireRate 10.0
-#define TurretBulletSpeed 8.0
-#define TurretBulletRange 400.0
+#define TurretVisionRange 270.0
+#define TurretFireRate 6.0
+#define TurretBulletSpeed 5.0
+#define TurretBulletRange 350.0
 #define TurretMinSpread 3
 #define TurretMaxSpread 6
 #define TurretDamagePerBullet 25

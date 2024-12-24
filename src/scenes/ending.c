@@ -26,7 +26,11 @@ void update_ending()
 
     if (can_close_ending && gamepad_button_start() == 1)
     {
-        set_multiply_color(color_white); // Restaurar color
+        // Restaurar color
+        set_multiply_color(color_white);
+        
+        // Reiniciar todo el juego
+        reset_game();
         game_scene = SceneMenu;
     }
 }
@@ -37,7 +41,7 @@ void render_ending()
     set_multiply_color(0x80FFFFFF);
     select_texture(TextureEnding);
     select_region(0);
-    draw_region_at(ScreenCenterX, ScreenCenterY);
+    draw_region_at(0, 0);
 
     // Texto scrolleando
     //set_multiply_color(color_yellow);
@@ -53,9 +57,11 @@ void render_ending()
         // Texto parpadeante al final
         if (pos < -text_position_for_show_message && (get_frame_counter() / BlinkRate) % 2 == 0)
         {
+            set_multiply_color(color_yellow);
             can_close_ending = true;
-            print_at(ScreenCenterX - 150, ScreenHeight - 40,
+            print_at(ScreenCenterX - 145, ScreenHeight - 40,
                      "Press START to return to menu");
+            set_multiply_color(color_white);
         }
     }
     else
@@ -66,9 +72,11 @@ void render_ending()
 
         if (pos < -text_position_for_show_message && (get_frame_counter() / BlinkRate) % 2 == 0)
         {
+            set_multiply_color(color_yellow);
             can_close_ending = true;
-            print_at(ScreenCenterX - 150, ScreenHeight - 40,
+            print_at(ScreenCenterX - 155, ScreenHeight - 40,
                      "Pulsa START para volver al men" u_ "");
+            set_multiply_color(color_white);
         }
     }
 }
