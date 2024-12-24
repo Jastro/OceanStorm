@@ -106,7 +106,7 @@ void initialize_ending()
 {
     select_texture(TextureEnding);
     select_region(0);
-    define_region(0, 0, 640, 480, 320, 240);
+    define_region(0, 0, 639, 359, 0, 0);
 }
 
 void starting_dialog()
