@@ -796,7 +796,7 @@ void check_phase_progress()
                 mark_event_as_happened(SpawnBoss);
             }
             spawn_boss();
-            phase = 3;
+            //phase = 3;
         }
         break;
     case 3:
