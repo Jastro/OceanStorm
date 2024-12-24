@@ -11,6 +11,7 @@ extern float[MaxBullets] bullet_angle;
 extern float[MaxBullets] bullet_speed;
 extern float[MaxBullets] bullet_damage;
 extern float[MaxBullets] bullet_distance;
+extern float[MaxBullets] bullet_range;
 extern int[MaxBullets] bullet_active;
 extern int[MaxBullets] bullet_type;
 
