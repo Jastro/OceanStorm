@@ -412,7 +412,8 @@ enum GameSounds
     SoundShoot,
     SoundHeli,
     SoundBomb,
-    SoundExplosion
+    SoundExplosion,
+    SoundSplash
 };
 
 #endif

@@ -36,5 +36,6 @@
     <sound path="obj/heli.vsnd" />
     <sound path="obj/beep.vsnd" />
     <sound path="obj/explosion.vsnd" />
+    <sound path="obj/splash.vsnd" />
     </sounds>
 </rom-definition>

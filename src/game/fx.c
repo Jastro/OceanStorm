@@ -56,6 +56,11 @@ void spawn_fx(float x, float y, int type)
             break;
         }
     }
+    
+    if(type == Explosion)
+        play_sound(SoundExplosion);
+    else
+        play_sound(SoundSplash);
 }
 
 void update_fx()
@@ -105,7 +110,7 @@ void render_fx()
         if (!fx_active[i])
             continue;
 
-        float fx_scale = 3.0;
+        float fx_scale = 2.5;
 
         switch (fx_type[i])
         {
@@ -119,7 +124,7 @@ void render_fx()
             break;
         }
         select_region(fx_frame[i]); // Ahora el tipo coincide con el frame
-        tilemap_draw_region(&world_map, fx_x[i], fx_y[i]);
+        tilemap_draw_region_zoomed(&world_map, fx_x[i], fx_y[i]);
         fx_spawned[i] = true;
     }
 }
