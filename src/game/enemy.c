@@ -638,7 +638,10 @@ void render_enemies()
         int frame;
         if (enemy_health[i] <= 0)
         {
-            spawn_fx(enemy_x[i], enemy_y[i], Explosion);
+            if (enemy_shoot_timer[i] >= 0.99 && enemy_shoot_timer[i] <= 1.0)
+            {
+                spawn_fx(enemy_x[i], enemy_y[i], Explosion);
+            }
             frame = 2; // Frame de destrucción
             float scale = enemy_shoot_timer[i];
             play_sound(SoundFall);
@@ -653,7 +656,14 @@ void render_enemies()
         }
         else
         {
-            set_drawing_scale(1, 1);
+            if (enemy_type[i] == EnemyTypeKamikaze)
+            {
+                set_drawing_scale(0.7, 0.7);
+            }
+            else
+            {
+                set_drawing_scale(1.0, 1.0);
+            }
             frame = (get_frame_counter() / 10) % 2; // Alternar entre 0 y 1
         }
 
@@ -738,7 +748,7 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 4)
+        if (num_active_turrets() <= 9)
         {
             if (!has_event_happened(SpawnFlyingEnemies))
             {

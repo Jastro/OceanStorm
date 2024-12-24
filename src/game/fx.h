@@ -7,6 +7,7 @@ extern int[MaxFX] fx_type;   // Explosion o Splash
 extern int[MaxFX] fx_active; // 1 si está activo, 0 si no
 extern float[MaxFX] fx_anim_timer;
 extern float[MaxFX] fx_frame;
+extern bool[MaxFX] fx_spawned;
 
 void initialize_fx();
 void reset_fx();

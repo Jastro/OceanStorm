@@ -7,6 +7,7 @@ int[MaxFX] fx_type;
 int[MaxFX] fx_active;
 float[MaxFX] fx_anim_timer;
 float[MaxFX] fx_frame;
+float[MaxFX] fx_spawned;
 
 void initialize_fx()
 {
@@ -51,6 +52,7 @@ void spawn_fx(float x, float y, int type)
             fx_active[i] = 1;
             fx_frame[i] = 0;
             fx_anim_timer[i] = FXFrameTime;
+            fx_spawned[i] = false;
             break;
         }
     }
@@ -103,17 +105,21 @@ void render_fx()
         if (!fx_active[i])
             continue;
 
+        float fx_scale = 3.0;
+
         switch (fx_type[i])
         {
         case Explosion:
             select_texture(TextureExplosionFX);
+            set_drawing_scale(fx_scale, fx_scale);
             break;
         case Splash:
             select_texture(TextureSplashFX);
+            set_drawing_scale(fx_scale, fx_scale);
             break;
         }
         select_region(fx_frame[i]); // Ahora el tipo coincide con el frame
-        set_drawing_scale(2, 2);
         tilemap_draw_region(&world_map, fx_x[i], fx_y[i]);
+        fx_spawned[i] = true;
     }
 }
