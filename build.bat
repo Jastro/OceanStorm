@@ -40,14 +40,28 @@ echo --------------------------
 echo.
 echo Convert the WAV sounds
 echo --------------------------
-%WAV2VIRCON% assets\sounds\hurt.wav    -o obj\hurt.vsnd    || goto :failed
-%WAV2VIRCON% assets\sounds\fall.wav    -o obj\fall.vsnd    || goto :failed
-%WAV2VIRCON% assets\sounds\pickup.wav    -o obj\pickup.vsnd    || goto :failed
-%WAV2VIRCON% assets\sounds\shoot.wav    -o obj\shoot.vsnd    || goto :failed
-%WAV2VIRCON% assets\sounds\heli.wav    -o obj\heli.vsnd    || goto :failed
-%WAV2VIRCON% assets\sounds\beep.wav    -o obj\beep.vsnd    || goto :failed
-%WAV2VIRCON% assets\sounds\explosion.wav    -o obj\explosion.vsnd    || goto :failed
-%WAV2VIRCON% assets\sounds\splash.wav    -o obj\splash.vsnd    || goto :failed
+%WAV2VIRCON% assets\music\menu.wav -o obj\music-menu.vsnd || goto :failed
+%WAV2VIRCON% assets\music\turrets.wav -o obj\music-turrets.vsnd || goto :failed
+%WAV2VIRCON% assets\music\planes.wav -o obj\music-planes.vsnd || goto :failed
+%WAV2VIRCON% assets\music\boss.wav -o obj\music-boss.vsnd || goto :failed
+%WAV2VIRCON% assets\music\ending.wav -o obj\music-ending.vsnd || goto :failed
+
+%WAV2VIRCON% assets\sounds\hurt.wav -o obj\hurt.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\death.wav -o obj\death.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\fall.wav -o obj\fall.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\pickup.wav -o obj\pickup.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\changeweapon.wav -o obj\changeweapon.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\shoot.wav -o obj\shoot.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\heli.wav -o obj\heli.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\enterheli.wav -o obj\enterheli.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\bombbeep.wav -o obj\bombbeep.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\explosion.wav -o obj\explosion.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\splash.wav -o obj\splash.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\enemyhit.wav -o obj\enemyhit.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\enemyshoot.wav -o obj\enemyshoot.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\menumove.wav -o obj\menumove.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\menuaccept.wav -o obj\menuaccept.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\actioncancelled.wav -o obj\actioncancelled.vsnd || goto :failed
 
 echo Compile the C code
 echo --------------------------

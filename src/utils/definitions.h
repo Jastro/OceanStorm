@@ -406,14 +406,30 @@ enum GameScenes
 
 enum GameSounds
 {
+    // Separamos: primero las musicas
+    MusicMenu,
+    MusicTurrets,
+    MusicPlanes,
+    MusicBoss,
+    MusicEnding,
+    
+    // y luego los sonidos
     SoundHurt,
+    SoundDeath,
     SoundFall,
     SoundPickup,
+    SoundChangeWeapon,
     SoundShoot,
     SoundHeli,
-    SoundBomb,
+    SoundEnterHeli,
+    SoundBombBeep,
     SoundExplosion,
-    SoundSplash
+    SoundSplash,
+    SoundEnemyHit,
+    SoundEnemyShoot,
+    SoundMenuMove,
+    SoundMenuAccept,
+    SoundActionCancelled
 };
 
 #endif
