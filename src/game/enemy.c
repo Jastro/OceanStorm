@@ -25,6 +25,7 @@ int[MaxEnemies] enemy_pattern_count;
 int[MaxEnemies] enemy_is_reloading;
 float[MaxEnemies] enemy_reload_start;
 float[MaxEnemies] enemy_spawn_animation_timer;
+int last_frame_hit_sound = 0;
 
 int num_active_enemies;
 int num_total_enemies;
@@ -476,7 +477,8 @@ void update_enemy(int index)
                 switch (enemy_spread_type[index])
                 {
                 case SpreadTypeSingle:
-                    create_bullet(enemy_x[index], enemy_y[index], enemy_angle[index], 0, BulletTypeTurret);
+                    create_spread_pattern(enemy_x[index], enemy_y[index],
+                                          enemy_angle[index], SpreadTypeSingle);
                     enemy_shoot_timer[index] = 1.0;
                     break;
 
@@ -712,16 +714,23 @@ void render_enemies()
 
 void damage_enemy(int index, int damage)
 {
-
     if (enemy_state[index] == SoldierStateSpawning)
         return;
 
     if (enemy_health[index] <= 0)
         return;
-
+    
     enemy_health[index] -= damage;
     enemy_blink_timer[index] = EnemyBlinkTime;
-
+    
+    // Reproducir sonido una única vez por frame,
+    // para no saturar con armas como la escopeta
+    if(last_frame_hit_sound != get_frame_counter())
+    {
+        play_sound(SoundEnemyHit);
+            last_frame_hit_sound = get_frame_counter();
+    }
+    
     if (enemy_health[index] <= 0)
     {
         if (enemy_type[index] == EnemyTypeSoldier)
@@ -811,7 +820,7 @@ void check_phase_progress()
         }
         break;
     case 3:
-        show_ending();
+        begin_ending();
         break;
     }
 }

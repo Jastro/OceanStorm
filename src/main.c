@@ -52,22 +52,34 @@ float target_zoom = 1.0;
 
 void main()
 {
-
+    // Configurar volumen de los canales
     for (int i = 0; i < 15; i++)
     {
         select_channel(i);
-        set_channel_volume(0.3);
+        set_channel_volume(0.35);
     }
 
     select_channel(ChannelMusic);
-    set_channel_volume(0.4);
-
+    set_channel_volume(0.35);
+    
+    // Activar bucle en todas las musicas
+    select_sound(MusicMenu);
+    set_sound_loop(true);
+    select_sound(MusicTurrets);
+    set_sound_loop(true);
+    select_sound(MusicPlanes);
+    set_sound_loop(true);
+    select_sound(MusicBoss);
+    set_sound_loop(true);
+    select_sound(MusicEnding);
+    set_sound_loop(true);
+    
     // Inicializar sistemas del juego
     initialize_game();
 
     // Establecer el estado inicial
     reset_game();
-    game_scene = SceneMenu;
+    begin_menu();
 
     // Bucle principal del juego
     while (true)

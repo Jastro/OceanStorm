@@ -64,9 +64,10 @@ void reset_game()
 
 void kill_player()
 {
-    // Detener cualquier sonido previo
+    // Sonido de muerte, sin musica
     stop_all_channels();
-
+    play_sound(SoundDeath);
+    
     // Dialogo tras la primera muerte
     if (!has_event_happened(GameOver))
     {
@@ -80,10 +81,31 @@ void kill_player()
     game_scene = SceneGameOver;
 }
 
-void show_ending()
+void begin_game()
 {
-    // Detener cualquier sonido previo
+    // Musica del inicio del juego
     stop_all_channels();
+    play_sound_in_channel(MusicTurrets, ChannelMusic);
+    
+    // Ir a escena juego
+    game_scene = SceneGame;
+}
+
+void begin_menu()
+{
+    // Musica del menu
+    stop_all_channels();
+    play_sound_in_channel(MusicMenu, ChannelMusic);
+
+    // Ir a escena menu
+    game_scene = SceneMenu;
+}
+
+void begin_ending()
+{
+    // Musica del ending
+    stop_all_channels();
+    play_sound_in_channel(MusicMenu, ChannelMusic);
 
     // Ir a escena ending
     game_scene = SceneEnding;

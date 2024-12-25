@@ -13,6 +13,7 @@ float[MaxBullets] bullet_range;
 int[MaxBullets] bullet_active;
 int[MaxBullets] bullet_type;
 float spiral_pattern_angle = 0;
+int last_frame_spread_sound = 0;
 
 // Comprueba colisión entre un punto y un círculo
 int check_circle_collision(float px, float py, float cx, float cy, float radius)
@@ -24,6 +25,22 @@ int check_circle_collision(float px, float py, float cx, float cy, float radius)
 
 void create_spread_pattern(float x, float y, float base_angle, int spread_type)
 {
+    // Reproducir sonido sólo si lo vemos en pantalla
+    // y hacerlo una única vez por frame para no saturar
+    if(last_frame_spread_sound != get_frame_counter())
+    {
+        float screen_x = x, screen_y = y;
+        tilemap_convert_position_to_screen(&world_map, &screen_x,&screen_y);
+        
+        if(screen_x >= 0 && screen_x < screen_width
+        && screen_y >= 0 && screen_y < screen_height)
+        {
+            play_sound(SoundEnemyShoot);
+            last_frame_spread_sound = get_frame_counter();
+        }
+    }
+    
+    // Generar balas según el tipo de spread
     switch (spread_type)
     {
     case SpreadTypeSingle:

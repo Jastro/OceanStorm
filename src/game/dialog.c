@@ -33,6 +33,7 @@ void start_dialog_sequence() {
 }
 
 void show_dialog(DialogWindow* dialog) {
+    play_sound(SoundMenuMove);
     dialog_active = 1;
     strcpy(dialog_text, dialog->texts[game_language]);
     dialog_region = dialog->portrait_region;
@@ -54,6 +55,7 @@ void update_dialog() {
         if(current_dialog < num_dialogs) {
             show_dialog(dialog_sequence[current_dialog]);
         } else {
+            play_sound(SoundMenuAccept);
             dialog_active = 0;
             num_dialogs = 0;
         }

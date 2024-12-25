@@ -17,9 +17,9 @@ float soldier_immunity_timer;
 float soldier_blink_timer;
 int[3] soldier_has_weapon;
 int soldier_health;
-float soldier_stamina = MaxStamina;
-float soldier_scale = 1.0;
-int is_swimming = 0;
+float soldier_stamina;
+float soldier_scale;
+int is_swimming;
 
 // Variable externa que necesitamos
 extern int game_scene;
@@ -57,6 +57,9 @@ void reset_soldier()
     soldier_bombs = BombCount;
     soldier_immunity_timer = 0;
     soldier_blink_timer = 0;
+    soldier_stamina = MaxStamina;
+    soldier_scale = 1.0;
+    is_swimming = 0;
 }
 
 void update_soldier()
@@ -456,6 +459,12 @@ void switch_weapon_next()
         current_weapon = (current_weapon + 1) % 3;
     } while (!soldier_has_weapon[current_weapon] &&
              current_weapon != original_weapon);
+    
+    // Indicar con sonidos si realmente hemos cambiado de arma
+    if(current_weapon != original_weapon)
+        play_sound(SoundChangeWeapon);
+    else
+        play_sound(SoundActionCancelled);
 }
 
 void switch_weapon_previous()
@@ -466,6 +475,12 @@ void switch_weapon_previous()
         current_weapon = (current_weapon + 2) % 3;
     } while (!soldier_has_weapon[current_weapon] &&
              current_weapon != original_weapon);
+             
+    // Indicar con sonidos si realmente hemos cambiado de arma
+    if(current_weapon != original_weapon)
+        play_sound(SoundChangeWeapon);
+    else
+        play_sound(SoundActionCancelled);
 }
 
 void give_weapon(int weapon_type)
