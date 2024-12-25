@@ -9,7 +9,7 @@ void update_gameover() {
     if(gamepad_button_start() == 1) {
         // Reiniciar todo el juego
         reset_game();
-        game_scene = SceneGame;
+        begin_game();
         
         // Dialogo tras el primer reintento
         if (!has_event_happened(GameRestart))

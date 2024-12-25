@@ -198,7 +198,7 @@ void update_bombs()
         if ((int)(bomb_timer[i] * 60) % 60 == 0)
         {
             if (bomb_timer[i] >= 1.0)
-                play_sound(SoundBomb);
+                play_sound(SoundBombBeep);
         }
 
         // Cuenta atrás para explotar

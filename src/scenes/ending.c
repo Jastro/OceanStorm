@@ -31,7 +31,9 @@ void update_ending()
         
         // Reiniciar todo el juego
         reset_game();
-        game_scene = SceneMenu;
+        begin_menu();
+        
+        play_sound(SoundMenuAccept);
     }
 }
 

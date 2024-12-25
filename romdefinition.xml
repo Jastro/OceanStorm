@@ -29,12 +29,28 @@
         <texture path="obj/splash.vtx" />
     </textures>
     <sounds>
-    <sound path="obj/hurt.vsnd" />
-    <sound path="obj/fall.vsnd" />
-    <sound path="obj/pickup.vsnd" />
-    <sound path="obj/shoot.vsnd" />
-    <sound path="obj/heli.vsnd" />
-    <sound path="obj/beep.vsnd" />
-    <sound path="obj/explosion.vsnd" />
+        <!-- music -->
+        <sound path="obj/music-menu.vsnd" />
+        <sound path="obj/music-turrets.vsnd" />
+        <sound path="obj/music-planes.vsnd" />
+        <sound path="obj/music-boss.vsnd" />
+        <sound path="obj/music-ending.vsnd" />
+        <!-- sound effects -->
+        <sound path="obj/hurt.vsnd" />
+        <sound path="obj/death.vsnd" />
+        <sound path="obj/fall.vsnd" />
+        <sound path="obj/pickup.vsnd" />
+        <sound path="obj/changeweapon.vsnd" />
+        <sound path="obj/shoot.vsnd" />
+        <sound path="obj/heli.vsnd" />
+        <sound path="obj/enterheli.vsnd" />
+        <sound path="obj/bombbeep.vsnd" />
+        <sound path="obj/explosion.vsnd" />
+        <sound path="obj/splash.vsnd" />
+        <sound path="obj/enemyhit.vsnd" />
+        <sound path="obj/enemyshoot.vsnd" />
+        <sound path="obj/menumove.vsnd" />
+        <sound path="obj/menuaccept.vsnd" />
+        <sound path="obj/actioncancelled.vsnd" />
     </sounds>
 </rom-definition>

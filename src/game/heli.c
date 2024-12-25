@@ -157,13 +157,17 @@ void exit_vehicle()
         // Si no podemos, cancelar la salida
         // (reproducir sonido indicandolo)
         if (is_over_ocean(soldier_x, soldier_y))
+        {
+            play_sound(SoundActionCancelled);
             return;
+        }
     }
 
     // Actualizar estado solo si hemos salido
     is_player_in_vehicle = 0;
     soldier_state = SoldierStateActive;
     target_zoom = CameraZoomGround;
+    play_sound(SoundEnterHeli);
     
     // parar sonido del heli quitando
     // el loop y dejando que termine
@@ -180,6 +184,7 @@ void enter_vehicle()
     is_player_in_vehicle = 1;
     soldier_state = SoldierStateNone;
     target_zoom = CameraZoomAir;
+    play_sound(SoundEnterHeli);
     
     // iniciar sonido del heli
     play_sound_in_channel(SoundHeli, ChannelHeli);
@@ -195,10 +200,16 @@ void update_heli()
     gamepad_direction(&direction_x, &direction_y);
 
     if (gamepad_button_l() == 1)
+    {
         active_cannon = (active_cannon + (4-1)) % 4;
+        play_sound(SoundChangeWeapon);
+    }
     
     if (gamepad_button_r() == 1)
+    {
         active_cannon = (active_cannon + 1) % 4;
+        play_sound(SoundChangeWeapon);
+    }
     
     // Rotar el avión
     if (gamepad_left() > 0)

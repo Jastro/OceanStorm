@@ -67,9 +67,15 @@ void update_menu() {
     
     // comun a ambos menus: movimiento cursor
     if(gamepad_up() == 1 && current_option > 0)
-      current_option--;
+    {
+        current_option--;
+        play_sound(SoundMenuMove);
+    }
     if(gamepad_down() == 1 && current_option <= 0)
-      current_option++;
+    {
+        current_option++;
+        play_sound(SoundMenuMove);
+    }
     
     // caso 1: menu principal
     if(!inside_options)
@@ -78,12 +84,16 @@ void update_menu() {
         if(gamepad_button_start() == 1)
         {
             if( current_option == 0 )
-                game_scene = SceneGame;
+            {
+                begin_game();
+                play_sound(SoundMenuAccept);
+            }
             else
             {
                 // por defecto elegir idioma actual
                 inside_options = true;
                 current_option = game_language;
+                play_sound(SoundMenuAccept);
             }
         }
         
@@ -91,7 +101,10 @@ void update_menu() {
         else if(gamepad_left() == 1)
         {
             if(gamepad_button_l() > 0 && gamepad_button_r() > 0)
+            {
                 blood_enabled = !blood_enabled;
+                play_sound(SoundActionCancelled);
+            }
         }
     }
     
@@ -104,6 +117,7 @@ void update_menu() {
             game_language = current_option;
             inside_options = false;
             current_option = 1;
+            play_sound(SoundMenuAccept);
         }
     }
 }

@@ -4,6 +4,8 @@
 void initialize_game();
 void reset_game();
 void kill_player();
-void show_ending();
+void begin_game();
+void begin_menu();
+void begin_ending();
 
 #endif

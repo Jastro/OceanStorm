@@ -25,6 +25,7 @@ int[MaxEnemies] enemy_pattern_count;
 int[MaxEnemies] enemy_is_reloading;
 float[MaxEnemies] enemy_reload_start;
 float[MaxEnemies] enemy_spawn_animation_timer;
+int last_frame_hit_sound = 0;
 
 int num_active_enemies;
 int num_total_enemies;
@@ -476,7 +477,8 @@ void update_enemy(int index)
                 switch (enemy_spread_type[index])
                 {
                 case SpreadTypeSingle:
-                    create_bullet(enemy_x[index], enemy_y[index], enemy_angle[index], 0, BulletTypeTurret);
+                    create_spread_pattern(enemy_x[index], enemy_y[index],
+                                          enemy_angle[index], SpreadTypeSingle);
                     enemy_shoot_timer[index] = 1.0;
                     break;
 
@@ -559,8 +561,7 @@ void update_enemy(int index)
                 }
             }
             // Destruir el kamikaze
-            enemy_health[index] = 0;
-            enemy_shoot_timer[index] = 1.0;
+            damage_enemy(index, enemy_health[index]);
         }
         break;
     }
@@ -638,17 +639,17 @@ void render_enemies()
         int frame;
         if (enemy_health[i] <= 0)
         {
-            if (enemy_shoot_timer[i] >= 0.99 && enemy_shoot_timer[i] <= 1.0)
-            {
-                spawn_fx(enemy_x[i], enemy_y[i], Explosion);
-            }
             frame = 2; // Frame de destrucción
             float scale = enemy_shoot_timer[i];
-            play_sound(SoundFall);
             set_drawing_scale(scale, scale);
             if (scale <= 0.1)
             {
-                spawn_fx(enemy_x[i], enemy_y[i], Splash);
+                // Explosión si cae en tierra, splash en agua
+                if(is_over_ocean(enemy_x[i], enemy_y[i]))
+                    spawn_fx(enemy_x[i], enemy_y[i], Splash);
+                else
+                    spawn_fx(enemy_x[i], enemy_y[i], Explosion);
+                
                 enemy_active[i] = 0;
                 num_active_enemies--;
                 continue;
@@ -713,16 +714,23 @@ void render_enemies()
 
 void damage_enemy(int index, int damage)
 {
-
     if (enemy_state[index] == SoldierStateSpawning)
         return;
 
     if (enemy_health[index] <= 0)
         return;
-
+    
     enemy_health[index] -= damage;
     enemy_blink_timer[index] = EnemyBlinkTime;
-
+    
+    // Reproducir sonido una única vez por frame,
+    // para no saturar con armas como la escopeta
+    if(last_frame_hit_sound != get_frame_counter())
+    {
+        play_sound(SoundEnemyHit);
+            last_frame_hit_sound = get_frame_counter();
+    }
+    
     if (enemy_health[index] <= 0)
     {
         if (enemy_type[index] == EnemyTypeSoldier)
@@ -734,6 +742,13 @@ void damage_enemy(int index, int damage)
         }
         else
         {
+            // al morir los aviones normales explotan y caen
+            if (enemy_type[index] != EnemyTypeBoss)
+            {
+                spawn_fx(enemy_x[index], enemy_y[index], Explosion);
+                play_sound(SoundFall);
+            }
+            
             enemy_shoot_timer[index] = 1.0; // Usamos este timer para la escala
         }
     }
@@ -805,7 +820,7 @@ void check_phase_progress()
         }
         break;
     case 3:
-        show_ending();
+        begin_ending();
         break;
     }
 }
