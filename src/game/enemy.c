@@ -290,8 +290,11 @@ void update_boss(int index)
     case BossPhaseTwo:
         shoot_rate = 1.0;
         // Fase 2: Perseguir agresivamente al jugador
-        enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 1.5;
-        enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 1.5;
+        if (dist > 80)
+        {
+            enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 1.5;
+            enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 1.5;
+        }
         break;
 
     case BossPhaseThree:
@@ -767,7 +770,6 @@ void check_phase_progress()
     switch (phase)
     {
     case 0: // Fase inicial
-        // if (num_active_turrets() <= MaxTurrets / 2)
         if (num_active_turrets() <= 4)
         {
             if (!has_event_happened(SpawnFlyingEnemies))

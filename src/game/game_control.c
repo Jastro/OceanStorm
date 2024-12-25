@@ -56,6 +56,7 @@ void reset_game()
     reset_bombs();
     reset_weapons();
     reset_pickups();
+    reset_fx();
     reset_screen_shake();
 
     // NO reiniciamos los eventos (para no

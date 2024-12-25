@@ -353,6 +353,7 @@ enum TYPE_FX {
 enum Events
 {
     StartGame,
+    FleeIsland,
     TurretDestroyed,
     SpawnFlyingEnemies,
     FlyingEnemiesDestroyed,

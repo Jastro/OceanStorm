@@ -175,12 +175,55 @@ void exit_vehicle()
     set_channel_loop(false);
 }
 
+// No permitimos entrar al heli y dejar una isla
+// tras poner la bomba, hasta vencer a los soldados
+bool is_enter_vehicle_allowed()
+{
+    if(is_over_carrier(soldier_x, soldier_y))
+        return true;
+    
+    if(is_over_island(soldier_x, soldier_y))
+    {
+        for(int i = 0; i < MaxActiveBombs; i++)
+            if(bomb_active[i])
+                return false;
+        
+        for (int i = 0; i < MaxEnemies; i++)
+            if (enemy_active[i] && enemy_type[i] == EnemyTypeSoldier)
+                return false;
+        
+        return true;
+    }
+    
+    return false;
+}
+
 void enter_vehicle()
 {
     // Si ya estamos dentro, no hacer nada
     if (is_player_in_vehicle)
         return;
+    
+    // Comprobar si permitimos subir al heli
+    if(!is_enter_vehicle_allowed())
+    {
+        // la primera vez salta el diálogo
+        if (!has_event_happened(FleeIsland))
+        {
+            end_frame();
+            queue_dialog(&DW_FleeIsland);
+            queue_dialog(&DW_FleeIslandReply);
+            start_dialog_sequence();
 
+            mark_event_as_happened(FleeIsland);
+        }
+        
+        // el resto lo avisamos solo con un sonido
+        else play_sound(SoundActionCancelled);
+        
+        return;
+    }
+    
     is_player_in_vehicle = 1;
     soldier_state = SoldierStateNone;
     target_zoom = CameraZoomAir;

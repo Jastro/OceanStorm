@@ -33,6 +33,30 @@ DialogWindow DW_StartOperationReply =
     }
 };
 
+DialogWindow DW_FleeIsland =
+{
+    RegionPortraitCommander,
+    {
+        "Rykov, you can't leave the island yet! \n"
+        "Defeat the enemy soldiers or else they \n"
+        "will repair the turret.",
+        
+        exclam "Rykov, a" u_ "n no puede dejar la isla! \n"
+        "Si no vence a los soldados enemigos \n"
+        "reparar" a_ "n la torreta."
+    }
+};
+
+DialogWindow DW_FleeIslandReply =
+{
+    RegionPortraitPlayer,
+    {
+        "I'm sorry, commander. You are right...",
+        
+        "Disculpe, comandante. Tiene raz" o_ "n..."
+    }
+};
+
 DialogWindow DW_TurretDestroyed =
 {
     RegionPortraitPlayer,
