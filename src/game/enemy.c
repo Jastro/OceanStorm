@@ -297,12 +297,12 @@ void update_boss(int index)
     case BossPhaseThree:
         shoot_rate = 0.5;
         // Fase 3: Mantener distancia y zigzag
-        if (dist < 400) // Si está demasiado cerca, alejarse
+        if (dist < 300) // Si está demasiado cerca, alejarse
         {
             enemy_x[index] -= cos(enemy_angle[index]) * enemy_speed[index];
             enemy_y[index] -= sin(enemy_angle[index]) * enemy_speed[index];
         }
-        else if (dist > 600) // Si está muy lejos, acercarse un poco
+        else if (dist > 300) // Si está muy lejos, acercarse un poco
         {
             enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 0.5;
             enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 0.5;
@@ -645,11 +645,11 @@ void render_enemies()
             if (scale <= 0.1)
             {
                 // Explosión si cae en tierra, splash en agua
-                if(is_over_ocean(enemy_x[i], enemy_y[i]))
+                if (is_over_ocean(enemy_x[i], enemy_y[i]))
                     spawn_fx(enemy_x[i], enemy_y[i], Splash);
                 else
                     spawn_fx(enemy_x[i], enemy_y[i], Explosion);
-                
+
                 enemy_active[i] = 0;
                 num_active_enemies--;
                 continue;
@@ -676,7 +676,7 @@ void render_enemies()
         {
             set_multiply_color(RedColor);
         }
-        else if(enemy_type[i] == EnemyTypeKamikaze)
+        else if (enemy_type[i] == EnemyTypeKamikaze)
         {
             // Dibujar los kamikazes de otro color
             set_multiply_color(0xFFFF40FF);
@@ -719,18 +719,18 @@ void damage_enemy(int index, int damage)
 
     if (enemy_health[index] <= 0)
         return;
-    
+
     enemy_health[index] -= damage;
     enemy_blink_timer[index] = EnemyBlinkTime;
-    
+
     // Reproducir sonido una única vez por frame,
     // para no saturar con armas como la escopeta
-    if(last_frame_hit_sound != get_frame_counter())
+    if (last_frame_hit_sound != get_frame_counter())
     {
         play_sound(SoundEnemyHit);
-            last_frame_hit_sound = get_frame_counter();
+        last_frame_hit_sound = get_frame_counter();
     }
-    
+
     if (enemy_health[index] <= 0)
     {
         if (enemy_type[index] == EnemyTypeSoldier)
@@ -748,7 +748,7 @@ void damage_enemy(int index, int damage)
                 spawn_fx(enemy_x[index], enemy_y[index], Explosion);
                 play_sound(SoundFall);
             }
-            
+
             enemy_shoot_timer[index] = 1.0; // Usamos este timer para la escala
         }
     }
@@ -768,7 +768,7 @@ void check_phase_progress()
     {
     case 0: // Fase inicial
         // if (num_active_turrets() <= MaxTurrets / 2)
-        if (num_active_turrets() <= 9)
+        if (num_active_turrets() <= 4)
         {
             if (!has_event_happened(SpawnFlyingEnemies))
             {
@@ -781,6 +781,7 @@ void check_phase_progress()
             }
 
             spawn_wave_of_enemies();
+            begin_planes();
             phase = 1;
             phase_time = 0;
         }
@@ -799,6 +800,7 @@ void check_phase_progress()
                 mark_event_as_happened(FlyingEnemiesDestroyed);
             }
             phase = 2;
+            begin_game();
         }
         break;
 
@@ -816,10 +818,17 @@ void check_phase_progress()
                 mark_event_as_happened(SpawnBoss);
             }
             spawn_boss();
-            //phase = 3;
+            begin_boss();
+            phase = 3;
         }
         break;
     case 3:
+        if (num_active_enemies == 0)
+        {
+            phase = 4;
+        }
+        break;
+    case 4:
         begin_ending();
         break;
     }

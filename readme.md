@@ -1,64 +1,91 @@
 # Ocean Storm
 
-This project is a game developed for the fictional Vircon32 console. In the game, you play as a soldier deployed from a carrier with a helicopter. Your mission is to destroy enemy turrets by planting bombs, engaging enemy aircraft, and fighting enemy soldiers. The game combines action and strategy elements with dynamic aerial and ground combat.
+A retro-style helicopter and tactical action shooter developed for the Vircon32 virtual console.
+
+## Description 
+Take control of a pilot on a critical mission: destroy enemy defenses across a series of fortified islands. Switch between aerial helicopter combat and on-foot tactical operations.
 
 ## Features
-- Pilot a helicopter from your carrier to enemy islands.
-- Land on islands to destroy turrets by planting bombs.
-- Engage in aerial combat with enemy planes.
-- Face enemy soldiers on the ground.
-- Immersive retro visuals and gameplay designed for the Vircon32 console.
+- Dual combat: Alternate between helicopter piloting and ground combat
+- Multiple weapon system for soldier
+- Tactical sabotage missions with bombs
+- Dynamic aerial battles
+- Multi-phase final boss
+- Dialogs and narrative in English/Spanish
+- Retro music and sound effects
 
-## Sprites Used
-The game utilizes sprites from:
+## How to Play
+1. Download latest release from [Releases](link-to-releases)
+2. Run Vircon32 emulator
+3. Load the .v32 file
 
-- [Helicopter Assault Assets](https://alb-pixel-store.itch.io/helicopter-assault-assets)
-- [Splash Effect (32x32)](https://opengameart.org/content/splash-effect-32x32)
-- [War on Water GFX](https://opengameart.org/content/war-on-water-gfx)
-- [Sea Warfare Set (Ships and More)](https://opengameart.org/content/sea-warfare-set-ships-and-more)
-- [Earth Walls (32x32 Oblique)](https://opengameart.org/content/earth-walls-32x32-oblique)
+### Controls
+- **Arrows**: Move helicopter/soldier
+- **Z**: Enter/exit vehicle - Plant bombs
+- **X**: Shoot
+- **Q/E**: Switch weapon (as soldier)
 
-## Getting Started
+## Development
 ### Requirements
-- [Vircon32 emulator and development tools](https://github.com/vircon32/ComputerSoftware) to run and compile the game.
-- Windows OS to use the provided `build.bat` file for compilation.
+- [Vircon32 emulator and tools](https://github.com/vircon32/ComputerSoftware)
+- Windows for build.bat
 
-### Installation
-1. Clone this repository to your local machine:
-   ```
-   git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```
-   cd <project-folder>
-   ```
-3. Use the `build.bat` file to compile the game:
-   ```
-   build.bat
-   ```
+### Building
+1. Clone repository
+2. Run build.bat
+3. Game will be in bin/OceanStorm.v32
 
-### Running the Game
-1. Download and install the [Vircon32 emulator and development tools](https://github.com/vircon32/ComputerSoftware).
-2. Load the compiled game in the Vircon32 emulator.
-3. Start playing!
+### Modifying
+1. Main code in src/
+2. Assets in assets/
+3. API docs in docs/
+4. Use DevTools to convert new assets
 
-## Controls
-- **Arrow Keys**: Move the helicopter or soldier.
-- **Z**: Enter or exit the vehicle / Plant bombs as a soldier.
-- **X**: Shoot (both in the helicopter and as a soldier).
-- **Q / E**: Switch weapons as a soldier.
+## Credits
+### Sprites
+- [Helicopter Assault Assets](https://alb-pixel-store.itch.io/helicopter-assault-assets)
+- [Splash Effect](https://opengameart.org/content/splash-effect-32x32)
+- [War on Water GFX](https://opengameart.org/content/war-on-water-gfx)
+- [Sea Warfare Set](https://opengameart.org/content/sea-warfare-set-ships-and-more)
+- [Earth Walls](https://opengameart.org/content/earth-walls-32x32-oblique)
 
-## Development Notes
-Ocean Storm was developed as a tribute to classic arcade games, emphasizing simple yet engaging mechanics. The Vircon32 platform offers a unique opportunity to explore retro-style game development.
+### Audio
+- [Ending Music](https://opengameart.org/content/ending-scene)
+- [Death Effects](https://opengameart.org/content/hurt-death-sound-effect-for-character)
 
 ## License
-All assets used in this project comply with their respective licenses. Please refer to the links above for specific licensing details.
+MIT License
 
-## Contributions
-Contributions are welcome! If you'd like to improve the game, feel free to fork this repository and submit a pull request.
+Copyright (c) 2024
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## Contributing
+Contributions welcome:
+1. Fork repository
+2. Create branch for changes
+3. Submit pull request
+4. Describe changes in detail
 
 ## Contact
-For questions or suggestions, please open an issue or contact the developer directly via GitHub.
+Questions or suggestions:
+- Open an issue
+- Contact via GitHub
 
 Enjoy the game!
-

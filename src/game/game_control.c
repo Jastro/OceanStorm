@@ -90,6 +90,20 @@ void begin_game()
     // Ir a escena juego
     game_scene = SceneGame;
 }
+void begin_planes()
+{
+    // Musica del inicio del juego
+    stop_all_channels();
+    play_sound_in_channel(MusicPlanes, ChannelMusic);
+    
+}
+void begin_boss()
+{
+    // Musica del inicio del juego
+    stop_all_channels();
+    play_sound_in_channel(MusicBoss, ChannelMusic);
+    
+}
 
 void begin_menu()
 {
@@ -105,7 +119,7 @@ void begin_ending()
 {
     // Musica del ending
     stop_all_channels();
-    play_sound_in_channel(MusicMenu, ChannelMusic);
+    play_sound_in_channel(MusicEnding, ChannelMusic);
 
     // Ir a escena ending
     game_scene = SceneEnding;
