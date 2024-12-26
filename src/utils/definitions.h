@@ -148,6 +148,7 @@ enum GameLanguages
 #define HeliShadowOffset 40
 #define HeliShadowBaseOffset 10
 #define MaxFuel 1500
+#define LowFuel (MaxFuel * 0.25)
 #define FuelConsumption 0.5
 #define RefuelRate 3.0
 #define InitialScale 0.5
@@ -358,7 +359,7 @@ enum Events
     SpawnFlyingEnemies,
     FlyingEnemiesDestroyed,
     SpawnBoss,
-    LowFuel,
+    FuelWarning,
     GameOver,
     GameRestart
 };
@@ -424,6 +425,7 @@ enum GameSounds
     SoundShoot,
     SoundHeli,
     SoundEnterHeli,
+    SoundLowFuel,
     SoundBombBeep,
     SoundExplosion,
     SoundSplash,

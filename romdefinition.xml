@@ -44,6 +44,7 @@
         <sound path="obj/shoot.vsnd" />
         <sound path="obj/heli.vsnd" />
         <sound path="obj/enterheli.vsnd" />
+        <sound path="obj/lowfuel.vsnd" />
         <sound path="obj/bombbeep.vsnd" />
         <sound path="obj/explosion.vsnd" />
         <sound path="obj/splash.vsnd" />

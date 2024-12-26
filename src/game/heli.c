@@ -274,7 +274,11 @@ void update_heli()
         heli_y -= MovementSpeed * cos(heli_angle);
         fuel -= FuelConsumption;
         heli_scale = clamp(heli_scale + AscendSpeed, MinScale, MaxScale);
-
+        
+        // Avisar de combustible bajo con sonido
+        if(fuel < LowFuel && fuel >= (LowFuel - FuelConsumption))
+            play_sound(SoundLowFuel);
+        
         // Actualizar animación
         anim_timer++;
         if (anim_timer >= HeliAnimSpeed)
@@ -385,13 +389,13 @@ void render_heli_fuel()
     // Avisar de combustible bajo
     if (fuel <= (MaxFuel / 2))
     {
-        if (!has_event_happened(LowFuel))
+        if (!has_event_happened(FuelWarning))
         {
             queue_dialog(&DW_FuelHalf);
             queue_dialog(&DW_FuelHalfReply);
             start_dialog_sequence();
 
-            mark_event_as_happened(LowFuel);
+            mark_event_as_happened(FuelWarning);
         }
     }
     
