@@ -130,7 +130,7 @@ void reload_weapon()
     }
 }
 
-void update_weapon(float delta_time)
+void update_weapon()
 {
     float current_time = get_frame_counter() / 60.0;
 

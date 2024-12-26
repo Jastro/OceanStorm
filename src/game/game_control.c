@@ -56,6 +56,7 @@ void reset_game()
     reset_bombs();
     reset_weapons();
     reset_pickups();
+    reset_fx();
     reset_screen_shake();
 
     // NO reiniciamos los eventos (para no
@@ -90,19 +91,19 @@ void begin_game()
     // Ir a escena juego
     game_scene = SceneGame;
 }
+
 void begin_planes()
 {
     // Musica del inicio del juego
     stop_all_channels();
     play_sound_in_channel(MusicPlanes, ChannelMusic);
-    
 }
+
 void begin_boss()
 {
     // Musica del inicio del juego
     stop_all_channels();
     play_sound_in_channel(MusicBoss, ChannelMusic);
-    
 }
 
 void begin_menu()
@@ -113,6 +114,26 @@ void begin_menu()
 
     // Ir a escena menu
     game_scene = SceneMenu;
+}
+
+void begin_boss_explosion()
+{
+    // Parar la musica y sonidos
+    stop_all_channels();
+    
+    // guardar el indice de enemigo del boss
+    for (int i = 0; i < MaxEnemies; i++)
+    {
+        if (enemy_type[i] == EnemyTypeBoss)
+        {
+            boss_enemy_index = i;
+            break;
+        }
+    }
+    
+    // Ir a escena explosion del boss
+    game_scene = SceneBossExplosion;
+    boss_explosion_elapsed_frames = 0;
 }
 
 void begin_ending()

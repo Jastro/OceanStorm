@@ -94,22 +94,6 @@ void update_soldier()
         return;
     }
 
-    /*
-        // Eje X: Calcular nueva posición potencial
-        float new_x = soldier_x + direction_x * SoldierSpeed;
-
-        // Solo mover en X si la nueva posición está en terreno válido
-        if (!is_over_ocean(new_x, soldier_y))
-            soldier_x = new_x;
-
-        // Eje Y: Calcular nueva posición potencial
-        float new_y = soldier_y + direction_y * SoldierSpeed;
-
-        // Solo mover en Y si la nueva posición está en terreno válido
-        if (!is_over_ocean(soldier_x, new_y))
-            soldier_y = new_y;
-    */
-
     // Movimiento del soldado
     int direction_x, direction_y, currentSpeed;
     gamepad_direction(&direction_x, &direction_y);
@@ -289,7 +273,7 @@ void render_soldier()
     float dy = soldier_y - heli_y;
     float distance = sqrt(dx * dx + dy * dy);
 
-    if (distance < 50.0)
+    if (distance < 50.0 && is_enter_vehicle_allowed())
     {
         // Dibujar con parpadeo para que se vea mejor
         if(get_frame_counter() % 40 > 8)
@@ -345,20 +329,6 @@ void render_soldier()
         // Restaurar el color
         set_multiply_color(color_white);
     }
-
-    // Dibujar indicadores de armadura si hay
-    /*if (soldier_armor > 0)
-    {
-        float bar_x = soldier_x - SoldierBarWidth / 2;
-        float bar_y = soldier_y - SoldierBarOffsetY;
-        float armor_spacing = SoldierBarWidth / MaxArmor;
-
-        select_texture(-1);
-        select_region(256);
-        set_multiply_color(TextColor); // Blanco para la armadura
-        set_drawing_scale(soldier_armor, SoldierBarHeight);
-        tilemap_draw_region_zoomed(&world_map, bar_x, bar_y);
-    }*/
 
     // Dibujar barra de estamina si está nadando
     if (is_swimming)

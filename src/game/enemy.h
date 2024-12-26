@@ -12,8 +12,6 @@ extern int[MaxEnemies] enemy_behavior;
 extern int[MaxEnemies] enemy_type;
 extern int[MaxEnemies] enemy_health;
 extern int[MaxEnemies] enemy_active;
-extern int[MaxEnemies] enemy_pattern_index;
-extern int[MaxEnemies] enemy_pattern_count;
 extern int[MaxEnemies] enemy_is_reloading;
 extern float[MaxEnemies] enemy_reload_start;
 extern float[MaxEnemies] enemy_spawn_animation_timer;

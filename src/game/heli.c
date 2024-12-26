@@ -26,6 +26,7 @@ int heli_current_ammo;
 float heli_last_shot_time;
 int heli_health;
 float health_flash_timer = 0;
+bool heli_heal_enabled;
 int active_cannon = 0;
 
 // Variable externa para el estado del juego
@@ -129,6 +130,7 @@ void reset_heli()
     heli_velocity = 0.0;
     fuel = MaxFuel;
     heli_health = HeliMaxHealth;
+    heli_heal_enabled = true;
     heli_current_ammo = HeliMaxAmmo;
     heli_last_shot_time = 0;
     active_cannon = 0;
@@ -175,12 +177,55 @@ void exit_vehicle()
     set_channel_loop(false);
 }
 
+// No permitimos entrar al heli y dejar una isla
+// tras poner la bomba, hasta vencer a los soldados
+bool is_enter_vehicle_allowed()
+{
+    if(is_over_carrier(soldier_x, soldier_y))
+        return true;
+    
+    if(is_over_island(soldier_x, soldier_y))
+    {
+        for(int i = 0; i < MaxActiveBombs; i++)
+            if(bomb_active[i])
+                return false;
+        
+        for (int i = 0; i < MaxEnemies; i++)
+            if (enemy_active[i] && enemy_type[i] == EnemyTypeSoldier)
+                return false;
+        
+        return true;
+    }
+    
+    return false;
+}
+
 void enter_vehicle()
 {
     // Si ya estamos dentro, no hacer nada
     if (is_player_in_vehicle)
         return;
+    
+    // Comprobar si permitimos subir al heli
+    if(!is_enter_vehicle_allowed())
+    {
+        // la primera vez salta el diálogo
+        if (!has_event_happened(FleeIsland))
+        {
+            end_frame();
+            queue_dialog(&DW_FleeIsland);
+            queue_dialog(&DW_FleeIslandReply);
+            start_dialog_sequence();
 
+            mark_event_as_happened(FleeIsland);
+        }
+        
+        // el resto lo avisamos solo con un sonido
+        else play_sound(SoundActionCancelled);
+        
+        return;
+    }
+    
     is_player_in_vehicle = 1;
     soldier_state = SoldierStateNone;
     target_zoom = CameraZoomAir;
@@ -229,7 +274,11 @@ void update_heli()
         heli_y -= MovementSpeed * cos(heli_angle);
         fuel -= FuelConsumption;
         heli_scale = clamp(heli_scale + AscendSpeed, MinScale, MaxScale);
-
+        
+        // Avisar de combustible bajo con sonido
+        if(fuel < LowFuel && fuel >= (LowFuel - FuelConsumption))
+            play_sound(SoundLowFuel);
+        
         // Actualizar animación
         anim_timer++;
         if (anim_timer >= HeliAnimSpeed)
@@ -262,7 +311,14 @@ void update_heli()
                 reload_heli();
 
                 // Curar helicóptero
-                heli_health = clamp(heli_health + RefuelRate, 0, HeliMaxHealth);
+                if(heli_heal_enabled)
+                {
+                    heli_health = clamp(heli_health + RefuelRate, 0, HeliMaxHealth);
+                    
+                    // No seguir curando tras alzanzar el maximo
+                    if(heli_health >= HeliMaxHealth)
+                        heli_heal_enabled = false;
+                }
 
                 // Restaurar soldado completamente
                 soldier_health = SoldierMaxHealth;
@@ -306,6 +362,13 @@ void update_heli()
         exit_vehicle();
         return;
     }
+    
+    // Reactivar la curacion si volamos fuera del carrier
+    if(is_over_ocean(heli_x, heli_y))
+    {
+        if(heli_scale > LandingScale)
+            heli_heal_enabled = true;
+    }
 }
 
 void render_heli_fuel()
@@ -326,13 +389,13 @@ void render_heli_fuel()
     // Avisar de combustible bajo
     if (fuel <= (MaxFuel / 2))
     {
-        if (!has_event_happened(LowFuel))
+        if (!has_event_happened(FuelWarning))
         {
             queue_dialog(&DW_FuelHalf);
             queue_dialog(&DW_FuelHalfReply);
             start_dialog_sequence();
 
-            mark_event_as_happened(LowFuel);
+            mark_event_as_happened(FuelWarning);
         }
     }
     

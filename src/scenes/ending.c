@@ -30,6 +30,7 @@ void update_ending()
         set_multiply_color(color_white);
         
         // Reiniciar todo el juego
+        initialize_events();
         reset_game();
         begin_menu();
         

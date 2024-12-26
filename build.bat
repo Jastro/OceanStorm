@@ -54,6 +54,7 @@ echo --------------------------
 %WAV2VIRCON% assets\sounds\shoot.wav -o obj\shoot.vsnd || goto :failed
 %WAV2VIRCON% assets\sounds\heli.wav -o obj\heli.vsnd || goto :failed
 %WAV2VIRCON% assets\sounds\enterheli.wav -o obj\enterheli.vsnd || goto :failed
+%WAV2VIRCON% assets\sounds\lowfuel.wav -o obj\lowfuel.vsnd || goto :failed
 %WAV2VIRCON% assets\sounds\bombbeep.wav -o obj\bombbeep.vsnd || goto :failed
 %WAV2VIRCON% assets\sounds\explosion.wav -o obj\explosion.vsnd || goto :failed
 %WAV2VIRCON% assets\sounds\splash.wav -o obj\splash.vsnd || goto :failed

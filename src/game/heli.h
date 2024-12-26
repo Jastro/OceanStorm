@@ -23,6 +23,8 @@ void update_heli();
 void render_heli();
 void render_heli_gui();
 void exit_vehicle();
+void enter_vehicle();
+bool is_enter_vehicle_allowed();
 void shoot_from_heli();
 void reload_heli();
 

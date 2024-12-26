@@ -30,7 +30,7 @@ extern float[3] weapon_speed;
 
 void initialize_weapons();
 void reset_weapons();
-void update_weapon(float delta_time);
+void update_weapon();
 void fire_weapon(float x, float y, float angle);
 void reload_weapon();
 

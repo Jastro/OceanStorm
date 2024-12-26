@@ -17,6 +17,7 @@
 #include "scenes/menu.h"
 #include "scenes/gameover.h"
 #include "scenes/ending.h"
+#include "scenes/boss_explosion.h"
 #include "game/game_control.h"
 
 // Incluir las implementaciones
@@ -40,6 +41,7 @@
 #include "utils/utilities.c"
 #include "scenes/gameover.c"
 #include "scenes/ending.c"
+#include "scenes/boss_explosion.c"
 #include "game/bullet.c"
 #include "game/game_control.c"
 
@@ -141,6 +143,11 @@ void main()
             }
             break;
 
+        case SceneBossExplosion:
+            update_boss_explosion();
+            render_boss_explosion();
+            break;
+            
         case SceneGameOver:
             update_dialog();
             starting_dialog();

@@ -14,6 +14,8 @@ struct DialogWindow
 // todos los textos del juego
 extern DialogWindow DW_StartOperation;
 extern DialogWindow DW_StartOperationReply;
+extern DialogWindow DW_FleeIsland;
+extern DialogWindow DW_FleeIslandReply;
 extern DialogWindow DW_TurretDestroyed;
 extern DialogWindow DW_EnemyDetected;
 extern DialogWindow DW_EnemyPenetration;
