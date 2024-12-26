@@ -219,7 +219,7 @@ enum EnemyTypes
 // Velocidades
 #define EnemySpeedNormal 3.0
 #define EnemySpeedKamikaze 4.0
-#define EnemySpeedBoss 3.0
+#define EnemySpeedBoss 2.0
 #define EnemySpeedPlane 3.0
 #define KamikazeBulletSpeed 4.0
 #define PlaneBulletSpeed 3.0
@@ -368,6 +368,7 @@ enum GameScenes
     SceneMenu,
     SceneGame,
     SceneGameOver,
+    SceneBossExplosion,
     SceneEnding
 };
 

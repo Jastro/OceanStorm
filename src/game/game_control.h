@@ -8,6 +8,7 @@ void begin_game();
 void begin_planes();
 void begin_boss();
 void begin_menu();
+void begin_boss_explosion();
 void begin_ending();
 
 #endif

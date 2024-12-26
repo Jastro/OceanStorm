@@ -33,6 +33,8 @@ int phase;
 float phase_time = 0;
 float boss_center_x = 0;
 float boss_center_y = 0;
+int boss_orbit_frames;
+float boss_orbit_angle;
 
 int check_enemy_collision(float x, float y, int current_enemy)
 {
@@ -142,10 +144,6 @@ void reset_enemies()
 
 void spawn_boss()
 {
-    /*
-    float center_x = WorldWidth;
-    float center_y = WorldHeight;
-    */
     float center_x = WorldWidth - 200;
     float center_y = WorldHeight / 2;
 
@@ -165,6 +163,7 @@ void spawn_boss()
             enemy_spread_type[i] = SpreadTypeCircle;
             enemy_speed[i] = BossSpeed1;
             phase_health_threshold[i] = BossHealth1;
+            boss_orbit_frames = 0;
 
             // Calculamos los umbrales de salud para cambios de fase
             float health_phase2 = BossHealth1 * 0.66; // A 66% de vida cambia a fase 2
@@ -243,7 +242,6 @@ void update_boss(int index)
 
     // Variables que necesitamos para los patrones de movimiento
     float shoot_rate;
-    float orbit_angle;
     float orbit_radius = 200;
     float side_movement;
     float perpendicular_x;
@@ -271,20 +269,27 @@ void update_boss(int index)
     case BossPhaseOne:
         shoot_rate = 1.5;
         // Fase 1: Si está lejos, acercarse al jugador, cuando está cerca orbitar
-        if (dist > 300) // Si está lejos
+        if (dist > 250) // Si está lejos
         {
             // Moverse hacia el jugador
             enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index];
             enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index];
+            boss_orbit_frames = 0;
         }
         else // Si está lo suficientemente cerca, orbitar
         {
-            orbit_angle = get_frame_counter() * 0.02;
-            float orbit_radius = 200;
-            enemy_x[index] = heli_x + cos(orbit_angle) * orbit_radius;
-            enemy_y[index] = heli_y + sin(orbit_angle) * orbit_radius;
+            // Iniciar la orbita en el angulo actual
+            if(boss_orbit_frames == 0)
+                boss_orbit_angle = enemy_angle[index] + pi;
+            
+            // Y luego continuar girando
+            else
+                boss_orbit_angle += 0.02;
+            
+            enemy_x[index] = heli_x + cos(boss_orbit_angle) * orbit_radius;
+            enemy_y[index] = heli_y + sin(boss_orbit_angle) * orbit_radius;
+            boss_orbit_frames++;
         }
-        enemy_angle[index] = atan2(dy, dx); // Siempre mirar al jugador
         break;
 
     case BossPhaseTwo:
@@ -300,20 +305,22 @@ void update_boss(int index)
     case BossPhaseThree:
         shoot_rate = 0.5;
         // Fase 3: Mantener distancia y zigzag
-        if (dist < 300) // Si está demasiado cerca, alejarse
+        if (dist < 280) // Si está demasiado cerca, alejarse
         {
             enemy_x[index] -= cos(enemy_angle[index]) * enemy_speed[index];
             enemy_y[index] -= sin(enemy_angle[index]) * enemy_speed[index];
+            boss_orbit_angle = enemy_angle[index];
         }
-        else if (dist > 300) // Si está muy lejos, acercarse un poco
+        else if (dist > 320) // Si está muy lejos, acercarse un poco
         {
             enemy_x[index] += cos(enemy_angle[index]) * enemy_speed[index] * 0.5;
             enemy_y[index] += sin(enemy_angle[index]) * enemy_speed[index] * 0.5;
+            boss_orbit_angle = enemy_angle[index] + pi;
         }
         else // En rango óptimo, hacer zigzag lateral
         {
-            orbit_angle = get_frame_counter() * 0.1;
-            float side_movement = cos(orbit_angle) * 100;
+            boss_orbit_angle = get_frame_counter() * 0.1;
+            float side_movement = cos(boss_orbit_angle) * 20;
             float perpendicular_x = -dy / dist; // Vector perpendicular al jugador
             float perpendicular_y = dx / dist;
             enemy_x[index] += perpendicular_x * side_movement;
@@ -713,6 +720,9 @@ void render_enemies()
                 "RELOADING");
         }
     }
+    
+    // Restaurar el color
+    set_multiply_color(color_white);
 }
 
 void damage_enemy(int index, int damage)
@@ -751,6 +761,12 @@ void damage_enemy(int index, int damage)
                 spawn_fx(enemy_x[index], enemy_y[index], Explosion);
                 play_sound(SoundFall);
             }
+            
+            // si era el boss explota y termina el juego
+            else
+            {
+                begin_boss_explosion();
+            }
 
             enemy_shoot_timer[index] = 1.0; // Usamos este timer para la escala
         }
@@ -759,7 +775,6 @@ void damage_enemy(int index, int damage)
 
 void spawn_wave_of_enemies()
 {
-    // spawn_boss();
     spawn_enemy(WorldHeight - 100, WorldWidth - 100, EnemyTypeNormal, AIBehaviorShootAndRun, SpreadTypeCircle);
     spawn_enemy(WorldWidth, WorldHeight / 2, EnemyTypeKamikaze, AIBehaviorKamikaze, SpreadTypeNormal);
     spawn_enemy(550, 640, EnemyTypePlane, AIBehaviorChase, SpreadTypeCross);
@@ -802,6 +817,7 @@ void check_phase_progress()
                 mark_event_as_happened(FlyingEnemiesDestroyed);
             }
             phase = 2;
+            phase_time = 0;
             begin_game();
         }
         break;
@@ -821,17 +837,17 @@ void check_phase_progress()
             }
             spawn_boss();
             begin_boss();
+            phase_time = 0;
             phase = 3;
         }
         break;
     case 3:
         if (num_active_enemies == 0)
         {
-            phase = 4;
+            begin_boss_explosion();
         }
         break;
-    case 4:
-        begin_ending();
+    default:
         break;
     }
 }
