@@ -26,6 +26,7 @@ int heli_current_ammo;
 float heli_last_shot_time;
 int heli_health;
 float health_flash_timer = 0;
+bool heli_heal_enabled;
 int active_cannon = 0;
 
 // Variable externa para el estado del juego
@@ -129,6 +130,7 @@ void reset_heli()
     heli_velocity = 0.0;
     fuel = MaxFuel;
     heli_health = HeliMaxHealth;
+    heli_heal_enabled = true;
     heli_current_ammo = HeliMaxAmmo;
     heli_last_shot_time = 0;
     active_cannon = 0;
@@ -305,7 +307,14 @@ void update_heli()
                 reload_heli();
 
                 // Curar helicóptero
-                heli_health = clamp(heli_health + RefuelRate, 0, HeliMaxHealth);
+                if(heli_heal_enabled)
+                {
+                    heli_health = clamp(heli_health + RefuelRate, 0, HeliMaxHealth);
+                    
+                    // No seguir curando tras alzanzar el maximo
+                    if(heli_health >= HeliMaxHealth)
+                        heli_heal_enabled = false;
+                }
 
                 // Restaurar soldado completamente
                 soldier_health = SoldierMaxHealth;
@@ -348,6 +357,13 @@ void update_heli()
     {
         exit_vehicle();
         return;
+    }
+    
+    // Reactivar la curacion si volamos fuera del carrier
+    if(is_over_ocean(heli_x, heli_y))
+    {
+        if(heli_scale > LandingScale)
+            heli_heal_enabled = true;
     }
 }
 
