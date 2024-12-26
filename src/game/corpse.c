@@ -41,7 +41,6 @@ void spawn_corpse(float x, float y) {
     int free_slot = -1;
     int oldest_offscreen = -1;
     int oldest_onscreen = -1;
-    float farthest_distance = 0;
     
     // Primero buscar un slot libre
     for(int i = 0; i < MaxCorpses; i++) {

@@ -309,7 +309,6 @@ void render_bullets()
                 select_texture(TextureEnemyBullet);
 
             select_region(0);
-            float render_x = bullet_x[i], render_y = bullet_y[i];
             tilemap_draw_region(&world_map, bullet_x[i], bullet_y[i]);
         }
     }

@@ -8,7 +8,6 @@
 int[MaxEnemies] enemy_phase;              // Para saber en qué fase está
 float[MaxEnemies] phase_health_threshold; // Para saber cuándo cambiar de fase
 int[MaxEnemies] enemy_state;
-float[MaxEnemies] enemy_spawn_timer;
 float[MaxEnemies] enemy_x;
 float[MaxEnemies] enemy_y;
 float[MaxEnemies] enemy_angle;
@@ -20,8 +19,6 @@ int[MaxEnemies] enemy_behavior;
 int[MaxEnemies] enemy_type;
 int[MaxEnemies] enemy_health;
 int[MaxEnemies] enemy_active;
-int[MaxEnemies] enemy_pattern_index; // Para controlar el patrón actual
-int[MaxEnemies] enemy_pattern_count;
 int[MaxEnemies] enemy_is_reloading;
 float[MaxEnemies] enemy_reload_start;
 float[MaxEnemies] enemy_spawn_animation_timer;
@@ -144,9 +141,6 @@ void reset_enemies()
 
 void spawn_boss()
 {
-    float center_x = WorldWidth - 200;
-    float center_y = WorldHeight / 2;
-
     for (int i = 0; i < MaxEnemies; i++)
     {
         if (!enemy_active[i])
@@ -164,10 +158,6 @@ void spawn_boss()
             enemy_speed[i] = BossSpeed1;
             phase_health_threshold[i] = BossHealth1;
             boss_orbit_frames = 0;
-
-            // Calculamos los umbrales de salud para cambios de fase
-            float health_phase2 = BossHealth1 * 0.66; // A 66% de vida cambia a fase 2
-            float health_phase3 = BossHealth1 * 0.33; // A 33% de vida cambia a fase 3
 
             num_active_enemies++;
             break;
@@ -243,9 +233,6 @@ void update_boss(int index)
     // Variables que necesitamos para los patrones de movimiento
     float shoot_rate;
     float orbit_radius = 200;
-    float side_movement;
-    float perpendicular_x;
-    float perpendicular_y;
 
     // Comprobar cambios de fase basados en salud
     if (enemy_phase[index] == BossPhaseOne && enemy_health[index] <= BossHealth1 * 0.66)
@@ -347,8 +334,6 @@ void update_enemy(int index)
     float target_y;
     float ideal_distance = 100;    // Era 200, ahora el doble
     float separation_margin = 100; // Margen de separación más amplio (era 50)
-    float new_x, new_y;
-    float offset_angle;
 
     if (enemy_state[index] == SoldierStateSpawning)
     {
