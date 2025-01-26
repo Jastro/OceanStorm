@@ -52,6 +52,8 @@ Take control of a pilot on a critical mission: destroy enemy defenses across a s
 ### Audio
 - [Ending Music](https://opengameart.org/content/ending-scene)
 - [Death Effects](https://opengameart.org/content/hurt-death-sound-effect-for-character)
+- [Gameplay Music](https://www.fesliyanstudios.com/royalty-free-music/download/8-bit-adventure/2282)
+
 
 ## License
 MIT License
